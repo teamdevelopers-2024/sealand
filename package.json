@@ -1,0 +1,22 @@
+{
+  "name": "sea-land",
+  "version": "1.0.0",
+  "main": "frontend/dist/index.html",
+  "scripts": {
+    "start": "nw ."
+  },
+  "window": {
+    "title": "Sea Land",
+    "width": 1024,
+    "height": 768,
+    "toolbar": false,
+    "debug": true
+  },
+  "node-remote": "<all_urls>",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nw": "^0.91.0"
+  }
+}
