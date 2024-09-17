@@ -1,0 +1,156 @@
+.adminLoginChild {
+    position: absolute;
+    top: 128.49px;
+    left: 676px;
+    border-right: 3px solid rgba(255, 255, 255, 0.29);
+    box-sizing: border-box;
+    width: 3px;
+    height: 757px;
+}
+.rectangle {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #4b49ac;
+    box-sizing: border-box;
+    width: 439px;
+    height: 65.9px;
+}
+.username1 {
+    position: absolute;
+    top: 19.02px;
+    left: 74.63px;
+    line-height: 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: inline-block;
+    width: 122.9px;
+    height: 29.3px;
+}
+.userIcon {
+    position: absolute;
+    top: 19.02px;
+    left: 17.56px;
+    width: 29.3px;
+    height: 29.3px;
+    overflow: hidden;
+}
+.username {
+    position: absolute;
+    top: 400px;
+    left: 838px;
+    width: 439px;
+    height: 65.9px;
+    color: #252323;
+}
+.password1 {
+    position: absolute;
+    top: 19.02px;
+    left: 74.63px;
+    line-height: 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: inline-block;
+    width: 124.4px;
+    height: 29.3px;
+}
+.lockIcon {
+    position: absolute;
+    height: 44.46%;
+    width: 6.67%;
+    top: 28.86%;
+    right: 89.33%;
+    bottom: 26.68%;
+    left: 4%;
+    max-width: 100%;
+    overflow: hidden;
+    max-height: 100%;
+}
+.password {
+    position: absolute;
+    top: 494.68px;
+    left: 838px;
+    width: 439px;
+    height: 65.9px;
+    color: #252323;
+}
+.rectangle2 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
+    border-radius: 47px;
+    background-color: #f61414;
+    width: 439px;
+    height: 65.9px;
+}
+.login {
+    position: absolute;
+    top: 20.02px;
+    left: 178.99px;
+    line-height: 20px;
+    text-transform: uppercase;
+    display: inline-block;
+    width: 79px;
+    height: 29.3px;
+}
+.loginBtn {
+    position: absolute;
+    top: 623.84px;
+    left: 838px;
+    width: 439px;
+    height: 65.9px;
+    font-size: 20px;
+}
+.welcome {
+    position: absolute;
+    top: 250px;
+    left: 962px;
+    font-size: 49px;
+    font-family: 'Post No Bills Colombo ExtraBold';
+    text-align: left;
+    display: inline-block;
+    width: 232px;
+    height: 92px;
+}
+.leaseLoginTo {
+    font-size: 22px;
+}
+.pleaseLoginToContainer {
+    position: absolute;
+    top: 319px;
+    left: 872px;
+    font-family: Padauk;
+    text-align: left;
+    font-size: 30px;
+}
+.techFusion11 {
+    position: absolute;
+    top: 30px;
+    left: 25px;
+    width: 650px;
+    height: 650px;
+}
+.removebgPreview1Icon {
+    position: absolute;
+    top: 348px;
+    left: 26px;
+    width: 620px;
+    height: 276px;
+    object-fit: cover;
+}
+.adminLogin {
+    width: 100%;
+    position: relative;
+    border-radius: 15px;
+    background-color: #171a1f;
+    height: 1024px;
+    overflow: hidden;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+    font-family: Poppins;
+}
+
