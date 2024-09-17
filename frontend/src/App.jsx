@@ -6,9 +6,8 @@ function App() {
   return (
     <>
     <LayoutRoutes/>
-      
     </>
   )
 }
 
-export default App
+export default App;

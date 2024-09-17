@@ -8,7 +8,6 @@ function LayoutRoutes() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        
       </Routes>
     </Router>
   );
