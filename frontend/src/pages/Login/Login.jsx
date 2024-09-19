@@ -32,7 +32,7 @@ const Login = () => {
             </div> */}
           </label>
           <input
-            className="w-full p-3 text-gray-900 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full p-3 text-gray-900 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4B49AC]"
             id="username"
             type="text"
             placeholder="Username"
@@ -51,7 +51,7 @@ const Login = () => {
             </div> */}
           </label>
           <input
-            className="w-full p-3 text-gray-900 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full p-3 text-gray-900 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-[#4B49AC]"
             id="password"
             type="password"
             placeholder="Password"
