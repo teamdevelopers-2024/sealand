@@ -1,6 +1,7 @@
 {
   "name": "sea-land",
   "version": "1.0.0",
+  "chromium-args": "--enable-node",
   "main": "frontend/dist/index.html",
   "scripts": {
     "start": "nw ."
