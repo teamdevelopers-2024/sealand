@@ -7,6 +7,7 @@ const Home = React.lazy(() => import("../../pages/Home/Home"));
 const CreditCustomers = React.lazy(() => import("../../pages/Credit Customers/CreditCustomers"));
 const AddIncome = React.lazy(() => import("../../components/Add Income/AddIncome"));
 const Income = React.lazy(() => import("../../components/Income/Income"));
+const Expense = React.lazy(()=>import("../../components/Expense/Expense"))
 
 function LayoutRoutes() {
   return (
@@ -19,6 +20,7 @@ function LayoutRoutes() {
           <Route path="/credit" element={<CreditCustomers />} />
           <Route path="/addincome" element={<AddIncome />} />
           <Route path="/income" element={<Income />} />
+          <Route path="/expense" element={<Expense />} />
         </Routes>
       </Suspense>
     </Router>
