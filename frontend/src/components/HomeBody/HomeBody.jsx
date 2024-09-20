@@ -9,12 +9,14 @@ function HomeBody() {
             <h2 className="text-lg text-[#00BDD6] mb-2">Today's Revenue</h2>
             <p className="text-2xl font-bold">₹11,726</p>
             {/* Graph */}
-            <div className="mt-4 flex justify-between">
-              <div className="bg-teal-500 h-8 w-4 rounded"></div>
-              <div className="bg-teal-500 h-6 w-4 rounded"></div>
-              <div className="bg-teal-500 h-10 w-4 rounded"></div>
-              <div className="bg-teal-500 h-6 w-4 rounded"></div>
-              <div className="bg-teal-500 h-8 w-4 rounded"></div>
+            <div className="flex justify-between items-end mt-4 h-[135px]">
+              <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[135px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[91px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[74px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[91px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[135px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[83px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[118px] w-[35px] rounded-3xl"></div>
             </div>
           </div>
 
@@ -23,14 +25,14 @@ function HomeBody() {
             <h2 className="text-lg text-[#00BDD6] mb-2">Today's Expenses</h2>
             <p className="text-2xl font-bold">₹4,237</p>
             {/* Graph */}
-            <div className="mt-4 flex justify-between">
-              <div className="bg-yellow-500 h-6 w-4 rounded"></div>
-              <div className="bg-yellow-500 h-8 w-4 rounded"></div>
-              <div className="bg-yellow-500 h-10 w-4 rounded"></div>
-              <div className="bg-yellow-500 h-6 w-4 rounded"></div>
-              <div className="bg-yellow-500 h-8 w-4 rounded"></div>
-              <div className="bg-yellow-500 h-6 w-4 rounded"></div>
-              <div className="bg-yellow-500 h-10 w-4 rounded"></div>
+            <div className="flex justify-between items-end mt-4 h-[135px]">
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[135px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[91px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[74px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[91px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[135px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[83px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[118px] w-[35px] rounded-3xl"></div>
             </div>
           </div>
 
@@ -64,6 +66,7 @@ function HomeBody() {
             <table className="w-full text-left">
               <thead>
                 <tr>
+                  <th className="text-teal-400">Date</th>
                   <th className="text-teal-400">Customer Name</th>
                   <th className="text-teal-400">Vehicle Number</th>
                   <th className="text-teal-400">Payment Type</th>
@@ -72,24 +75,28 @@ function HomeBody() {
               </thead>
               <tbody>
                 <tr className="border-t border-gray-700">
+                  <td>20-09-2024</td>
                   <td>Muhammed Danish</td>
                   <td>KL 13 A 5672</td>
                   <td>By UPI</td>
                   <td>₹1970</td>
                 </tr>
                 <tr className="border-t border-gray-700">
+                  <td>20-09-2024</td>
                   <td>Ahmed Shehin</td>
                   <td>KL 56 R 7598</td>
                   <td>By Cash</td>
                   <td>₹1310</td>
                 </tr>
                 <tr className="border-t border-gray-700">
+                  <td>20-09-2024</td>
                   <td>Muhammed Sinan</td>
                   <td>KL 11 H 3260</td>
                   <td>By UPI</td>
                   <td>₹1420</td>
                 </tr>
                 <tr className="border-t border-gray-700">
+                  <td>20-09-2024</td>
                   <td>Dilshad</td>
                   <td>KL 11 A 0001</td>
                   <td>By UPI</td>
