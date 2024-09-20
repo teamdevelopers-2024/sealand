@@ -1,22 +1,25 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "../../pages/Login/Login";
-import Home from "../../pages/Home/Home";
-import CreditCustomers from "../../pages/Credit Customers/CreditCustomers";
-import AddIncome from "../../components/Add Income/AddIncome";
 import Income from "../../components/Income/Income";
 
+// Lazy import components
+const Login = React.lazy(() => import("../../pages/Login/Login"));
+const Home = React.lazy(() => import("../../pages/Home/Home"));
+const CreditCustomers = React.lazy(() => import("../../pages/Credit Customers/CreditCustomers"));
+const AddIncome = React.lazy(() => import("../../components/Add Income/AddIncome"));
 
 function LayoutRoutes() {
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/credit" element={<CreditCustomers />} />
-        <Route path="/addincome" element={<AddIncome />} />
-        <Route path="/income" element={<Income />} />
-      </Routes>
+      {/* Suspense with fallback UI while components are loading */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/credit" element={<CreditCustomers />} />
+          <Route path="/income" element={<AddIncome />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
