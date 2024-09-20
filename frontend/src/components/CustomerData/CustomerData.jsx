@@ -58,6 +58,7 @@ const CustomerData = () => {
                   <td className="px-4 py-2">
                     <div className="flex justify-around space-x-2">
                       <button className="bg-yellow-500 text-black px-4 py-1 rounded-full">Credit</button>
+                      <button className="bg-yellow-500 text-black px-4 py-1 rounded-full">Credit</button>
                       <button className={`px-4 py-1 rounded-full ${customer.due === '₹0' ? 'bg-teal-500' : 'bg-blue-500'} text-white`}>
                         {customer.due === '₹0' ? 'Receipt' : 'Pay'}
                       </button>
