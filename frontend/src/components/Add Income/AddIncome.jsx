@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navbar from "../Navbar/Navbar";
 
 const AddIncome = () => {
   // State for popup visibility
@@ -9,8 +10,6 @@ const AddIncome = () => {
     { description: "", amount: "", reference: "" },
   ]);
 
-  const openPopup = () => setIsOpen(true);
-  const closePopup = () => setIsOpen(false);
 
   // Function to handle input change
   const handleInputChange = (index, event) => {
@@ -41,31 +40,13 @@ const AddIncome = () => {
 
   return (
     <>
-      {/* Navbar (static, back of the popup) */}
-      <nav className="bg-gray-900 text-white p-4 fixed top-0 left-0 right-0 z-10">
-        <div className="flex justify-between">
-          <div className="text-lg">Sea Land Car Care</div>
-          <div className="flex space-x-4">
-            <a href="#" className="hover:underline">Home</a>
-            <a href="#" className="hover:underline">Expenses</a>
-            <a href="#" className="text-red-500 underline">Income</a>
-            <a href="#" className="hover:underline">Credit Customers</a>
-          </div>
-        </div>
-      </nav>
-
       {/* Button to trigger the popup */}
-      <div className="mt-16 p-4">
-        <button onClick={openPopup} className="bg-red-600 text-white px-4 py-2 rounded">
-          Add Income
-        </button>
-      </div>
+
 
       {/* Popup Modal */}
-      {isOpen && (
         <>
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-20" onClick={closePopup}></div>
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-20" onClick={''}></div>
 
           {/* Popup Form */}
           <div className="fixed inset-0 flex items-center justify-center z-30">
@@ -182,7 +163,7 @@ const AddIncome = () => {
 
                 {/* Cancel and Save Buttons */}
                 <div className="flex space-x-4">
-                  <button onClick={closePopup} className="bg-gray-600 text-white px-4 py-2 rounded">
+                  <button onClick={''} className="bg-gray-600 text-white px-4 py-2 rounded">
                     Cancel
                   </button>
                   <button className="bg-teal-500 text-white px-4 py-2 rounded">
@@ -193,7 +174,6 @@ const AddIncome = () => {
             </div>
           </div>
         </>
-      )}
     </>
   );
 };

@@ -8,11 +8,11 @@ const Home = () => {
   return (
     <>
       {/* Suspense wrapper with a fallback UI for loading state */}
-      <Suspense fallback={<div>Loading Navbar...</div>}>
+      <Suspense fallback={<div className="bg-gray-900">Loading Navbar...</div>}>
         <Navbar />
       </Suspense>
 
-      <Suspense fallback={<div>Loading Content...</div>}>
+      <Suspense fallback={<div className="bg-gray-900">Loading Content...</div>}>
         <HomeBody />
       </Suspense>
     </>
