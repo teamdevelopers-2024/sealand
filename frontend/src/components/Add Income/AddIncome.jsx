@@ -10,7 +10,6 @@ const AddIncome = () => {
     { description: "", amount: "", reference: "" },
   ]);
 
-
   // Function to handle input change
   const handleInputChange = (index, event) => {
     const { name, value } = event.target;
@@ -21,7 +20,10 @@ const AddIncome = () => {
 
   // Function to add a new work description field
   const addField = () => {
-    setWorkDescriptions([...workDescriptions, { description: "", amount: "", reference: "" }]);
+    setWorkDescriptions([
+      ...workDescriptions,
+      { description: "", amount: "", reference: "" },
+    ]);
   };
 
   // Function to remove a field
@@ -42,68 +44,91 @@ const AddIncome = () => {
     <>
       {/* Button to trigger the popup */}
 
-
       {/* Popup Modal */}
-        <>
-          {/* Backdrop */}
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-20" onClick={''}></div>
+      <>
+        {/* Backdrop */}
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-20"></div>
 
-          {/* Popup Form */}
-          <div className="fixed inset-0 flex items-center justify-center z-30">
-            <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
-              <h2 className="text-xl mb-4">Income Entry</h2>
+        {/* Popup Form */}
+        <div className="fixed inset-0 flex items-center justify-center z-30">
+          <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
+            <h2 className="text-xl mb-4">Income Entry</h2>
 
-              {/* Form inputs */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
+            {/* Form inputs */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <label className="block">
+                <span className="text-white">Work Date</span>
                 <input
                   type="date"
                   placeholder="Car care date?"
-                  className="p-2 bg-gray-700 rounded"
+                  className="p-2 bg-gray-700 rounded w-full"
                 />
+              </label>
+
+              <label className="block">
+                <span className="text-white">Customer Name</span>
                 <input
                   type="text"
                   placeholder="Who is the customer?"
-                  className="p-2 bg-gray-700 rounded"
+                  className="p-2 bg-gray-700 rounded w-full"
                 />
+              </label>
+
+              <label className="block">
+                <span className="text-white">Vehicle Number</span>
                 <input
                   type="text"
                   placeholder="Plate ID for this vehicle?"
-                  className="p-2 bg-gray-700 rounded"
+                  className="p-2 bg-gray-700 rounded w-full"
                 />
+              </label>
+
+              <label className="block">
+                <span className="text-white">Contact Number</span>
                 <input
                   type="tel"
                   placeholder="Preferred contact for updates?"
-                  className="p-2 bg-gray-700 rounded"
+                  className="p-2 bg-gray-700 rounded w-full"
                 />
-                <select className="p-2 bg-gray-700 rounded">
+              </label>
+
+              <label className="block">
+                <span className="text-white">Payment Method</span>
+                <select className="p-2 bg-gray-700 rounded w-full">
                   <option>How did you pay?</option>
                   <option>Cash</option>
-                  <option>Credit Card</option>
+                  <option>UPI</option>
                   <option>Online Transfer</option>
                 </select>
+              </label>
+
+              <label className="block">
+                <span className="text-white">Total Service Cost</span>
                 <input
                   type="number"
                   placeholder="Total service cost?"
-                  className="p-2 bg-gray-700 rounded"
+                  className="p-2 bg-gray-700 rounded w-full"
                 />
-              </div>
+              </label>
+            </div>
 
-              {/* Work Description Table */}
-              <table className="w-full mb-4">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Work Description</th>
-                    <th>Amount</th>
-                    <th>Reference</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {workDescriptions.map((work, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>
+            {/* Work Description Table */}
+            <table className="w-full mb-4">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Work Description</th>
+                  <th>Amount</th>
+                  <th>Reference</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {workDescriptions.map((work, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <label className="block">
                         <input
                           type="text"
                           name="description"
@@ -112,8 +137,10 @@ const AddIncome = () => {
                           className="p-2 bg-gray-700 rounded w-full"
                           placeholder="Name of the work"
                         />
-                      </td>
-                      <td>
+                      </label>
+                    </td>
+                    <td>
+                      <label className="block">
                         <input
                           type="number"
                           name="amount"
@@ -122,8 +149,10 @@ const AddIncome = () => {
                           className="p-2 bg-gray-700 rounded w-full"
                           placeholder="Amount of work"
                         />
-                      </td>
-                      <td>
+                      </label>
+                    </td>
+                    <td>
+                      <label className="block">
                         <input
                           type="text"
                           name="reference"
@@ -132,48 +161,49 @@ const AddIncome = () => {
                           className="p-2 bg-gray-700 rounded w-full"
                           placeholder="Additional information"
                         />
-                      </td>
-                      <td>
-                        <button
-                          className="text-red-500"
-                          onClick={() => removeField(index)}
-                        >
-                          🗑
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </label>
+                    </td>
+                    <td>
+                      <button
+                        className="text-red-500"
+                        onClick={() => removeField(index)}
+                      >
+                        🗑
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-              {/* Button to add more fields */}
-              <button
-                onClick={addField}
-                className="bg-teal-500 text-white px-4 py-2 rounded mb-4"
-              >
-                + Add Field
-              </button>
+            {/* Button to add more fields */}
+            <button
+              onClick={addField}
+              className="bg-teal-500 text-white px-4 py-2 rounded mb-4"
+            >
+              + Add Field
+            </button>
 
-              {/* Total Amount and Action Buttons */}
-              <div className="flex justify-between items-center">
-                {/* Total Amount Display */}
-                <div className="text-lg font-semibold">
-                  Total Amount: ₹ {calculateTotal().toLocaleString()}
-                </div>
+            {/* Total Amount and Action Buttons */}
+            <div className="flex justify-between items-center">
+              {/* Total Amount Display */}
+              <div className="text-lg font-semibold">
+                Total Amount: ₹ {calculateTotal().toLocaleString()}
+              </div>
 
-                {/* Cancel and Save Buttons */}
-                <div className="flex space-x-4">
-                  <button onClick={''} className="bg-gray-600 text-white px-4 py-2 rounded">
-                    Cancel
-                  </button>
-                  <button className="bg-teal-500 text-white px-4 py-2 rounded">
-                    Save
-                  </button>
-                </div>
+              {/* Cancel and Save Buttons */}
+              <div className="flex space-x-4">
+                <button className="bg-gray-600 text-white px-4 py-2 rounded">
+                  Cancel
+                </button>
+                <button className="bg-teal-500 text-white px-4 py-2 rounded">
+                  Save
+                </button>
               </div>
             </div>
           </div>
-        </>
+        </div>
+      </>
     </>
   );
 };

@@ -5,8 +5,8 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 const Login = React.lazy(() => import("../../pages/Login/Login"));
 const Home = React.lazy(() => import("../../pages/Home/Home"));
 const CreditCustomers = React.lazy(() => import("../../pages/Credit Customers/CreditCustomers"));
-const Income = React.lazy(() => import("../../components/Income/Income"));
-const Expense = React.lazy(()=>import("../../components/Expense/Expense"))
+const Income = React.lazy(() => import("../../pages/Income/Income"));
+const Expense = React.lazy(()=>import("../../pages/Expense/Expense"))
 
 function LayoutRoutes() {
   return (
