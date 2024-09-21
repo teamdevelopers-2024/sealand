@@ -1,0 +1,9 @@
+{
+    "src": ["./**/**", "!./node_modules/**"],
+    "platforms": ["win64"],
+    "version": "latest",
+    "output": "./build",
+    "buildType": "versioned",
+    "zip": false
+  }
+  
