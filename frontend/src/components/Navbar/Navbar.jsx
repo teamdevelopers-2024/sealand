@@ -18,7 +18,7 @@ const Navbar = ({setAddIncomeModal}) => {
             src={Logo}
             alt="Logo"
             className="h-12 w-28"
-          />
+            />
         </div>
 
         {/* Navigation Links */}
@@ -35,7 +35,7 @@ const Navbar = ({setAddIncomeModal}) => {
             <a
               onClick={() => navigate('/expense')}
               className={`${pathSegment === 'expense' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'} cursor-pointer`}
-            >
+              >
               Expenses
             </a>
           </li>
@@ -43,7 +43,7 @@ const Navbar = ({setAddIncomeModal}) => {
             <a
               onClick={() => navigate('/income')}
               className={`${pathSegment === 'income' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'} cursor-pointer`}
-            >
+              >
               Income
             </a>
           </li>
@@ -51,7 +51,7 @@ const Navbar = ({setAddIncomeModal}) => {
             <a
               onClick={() => navigate('/credit')}
               className={`${pathSegment === 'credit' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'} cursor-pointer`}
-            >
+              >
               Credit Customers
             </a>
           </li>
@@ -83,7 +83,7 @@ const Navbar = ({setAddIncomeModal}) => {
             src="https://via.placeholder.com/150" // Replace with profile image URL
             alt="Profile"
             className="h-8 w-8 rounded-full"
-          />
+            />
         </div>
 
         {/* Mobile menu button */}
@@ -113,4 +113,4 @@ const Navbar = ({setAddIncomeModal}) => {
   );
 };
 
-export default Navbar;
+export default Navbar;
