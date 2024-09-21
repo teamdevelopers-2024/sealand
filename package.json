@@ -1,21 +1,18 @@
 {
   "name": "sea-land",
   "version": "1.0.0",
+  "type": "module",
   "chromium-args": "--enable-node",
   "main": "frontend/dist/index.html",
-"scripts": {
-  "start": "nw .",
-  "debug": "npx nw . --enable-logging=stderr",
-  "build": "nwbuild --win --outDir build ."
-}
-
-,
+  "scripts": {
+    "start": "nw ."
+  },
   "window": {
     "title": "Sea Land",
     "width": 1024,
     "height": 768,
     "toolbar": true,
-    "debug": true,
+    "debug": false, 
     "show_in_taskbar": true,
     "frame": true,
     "web_preferences": {
@@ -29,7 +26,6 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "nw": "^0.91.0",
-    "nw-builder": "^4.11.0"
+    "nw": "^0.91.0"
   }
 }
