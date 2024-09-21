@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 const Login = React.lazy(() => import("../../pages/Login/Login"));
 const Home = React.lazy(() => import("../../pages/Home/Home"));
 const CreditCustomers = React.lazy(() => import("../../pages/Credit Customers/CreditCustomers"));
-const AddIncome = React.lazy(() => import("../../components/Add Income/AddIncome"));
 const Income = React.lazy(() => import("../../components/Income/Income"));
 
 function LayoutRoutes() {
