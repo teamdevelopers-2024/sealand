@@ -33,8 +33,8 @@ const Navbar = ({setAddIncomeModal}) => {
           </li>
           <li>
             <a
-              onClick={() => navigate('/')}
-              className={`${pathSegment === 'expenses' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'} cursor-pointer`}
+              onClick={() => navigate('/expense')}
+              className={`${pathSegment === 'expense' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'} cursor-pointer`}
             >
               Expenses
             </a>
