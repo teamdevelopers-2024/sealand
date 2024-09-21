@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Navbar from "../Navbar/Navbar";
+import AddIncome from "../Add Income/AddIncome";
 
 // monthly data
 const monthlyData = [
@@ -226,7 +227,7 @@ const Income = () => {
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 5;
-
+  const [addIncomeModal , setAddIncomeModal] = useState(false)
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
@@ -286,7 +287,7 @@ const Income = () => {
 
   return (
     <>
-    <Navbar />
+    <Navbar setAddIncomeModal={setAddIncomeModal} />
       <div className="min-h-screen bg-gray-900 p-8 text-gray-100 relative">
         {/* Main Content */}
         <main className="mt-8">
@@ -409,6 +410,7 @@ const Income = () => {
           </div>
         </main>
       </div>
+       {addIncomeModal && <AddIncome/>}
     </>
   );
 };
