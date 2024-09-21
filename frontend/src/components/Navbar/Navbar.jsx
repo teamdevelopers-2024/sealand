@@ -25,8 +25,8 @@ const Navbar = ({setAddIncomeModal}) => {
         <ul className="hidden md:flex space-x-8 text-gray-300">
           <li>
             <a
-              onClick={() => navigate('/')}
-              className={`cursor-pointer ${!pathSegment ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'}`}
+              onClick={() => navigate('/home')}
+              className={`cursor-pointer ${pathSegment=='home' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'}`}
             >
               Home
             </a>

@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import PrivateRoutes from "./PrivateRoutes";
 
 // Lazy import components
 const Login = React.lazy(() => import("../../pages/Login/Login"));
@@ -23,11 +24,14 @@ function LayoutRoutes() {
         }
       >
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
+          <Route element={<PrivateRoutes/>}>
+          <Route path="/home" element={<Home />} />
           <Route path="/credit" element={<CreditCustomers />} />
           <Route path="/income" element={<Income />} />
           <Route path="/expense" element={<Expense />} />
+          </Route>
+          <Route path="*" element={<Login/>}></Route>
         </Routes>
       </Suspense>
     </Router>
