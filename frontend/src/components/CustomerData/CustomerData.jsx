@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import AddCustomer from "../Add Customer/AddCustomer"; // Adjust the path according to your file structure
 import History from "../History/History";
 import PaymentModal from "../Pay Modal/PaymentModal"; // Import the Payment Modal
+import CreditForm from "../Credit Form/CreditForm";
 
 const CustomerData = () => {
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showCreditForm, setShowCreditForm] = useState(false); // control for credit form visibility
 
   // Customer data with creditAmount and paidAmount
   const customers = [
@@ -39,7 +40,7 @@ const CustomerData = () => {
 
   const handleViewClick = (customer) => {
     setSelectedCustomer(customer);
-    setShowHistory(true);
+    setShowHistory(true); // specifically show history modal
   };
 
   const closeHistoryModal = () => {
@@ -49,11 +50,21 @@ const CustomerData = () => {
 
   const handlePayClick = (customer) => {
     setSelectedCustomer(customer);
-    setShowPaymentModal(true); // Show the Payment Modal
+    setShowPaymentModal(true); // specifically show payment modal
   };
 
   const closePaymentModal = () => {
     setShowPaymentModal(false);
+    setSelectedCustomer(null);
+  };
+
+  const handleCreditClick = (customer) => {
+    setSelectedCustomer(customer);
+    setShowCreditForm(true); // specifically show credit form
+  };
+
+  const closeCreditForm = () => {
+    setShowCreditForm(false);
     setSelectedCustomer(null);
   };
 
@@ -114,7 +125,9 @@ const CustomerData = () => {
                     )}
                   </td>
                   <td className="px-4 py-2">
-                    <button className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-md">
+                    <button className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-md" 
+                    onClick={() => handleCreditClick(customer)}
+                    >
                       Credit
                     </button>
                     <button
@@ -161,7 +174,7 @@ const CustomerData = () => {
       </div>
 
       {/* Payment Modal */}
-      {selectedCustomer && (
+      {selectedCustomer && showPaymentModal && (
         <PaymentModal
           show={showPaymentModal}
           onClose={closePaymentModal}
@@ -170,7 +183,7 @@ const CustomerData = () => {
       )}
 
       {/* History Modal */}
-      {selectedCustomer && (
+      {selectedCustomer && showHistory && (
         <History
           show={showHistory}
           onClose={closeHistoryModal}
@@ -179,10 +192,21 @@ const CustomerData = () => {
       )}
 
       {/* Add Customer Modal */}
-      <AddCustomer
-        show={showAddCustomerModal}
-        onClose={() => setShowAddCustomerModal(false)}
-      />
+      {showAddCustomerModal && (
+        <AddCustomer
+          show={showAddCustomerModal}
+          onClose={() => setShowAddCustomerModal(false)}
+        />
+      )}
+
+      {/* Show Credit Form when a customer is selected */}
+      {selectedCustomer && showCreditForm && (
+        <CreditForm
+          show={showCreditForm}
+          customer={selectedCustomer}
+          onClose={closeCreditForm}
+        />
+      )}
     </div>
   );
 };
