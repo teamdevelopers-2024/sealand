@@ -7,6 +7,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import Navbar from "../Navbar/Navbar";
+import AddIncome from "../Add Income/AddIncome";
 
 // monthly data
 const monthlyData = [
@@ -219,12 +221,13 @@ const incomeHistoryData = [
   },
 ];
 
-const IncomeBody = () => {
+const Income = () => {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [income, setIncome] = useState(106480); // Default for monthly
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 5;
+  const [addIncomeModal , setAddIncomeModal] = useState(false)
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
@@ -284,21 +287,25 @@ const IncomeBody = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-900 p-8 text-gray-100 relative">
+      <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
         {/* Main Content */}
-        <main className="mt-8">
+        <main className="mt-8 p-2">
           {/* Income Overview */}
-          <div className="bg-gray-800 p-6 rounded-lg flex justify-between items-center mb-8">
+          <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
             <div className="text-left space-y-3 w-1/3">
               <h2 className="text-5xl font-bold text-cyan-400">Total Income</h2>
-              <h3 className="text-4xl font-bold">₹ {income}</h3>
+              <h3 className="text-3xl text-green-300 font-bold">
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
+              </h3>
               <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-              <h2 className="text-4xl font-bold text-cyan-400">
+              <h2 className="text-3xl font-bold text-cyan-400">
                 {timePeriod} income
               </h2>
-              <h3 className="text-3xl font-bold">₹ {income}</h3>
+              <h3 className="text-2xl text-green-300 font-semibold">
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
+              </h3>
               <p className="text-xl text-cyan-400">
-                This {timePeriod.toLowerCase()}: ₹ {income}
+                This {timePeriod.toLowerCase()}: {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
               </p>
             </div>
 
@@ -339,7 +346,7 @@ const IncomeBody = () => {
           </div>
 
           {/* Income History */}
-          <div className="bg-gray-800 p-6 rounded-lg">
+          <div className="bg-gray-800 p-10 rounded-lg">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold text-cyan-400">
                 Income history
@@ -406,9 +413,9 @@ const IncomeBody = () => {
           </div>
         </main>
       </div>
-       
+       {addIncomeModal && <AddIncome setAddIncomeModal={setAddIncomeModal}/>}
     </>
   );
 };
 
-export default IncomeBody;
+export default Income;

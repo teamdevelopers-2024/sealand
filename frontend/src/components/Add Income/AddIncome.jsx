@@ -1,8 +1,7 @@
 import React, { useState } from "react";
+
 const AddIncome = () => {
   // State for popup visibility
-  const [isOpen, setIsOpen] = useState(false);
-
   // State to handle the dynamic fields
   const [workDescriptions, setWorkDescriptions] = useState([
     { description: "", amount: "", reference: "" },
@@ -189,19 +188,19 @@ const AddIncome = () => {
                 Total Amount: ₹ {calculateTotal().toLocaleString()}
               </div>
 
-              {/* Cancel and Save Buttons */}
-              <div className="flex space-x-4">
-                <button className="bg-gray-600 text-white px-4 py-2 rounded">
-                  Cancel
-                </button>
-                <button className="bg-teal-500 text-white px-4 py-2 rounded">
-                  Save
-                </button>
+                {/* Cancel and Save Buttons */}
+                <div className="flex space-x-4">
+                  <button onClick={()=> setAddIncomeModal(false)} className="bg-gray-600 text-white px-4 py-2 rounded">
+                    Cancel
+                  </button>
+                  <button className="bg-teal-500 text-white px-4 py-2 rounded">
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </>
+        </>
     </>
   );
 };
