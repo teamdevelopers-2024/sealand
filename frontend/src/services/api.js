@@ -18,7 +18,7 @@ async function login(body) {
     return response.data;
 
   } catch (error) {
-    console.log(error.response.data)
+    console.log(error)
     return error.response.data
 
   }
