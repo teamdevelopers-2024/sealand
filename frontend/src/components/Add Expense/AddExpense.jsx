@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-
-const AddIncome = () => {
+const AddExpense = () => {
   // State for popup visibility
+  const [isOpen, setIsOpen] = useState(false);
+
   // State to handle the dynamic fields
   const [workDescriptions, setWorkDescriptions] = useState([
     { description: "", amount: "", reference: "" },
@@ -49,30 +50,30 @@ const AddIncome = () => {
         {/* Popup Form */}
         <div className="fixed inset-0 flex items-center justify-center z-30">
           <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
-            <h2 className="text-xl mb-4">Income Entry</h2>
+            <h2 className="text-xl mb-4">Expense Entry</h2>
 
             {/* Form inputs */}
             <div className="grid grid-cols-3 gap-4 mb-6">
               <label className="block">
-                <span className="text-white">Work Date</span>
+                <span className="text-white">Date</span>
                 <input
                   type="date"
-                  placeholder="Car care date?"
+                  placeholder="Select Date"
                   className="p-2 bg-gray-700 rounded w-full"
                 />
               </label>
 
               <label className="block">
-                <span className="text-white">Customer Name</span>
+                <span className="text-white">Payee Name</span>
                 <input
                   type="text"
-                  placeholder="Who is the customer?"
+                  placeholder="To whom?"
                   className="p-2 bg-gray-700 rounded w-full"
                 />
               </label>
 
               <label className="block">
-                <span className="text-white">Vehicle Number</span>
+                <span className="text-white">Expense Type</span>
                 <input
                   type="text"
                   placeholder="Plate ID for this vehicle?"
@@ -100,7 +101,7 @@ const AddIncome = () => {
               </label>
 
               <label className="block">
-                <span className="text-white">Total Service Cost</span>
+                <span className="text-white">Total Expense</span>
                 <input
                   type="number"
                   placeholder="Total service cost?"
@@ -114,7 +115,7 @@ const AddIncome = () => {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Work Description</th>
+                  <th>Expense Detail</th>
                   <th>Amount</th>
                   <th>Reference</th>
                   <th>Action</th>
@@ -188,21 +189,21 @@ const AddIncome = () => {
                 Total Amount: ₹ {calculateTotal().toLocaleString()}
               </div>
 
-                {/* Cancel and Save Buttons */}
-                <div className="flex space-x-4">
-                  <button onClick={()=> setAddIncomeModal(false)} className="bg-gray-600 text-white px-4 py-2 rounded">
-                    Cancel
-                  </button>
-                  <button className="bg-teal-500 text-white px-4 py-2 rounded">
-                    Save
-                  </button>
-                </div>
+              {/* Cancel and Save Buttons */}
+              <div className="flex space-x-4">
+                <button className="bg-gray-600 text-white px-4 py-2 rounded">
+                  Cancel
+                </button>
+                <button className="bg-teal-500 text-white px-4 py-2 rounded">
+                  Save
+                </button>
               </div>
             </div>
           </div>
-        </>
+        </div>
+      </>
     </>
   );
 };
 
-export default AddIncome;
+export default AddExpense;

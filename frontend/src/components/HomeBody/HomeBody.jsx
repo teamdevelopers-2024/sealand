@@ -26,13 +26,13 @@ function HomeBody() {
             <p className="text-2xl font-bold">₹4,237</p>
             {/* Graph */}
             <div className="flex justify-between items-end mt-4 h-[135px]">
-              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[135px] w-[35px] rounded-3xl"></div>
-              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[91px] w-[35px] rounded-3xl"></div>
-              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[74px] w-[35px] rounded-3xl"></div>
-              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[91px] w-[35px] rounded-3xl"></div>
-              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[135px] w-[35px] rounded-3xl"></div>
-              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[83px] w-[35px] rounded-3xl"></div>
-              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[118px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[87px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[129px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[70px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[119px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[87px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[79px] w-[35px] rounded-3xl"></div>
+              <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[112px] w-[35px] rounded-3xl"></div>
             </div>
           </div>
 
