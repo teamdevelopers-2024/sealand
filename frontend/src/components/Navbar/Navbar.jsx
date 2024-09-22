@@ -80,6 +80,11 @@ const Navbar = ({setAddIncomeModal}) => {
                 Add Expense
               </button>
             )}
+            {pathSegment !== 'expense' && pathSegment !== 'income' && (
+                   <button onClick={()=> setAddIncomeModal(true)} className="invisible bg-red-600 text-white px-4 py-2 rounded">
+                   Add Expense
+                 </button>
+            )}
           </div>
 
           {/* Icons */}
