@@ -10,7 +10,7 @@ const PaymentModal = ({ show, onClose, customer }) => {
       <div className="bg-gray-800 text-gray-300 p-6 rounded-md w-full max-w-2xl">
         <h2 className="text-xl font-semibold mb-4">Payment Details</h2>
         <form>
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-3 gap-4 mb-4">
             <div className="col-span-2 md:col-span-1">
               <label className="block mb-2">Date of repayment</label>
               <input
