@@ -67,40 +67,28 @@ const Navbar = ({setAddIncomeModal}) => {
 
         {/* Icons and Add Income Button Placeholder */}
         <div className="flex items-center space-x-4">
-          {/* Add Income Button or Invisible Placeholder */}
-          <div className="flex items-center">
-            {pathSegment === 'income' ? (
-              <button onClick={()=> setAddIncomeModal(true)} className="bg-red-600 text-white px-4 py-2 rounded">
-                Add Income
-              </button>
-            ) : (
-              <div className="invisible px-4 py-2 rounded bg-red-600"> {/* Invisible placeholder */}
-                Add Income
-              </div>
-            )}
-          </div>
-         
+          {/* Add Income Button or Invisible Placeholder */}   
           {/* Add Expense Button or Invisible Placeholder */}
           <div className="flex items-center">
-            {pathSegment === 'expense' ? (
+          {pathSegment === 'income' && (
+              <button onClick={()=> setAddIncomeModal(true)} className="bg-red-600 text-white px-4 py-2 rounded">
+                Add Income
+              </button>
+            )}
+            {pathSegment === 'expense' && (
               <button onClick={()=> setAddIncomeModal(true)} className="bg-red-600 text-white px-4 py-2 rounded">
                 Add Expense
               </button>
-            ) : (
-              <div className="invisible px-4 py-2 rounded bg-red-600"> {/* Invisible placeholder */}
-                Add Expense
-              </div>
+            )}
+            {pathSegment !== 'expense' && pathSegment !== 'income' && (
+                   <button onClick={()=> setAddIncomeModal(true)} className="invisible bg-red-600 text-white px-4 py-2 rounded">
+                   Add Expense
+                 </button>
             )}
           </div>
 
           {/* Icons */}
           <button onClick={handleLogout}>logout</button>
-          <button className="text-gray-300 hover:text-white">
-            <i className="fas fa-cog"></i> {/* Settings icon */}
-          </button>
-          <button className="text-gray-300 hover:text-white">
-            <i className="fas fa-bell"></i> {/* Notification icon */}
-          </button>
           <img
             src="https://via.placeholder.com/150" // Replace with profile image URL
             alt="Profile"
