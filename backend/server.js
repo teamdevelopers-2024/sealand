@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors"; // Import CORS package
 import 'dotenv/config';
 import router from "./Router.js";
+import connectDB from "./database/connection.js";
 
 // Initialize the Express application
 const app = express();
@@ -13,20 +14,22 @@ const PORT = process.env.PORT || 5000;
 
 // Set up CORS with options (adjust the origin as needed)
 const corsOptions = {
-    origin: [
-      'http://localhost:5173', // Add your frontend URL
-      'http://localhost:4200',
-      'http://localhost:5000',
-      'http://localhost:3000',
-      'http://localhost:3001',
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // Allows cookies to be sent from the frontend
-  };
-  
-  app.use(cors(corsOptions));
-  
+  origin: [
+    'http://localhost:5173', // Add your frontend URL
+    'http://localhost:4200',
+    'http://localhost:5000',
+    'http://localhost:3000',
+    'http://localhost:3001',
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Allows cookies to be sent from the frontend
+};
+
+app.use(cors(corsOptions));
+
+connectDB();
+
 
 // Parse incoming JSON requests (replaces body-parser.json())
 app.use(express.json());
@@ -48,7 +51,7 @@ app.use('/api', router);
 //   });
 // }
 
-app.listen(PORT , (err)=>{
+app.listen(PORT, (err) => {
   console.log(`Backend server is running on port ${PORT}`);
 })
 
