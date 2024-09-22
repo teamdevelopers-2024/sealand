@@ -56,7 +56,7 @@ const expenseHistoryData = [
     vehicleNumber: "KL 13 A 5672",
     paymentType: "By UPI",
     phoneNumber: "8921405362",
-    amount: "₹ 1970",
+    amount: "1970",
   },
   {
     date: "18-09-2024",
@@ -64,7 +64,7 @@ const expenseHistoryData = [
     vehicleNumber: "KL 14 B 1234",
     paymentType: "Cash",
     phoneNumber: "9876543210",
-    amount: "₹ 2500",
+    amount: "2500",
   },
   {
     date: "18-09-2024",
@@ -72,7 +72,7 @@ const expenseHistoryData = [
     vehicleNumber: "KL 15 C 5678",
     paymentType: "By Card",
     phoneNumber: "8765432109",
-    amount: "₹ 3000",
+    amount: "3000",
   },
   {
     date: "18-09-2024",
@@ -80,7 +80,7 @@ const expenseHistoryData = [
     vehicleNumber: "KL 16 D 1357",
     paymentType: "By UPI",
     phoneNumber: "7654321098",
-    amount: "₹ 2800",
+    amount: "2800",
   },
   {
     date: "18-09-2024",
@@ -88,7 +88,7 @@ const expenseHistoryData = [
     vehicleNumber: "KL 17 E 2468",
     paymentType: "Cash",
     phoneNumber: "6543210987",
-    amount: "₹ 1500",
+    amount: "1500",
   },
   {
     date: "18-09-2024",
@@ -96,7 +96,7 @@ const expenseHistoryData = [
     vehicleNumber: "KL 18 F 9876",
     paymentType: "By Card",
     phoneNumber: "5432109876",
-    amount: "₹ 4000",
+    amount: "4000",
   },
   {
     date: "18-09-2024",
@@ -104,7 +104,7 @@ const expenseHistoryData = [
     vehicleNumber: "KL 19 G 5432",
     paymentType: "By UPI",
     phoneNumber: "4321098765",
-    amount: "₹ 3700",
+    amount: "3700",
   },
   {
     date: "18-09-2024",
@@ -112,7 +112,7 @@ const expenseHistoryData = [
     vehicleNumber: "KL 20 H 9876",
     paymentType: "Cash",
     phoneNumber: "3210987654",
-    amount: "₹ 2200",
+    amount: "2200",
   },
   // additional entries...
 ];
@@ -181,6 +181,18 @@ const Expense = () => {
     setCurrentPage(1);
   };
 
+
+  const handleNextYear = () => {
+    if (timePeriod === "Monthly") {
+      setCurrentYear(prevYear => prevYear + 1);
+    }
+  };
+
+  const handlePrevYear = () => {
+    if (timePeriod === "Monthly" && currentYear > 2020) {
+      setCurrentYear(prevYear => prevYear - 1);
+    }
+  };
   return (
     <>
       <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
@@ -190,14 +202,14 @@ const Expense = () => {
           <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
             <div className="text-left space-y-3 w-1/3">
               <h2 className="text-5xl font-bold text-cyan-400">Total Expense</h2>
-              <h3 className="text-3xl text-red-300 font-bold">
+              <h3 className="text-3xl text-red-400 font-bold">
               {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(expense)}
               </h3>
               <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
               <h2 className="text-3xl font-bold text-cyan-400">
                 {timePeriod} Expense
               </h2>
-              <h3 className="text-3xl text-red-300 font-bold">
+              <h3 className="text-3xl text-red-400 font-bold">
               {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(expense)}
               </h3>
               <p className="text-xl text-cyan-400">
@@ -237,6 +249,25 @@ const Expense = () => {
                     />
                   </LineChart>
                 </ResponsiveContainer>
+
+                {timePeriod === "Monthly" && (
+                <>
+                  <button
+                    onClick={handlePrevYear}
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{ marginLeft: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    &lt; {/* Left arrow */}
+                  </button>
+                  <button
+                    onClick={handleNextYear}
+                    className="absolute right-16 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{ marginRight: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    &gt; {/* Right arrow */}
+                  </button>
+                </>
+              )}
               </div>
             </div>
           </div>
@@ -273,7 +304,7 @@ const Expense = () => {
                       <td className="py-4">{entry.vehicleNumber}</td>
                       <td className="py-4">{entry.paymentType}</td>
                       <td className="py-4">{entry.phoneNumber}</td>
-                      <td className="py-4">{entry.amount}</td>
+                      <td className="py-4">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(entry.amount)}</td>
                       <td className="py-4">
                         <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">
                           View

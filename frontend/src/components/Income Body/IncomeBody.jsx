@@ -7,10 +7,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import Navbar from "../Navbar/Navbar";
-import AddIncome from "../Add Income/AddIncome";
 
-// monthly data
+// Monthly data
 const monthlyData = [
   { name: "Jan", income: 2000 },
   { name: "Feb", income: 4500 },
@@ -26,250 +24,74 @@ const monthlyData = [
   { name: "Dec", income: 14200 },
 ];
 
-// weekly data
-const weeklyData = [
-  { name: "Sun", income: 1500 },
-  { name: "Mon", income: 3000 },
-  { name: "Tue", income: 4000 },
-  { name: "Wed", income: 2500 },
-  { name: "Thu", income: 3500 },
-  { name: "Fri", income: 5000 },
-  { name: "Sat", income: 6000 },
-];
-
-// yearly data
+// Yearly data
 const yearlyData = [
-  { name: "2016", income: 50000 },
-  { name: "2017", income: 60000 },
-  { name: "2018", income: 70000 },
-  { name: "2019", income: 80000 },
-  { name: "2020", income: 90000 },
-  { name: "2021", income: 100000 },
-  { name: "2022", income: 110000 },
-  { name: "2023", income: 120000 },
+  { name: "2019", income: 50000 },
+  { name: "2020", income: 100000 },
+  { name: "2021", income: 110000 },
+  { name: "2022", income: 120000 },
+  { name: "2023", income: 130000 },
+  { name: "2024", income: 140000 },
 ];
 
-// income history data
+// Daily data (last 7 days, starting from Sunday)
+const dailyData = Array.from({ length: 7 }, (_, index) => {
+  const date = new Date();
+  date.setDate(date.getDate() - (index + 1)); // Shift to start from Sunday
+  return {
+    name: date.toLocaleDateString(undefined, { weekday: 'long' }),
+    income: Math.floor(Math.random() * 5000) + 1000,
+  };
+}).reverse(); // Reverse to show from Sunday to Saturday
+
 const incomeHistoryData = [
-  {
-    date : "18-09-2024",
-    customerName: "Muhammed Danish",
-    vehicleNumber: "KL 13 A 5672",
-    paymentType: "By UPI",
-    phoneNumber: "8921405362",
-    amount: "₹ 1970",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Anjali Mehta",
-    vehicleNumber: "KL 14 B 1234",
-    paymentType: "Cash",
-    phoneNumber: "9876543210",
-    amount: "₹ 2500",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Rajesh Kumar",
-    vehicleNumber: "KL 15 C 5678",
-    paymentType: "By Card",
-    phoneNumber: "8765432109",
-    amount: "₹ 3000",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Sita Sharma",
-    vehicleNumber: "KL 16 D 1357",
-    paymentType: "By UPI",
-    phoneNumber: "7654321098",
-    amount: "₹ 2800",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Rahul Verma",
-    vehicleNumber: "KL 17 E 2468",
-    paymentType: "Cash",
-    phoneNumber: "6543210987",
-    amount: "₹ 1500",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Priya Singh",
-    vehicleNumber: "KL 18 F 9876",
-    paymentType: "By Card",
-    phoneNumber: "5432109876",
-    amount: "₹ 4000",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Vikram Rao",
-    vehicleNumber: "KL 19 G 5432",
-    paymentType: "By UPI",
-    phoneNumber: "4321098765",
-    amount: "₹ 3700",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Ravi Patel",
-    vehicleNumber: "KL 20 H 9876",
-    paymentType: "Cash",
-    phoneNumber: "3210987654",
-    amount: "₹ 2200",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Meena Nair",
-    vehicleNumber: "KL 21 I 1357",
-    paymentType: "By Card",
-    phoneNumber: "2109876543",
-    amount: "₹ 3100",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Sunil Joshi",
-    vehicleNumber: "KL 22 J 2468",
-    paymentType: "By UPI",
-    phoneNumber: "1098765432",
-    amount: "₹ 1800",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Neha Gupta",
-    vehicleNumber: "KL 23 K 1357",
-    paymentType: "Cash",
-    phoneNumber: "0987654321",
-    amount: "₹ 3000",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Amit Sharma",
-    vehicleNumber: "KL 24 L 5672",
-    paymentType: "By Card",
-    phoneNumber: "9876543210",
-    amount: "₹ 2400",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Rita Banerjee",
-    vehicleNumber: "KL 25 M 1357",
-    paymentType: "By UPI",
-    phoneNumber: "8765432109",
-    amount: "₹ 4200",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Kiran Desai",
-    vehicleNumber: "KL 26 N 2468",
-    paymentType: "Cash",
-    phoneNumber: "7654321098",
-    amount: "₹ 1900",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Deepak Verma",
-    vehicleNumber: "KL 27 O 9876",
-    paymentType: "By Card",
-    phoneNumber: "6543210987",
-    amount: "₹ 3100",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Shalini Reddy",
-    vehicleNumber: "KL 28 P 5432",
-    paymentType: "By UPI",
-    phoneNumber: "5432109876",
-    amount: "₹ 3500",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Pawan Yadav",
-    vehicleNumber: "KL 29 Q 1357",
-    paymentType: "Cash",
-    phoneNumber: "4321098765",
-    amount: "₹ 2800",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Sneha Malhotra",
-    vehicleNumber: "KL 30 R 2468",
-    paymentType: "By Card",
-    phoneNumber: "3210987654",
-    amount: "₹ 3700",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Vijay Kumar",
-    vehicleNumber: "KL 31 S 9876",
-    paymentType: "By UPI",
-    phoneNumber: "2109876543",
-    amount: "₹ 2200",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Lakshmi Iyer",
-    vehicleNumber: "KL 32 T 1357",
-    paymentType: "Cash",
-    phoneNumber: "1098765432",
-    amount: "₹ 4000",
-  },
-  {
-    date : "18-09-2024",
-    customerName: "Gopal Mehta",
-    vehicleNumber: "KL 33 U 2468",
-    paymentType: "By Card",
-    phoneNumber: "0987654321",
-    amount: "₹ 2900",
-  },
+  // Example income history data
+  { id: 1, date: '2024-09-20', customerName: 'John Doe', vehicleNumber: 'XYZ 1234', paymentType: 'Cash', phoneNumber: '1234567890', amount: 5000 },
+  { id: 2, date: '2024-09-19', customerName: 'Jane Smith', vehicleNumber: 'ABC 5678', paymentType: 'Card', phoneNumber: '0987654321', amount: 7000 },
+  { id: 3, date: '2024-09-18', customerName: 'Sam Wilson', vehicleNumber: 'LMN 9101', paymentType: 'Cash', phoneNumber: '1122334455', amount: 6000 },
+  { id: 4, date: '2024-09-17', customerName: 'Peter Parker', vehicleNumber: 'QRS 3456', paymentType: 'Card', phoneNumber: '5566778899', amount: 8000 },
+  { id: 5, date: '2024-09-16', customerName: 'Clark Kent', vehicleNumber: 'TUV 7890', paymentType: 'Cash', phoneNumber: '1234567890', amount: 5500 },
+  { id: 6, date: '2024-09-15', customerName: 'Bruce Wayne', vehicleNumber: 'WXY 1357', paymentType: 'Card', phoneNumber: '0987654321', amount: 6500 },
 ];
 
-const Income = () => {
+const IncomeBody = () => {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [income, setIncome] = useState(106480); // Default for monthly
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // State for current year
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 5;
-  const [addIncomeModal , setAddIncomeModal] = useState(false)
+
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
 
-    // income based on time period
+    // Update income based on selected time period
     if (period === "Daily") {
-      const today = new Date().toISOString().split("T")[0];
-      const dailyIncome = incomeHistoryData
-        .filter((entry) => entry.date === today)
-        .reduce(
-          (total, entry) =>
-            total + parseInt(entry.amount.replace(/[^\d]/g, "")),
-          0
-        );
-      setIncome(dailyIncome);
-    } else if (period === "Weekly") {
-      setIncome(24500); // weekly income
+      setIncome(0); // Reset income or fetch daily total if necessary
     } else if (period === "Monthly") {
-      setIncome(106480); // monthly income
+      setIncome(106480); // Monthly income
     } else if (period === "Yearly") {
-      setIncome(120000); // yearly income
+      setIncome(120000); // Yearly income
     }
   };
 
   const graphData =
-    timePeriod === "Weekly"
-      ? weeklyData
+    timePeriod === "Daily"
+      ? dailyData
       : timePeriod === "Yearly"
       ? yearlyData
-      : monthlyData;
+      : monthlyData; // Show all 12 months when Monthly is selected
 
-  // entries to display
+  // Entries to display
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = showAll
     ? incomeHistoryData
-    : incomeHistoryData.slice(0, 3);
-
-  const pageCount = Math.ceil(incomeHistoryData.length / entriesPerPage);
+    : incomeHistoryData.slice(indexOfFirstEntry, indexOfLastEntry);
 
   const handleNextPage = () => {
-    if (currentPage < pageCount) {
+    if (currentPage < Math.ceil(incomeHistoryData.length / entriesPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -285,15 +107,29 @@ const Income = () => {
     setCurrentPage(1);
   };
 
+  const handleNextYear = () => {
+    if (timePeriod === "Monthly") {
+      setCurrentYear(prevYear => prevYear + 1);
+    }
+  };
+
+  const handlePrevYear = () => {
+    if (timePeriod === "Monthly" && currentYear > 2020) {
+      setCurrentYear(prevYear => prevYear - 1);
+    }
+  };
+
+  // Get current date
+  const currentDate = new Date();
+
   return (
-    <>
-      <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
-        {/* Main Content */}
-        <main className="mt-8 p-2">
-          {/* Income Overview */}
-          <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
-            <div className="text-left space-y-3 w-1/3">
-              <h2 className="text-5xl font-bold text-cyan-400">Total Income</h2>
+    <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
+      {/* Main Content */}
+      <main className="mt-8">
+        {/* Income Overview */}
+        <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
+        <div className="text-left space-y-3 w-1/3">
+              <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
               <h3 className="text-3xl text-green-300 font-bold">
               {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
               </h3>
@@ -301,121 +137,137 @@ const Income = () => {
               <h2 className="text-3xl font-bold text-cyan-400">
                 {timePeriod} income
               </h2>
-              <h3 className="text-2xl text-green-300 font-semibold">
+              <h3 className="text-3xl text-green-300 font-bold">
               {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
               </h3>
               <p className="text-xl text-cyan-400">
-                This {timePeriod.toLowerCase()}: {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
+                This {timePeriod.toLowerCase()}:   {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
               </p>
             </div>
 
-            {/* Graph and Dropdown */}
-            <div className="w-2/4 relative">
-              <div className="absolute z-10 bottom--4 left-0 p-2">
-                <select
-                  value={timePeriod}
-                  onChange={handleTimePeriodChange}
-                  className="bg-gray-700 px-4 py-2 rounded-lg text-cyan-400"
-                >
-                  <option value="Daily">Daily</option>
-                  <option value="Weekly">Week</option>
-                  <option value="Monthly">Month</option>
-                  <option value="Yearly">Yearly</option>
-                </select>
-              </div>
+          {/* Graph and Dropdown */}
+          <div className="w-2/4 relative">
+            <div className="absolute z-10 bottom--4 left-0 p-2">
+              <select
+                value={timePeriod}
+                onChange={handleTimePeriodChange}
+                className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
+              >
+                <option value="Daily">Daily</option>
+                <option value="Monthly">Month</option>
+                <option value="Yearly">Yearly</option>
+              </select>
+            </div>
 
-              {/* Graph */}
-              <div className="mt-5" style={{ width: "600px", height: "300px" }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={graphData}>
-                    <XAxis dataKey="name" stroke="#999" />
-                    <YAxis stroke="#999" hide />
-                    <Tooltip cursor={false} />
-                    <Line
-                      type="monotone"
-                      dataKey="income"
-                      stroke="#00d8ff"
-                      strokeWidth={3}
-                      dot={{ stroke: "#00d8ff", strokeWidth: 2 }}
-                      activeDot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+            {/* Graph */}
+            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: '45px' }}>
+              <div className="flex justify-center mb-2 text-gray-300">
+                {timePeriod === "Daily" ? (
+                  <span className="text-lg font-semibold">Last 7 Days</span>
+                ) : timePeriod === "Monthly" ? (
+                  <span className="text-lg font-semibold">{currentYear}</span>
+                ) : (
+                  <span className="text-lg font-semibold">Last 5 Years</span>
+                )}
               </div>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={graphData}>
+                  <XAxis dataKey="name" stroke="#999" />
+                  <YAxis stroke="#999" hide />
+                  <Tooltip cursor={false} />
+                  <Line
+                    type="monotone"
+                    dataKey="income"
+                    stroke="#00d8ff"
+                    strokeWidth={3}
+                    dot={{ stroke: "#00d8ff", strokeWidth: 2 }}
+                    activeDot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+
+              {/* Arrow Buttons */}
+              {timePeriod === "Monthly" && (
+                <>
+                  <button
+                    onClick={handlePrevYear}
+                    className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{ marginLeft: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    &lt; {/* Left arrow */}
+                  </button>
+                  <button
+                    onClick={handleNextYear}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{ marginRight: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    &gt; {/* Right arrow */}
+                  </button>
+                </>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Income History */}
-          <div className="bg-gray-800 p-10 rounded-lg">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-cyan-400">
-                Income history
-              </h3>
-              <button onClick={handleShowAll} className="text-cyan-400">
-                See all
-              </button>
-            </div>
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-gray-500">
-                  <th className="pb-2">Date</th>
-                  <th className="pb-2">Customer name</th>
-                  <th className="pb-2">Vehicle number</th>
-                  <th className="pb-2">Payment type</th>
-                  <th className="pb-2">Phone number</th>
-                  <th className="pb-2">Amount</th>
-                  <th className="pb-2">Receipt</th>
+        {/* Income History */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-2xl font-bold text-cyan-400">Income history</h3>
+            <button onClick={handleShowAll} className="text-cyan-400">
+              See all
+            </button>
+          </div>
+          <table className="w-full text-left">
+            <thead>
+              <tr className="text-gray-500">
+                <th className="pb-2">Date</th>
+                <th className="pb-2">Customer name</th>
+                <th className="pb-2">Vehicle number</th>
+                <th className="pb-2">Payment type</th>
+                <th className="pb-2">Phone number</th>
+                <th className="pb-2">Amount</th>
+                <th className="pb-2">Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentEntries.map((entry) => (
+                <tr key={entry.id} className="border-b border-gray-700">
+                  <td className="py-2">{entry.date}</td>
+                  <td className="py-2">{entry.customerName}</td>
+                  <td className="py-2">{entry.vehicleNumber}</td>
+                  <td className="py-2">{entry.paymentType}</td>
+                  <td className="py-2">{entry.phoneNumber}</td>
+                  <td className="py-2">₹ {entry.amount}</td>
+                  <td className="py-2">
+                    <button className="text-cyan-400">View</button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {currentEntries
-                  .slice(indexOfFirstEntry, indexOfLastEntry)
-                  .map((entry, index) => (
-                    <tr key={index} className="border-t border-gray-700">
-                      <td className="py-4">{entry.date}</td>
-                      <td className="py-4">{entry.customerName}</td>
-                      <td className="py-4">{entry.vehicleNumber}</td>
-                      <td className="py-4">{entry.paymentType}</td>
-                      <td className="py-4">{entry.phoneNumber}</td>
-                      <td className="py-4">{entry.amount}</td>
-                      <td className="py-4">
-                        <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
 
-            {/* Pagination*/}
-            {showAll && (
-              <div className="flex justify-between items-center mt-4">
-                <button
-                  onClick={handlePrevPage}
-                  disabled={currentPage === 1}
-                  className="bg-cyan-400 px-4 py-2 rounded-lg"
-                >
-                  &#8592; {/* Left arrow */}
-                </button>
-                <span className="text-gray-500">
-                  Page {currentPage} of {pageCount}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentPage === pageCount}
-                  className="bg-cyan-400 px-4 py-2 rounded-lg"
-                >
-                  &#8594; {/* Right arrow */}
-                </button>
-              </div>
-            )}
+          {/* Pagination Buttons */}
+          <div className="flex justify-between mt-4">
+            <button
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className="p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+            >
+              &lt; {/* Left arrow */}
+            </button>
+            <span className="text-gray-400">{`Page ${currentPage} of ${Math.ceil(incomeHistoryData.length / entriesPerPage)}`}</span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === Math.ceil(incomeHistoryData.length / entriesPerPage)}
+              className="p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+            >
+              &gt; {/* Right arrow */}
+            </button>
           </div>
-        </main>
-      </div>
-       {addIncomeModal && <AddIncome setAddIncomeModal={setAddIncomeModal}/>}
-    </>
+        </div>
+      </main>
+    </div>
   );
 };
 
-export default Income;
+export default IncomeBody;
