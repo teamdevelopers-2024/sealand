@@ -1,7 +1,7 @@
 function HomeBody() {
   return (
     <>
-      <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="min-h-screen bg-gray-900 text-white p-16">
         {/* Main Content */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 items-stretch">
           {/* Card 1 */}
@@ -86,7 +86,7 @@ function HomeBody() {
                   <td>Ahmed Shehin</td>
                   <td>KL 56 R 7598</td>
                   <td>By Cash</td>
-                  <td>₹1310</td>
+                  <td>₹1315</td>
                 </tr>
                 <tr className="border-t border-gray-700">
                   <td>20-09-2024</td>
