@@ -1,10 +1,18 @@
 import React from 'react';
 import Logo from "../../assets/logoNoBackgroundCropped.png";
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/authContext';
 
 const Navbar = ({setAddIncomeModal}) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const {logout} = useAuth()
+
+  const handleLogout = (e)=>{
+    e.preventDefault()
+    logout()
+    navigate('/')
+  }
 
   // Extracting the last segment of the pathname
   const pathSegment = location.pathname.split("/").filter(Boolean).pop();
@@ -86,6 +94,7 @@ const Navbar = ({setAddIncomeModal}) => {
           </div>
 
           {/* Icons */}
+          <button onClick={handleLogout}>logout</button>
           <button className="text-gray-300 hover:text-white">
             <i className="fas fa-cog"></i> {/* Settings icon */}
           </button>
