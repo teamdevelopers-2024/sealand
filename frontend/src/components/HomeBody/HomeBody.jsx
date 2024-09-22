@@ -86,7 +86,7 @@ function HomeBody() {
                   <td>Ahmed Shehin</td>
                   <td>KL 56 R 7598</td>
                   <td>By Cash</td>
-                  <td>₹1310</td>
+                  <td>₹1315</td>
                 </tr>
                 <tr className="border-t border-gray-700">
                   <td>20-09-2024</td>
