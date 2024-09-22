@@ -71,6 +71,19 @@ const Navbar = ({setAddIncomeModal}) => {
               </div>
             )}
           </div>
+         
+          {/* Add Expense Button or Invisible Placeholder */}
+          <div className="flex items-center">
+            {pathSegment === 'expense' ? (
+              <button onClick={()=> setAddIncomeModal(true)} className="bg-red-600 text-white px-4 py-2 rounded">
+                Add Expense
+              </button>
+            ) : (
+              <div className="invisible px-4 py-2 rounded bg-red-600"> {/* Invisible placeholder */}
+                Add Expense
+              </div>
+            )}
+          </div>
 
           {/* Icons */}
           <button className="text-gray-300 hover:text-white">
