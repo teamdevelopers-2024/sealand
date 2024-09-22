@@ -184,21 +184,25 @@ const Expense = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gray-900 p-8 text-gray-100 relative">
+      <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
         {/* Main Content */}
-        <main className="mt-8">
+        <main className="mt-8 p-2">
           {/* Expense Overview */}
-          <div className="bg-gray-800 p-6 rounded-lg flex justify-between items-center mb-8">
+          <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
             <div className="text-left space-y-3 w-1/3">
               <h2 className="text-5xl font-bold text-cyan-400">Total Expense</h2>
-              <h3 className="text-4xl font-bold">₹ {expense}</h3>
+              <h3 className="text-3xl text-red-300 font-bold">
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(expense)}
+              </h3>
               <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-              <h2 className="text-4xl font-bold text-cyan-400">
+              <h2 className="text-3xl font-bold text-cyan-400">
                 {timePeriod} Expense
               </h2>
-              <h3 className="text-3xl font-bold">₹ {expense}</h3>
+              <h3 className="text-3xl text-red-300 font-bold">
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(expense)}
+              </h3>
               <p className="text-xl text-cyan-400">
-                This {timePeriod.toLowerCase()}: ₹ {expense}
+                This {timePeriod.toLowerCase()}:   {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(expense)}
               </p>
             </div>
 
@@ -239,7 +243,7 @@ const Expense = () => {
           </div>
 
           {/* Expense History */}
-          <div className="bg-gray-800 p-6 rounded-lg">
+          <div className="bg-gray-800 p-10 rounded-lg">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold text-cyan-400">
                 Expense History
