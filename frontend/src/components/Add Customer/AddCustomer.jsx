@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa"; // Import the delete icon
+import api from "../../services/api";
 
 const AddCustomer = ({ show, onClose }) => {
   const [dateOfService, setDateOfService] = useState("");
@@ -30,10 +31,23 @@ const AddCustomer = ({ show, onClose }) => {
     setWorkDetails(updatedDetails);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission logic here, like sending data to an API
-    onClose(); // Close modal after submission
+
+    // Data to be sent to the backend
+    const formData = {
+      dateOfService,
+      customerName,
+      vehicleNumber,
+      phoneNumber,
+      paymentMethod,
+      creditAmount,
+      workDetails,
+    };
+
+    const response = await api.addcustomer(formData);
+    console.log('Response:', response);
+    onClose();
   };
 
   if (!show) {
