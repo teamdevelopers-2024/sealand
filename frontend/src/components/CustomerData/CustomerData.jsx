@@ -1,11 +1,15 @@
 import React, { useState } from "react";
+import AddCustomer from "../Add Customer/AddCustomer"; // Adjust the path according to your file structure
 import History from "../History/History";
 import PaymentModal from "../Pay Modal/PaymentModal"; // Import the Payment Modal
 
 const CustomerData = () => {
+  const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
 
   // Customer data with creditAmount and paidAmount
   const customers = [
@@ -34,23 +38,23 @@ const CustomerData = () => {
   };
 
   const handleViewClick = (customer) => {
-    setSelectedCustomer(customer); 
-    setShowHistory(true); 
+    setSelectedCustomer(customer);
+    setShowHistory(true);
   };
 
   const closeHistoryModal = () => {
     setShowHistory(false);
-    setSelectedCustomer(null); 
+    setSelectedCustomer(null);
   };
 
   const handlePayClick = (customer) => {
-    setSelectedCustomer(customer); 
+    setSelectedCustomer(customer);
     setShowPaymentModal(true); // Show the Payment Modal
   };
 
   const closePaymentModal = () => {
     setShowPaymentModal(false);
-    setSelectedCustomer(null); 
+    setSelectedCustomer(null);
   };
 
   return (
@@ -58,6 +62,24 @@ const CustomerData = () => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold text-teal-400">Customer Data</h1>
+
+          {/* Search Bar */}
+          <div className="flex items-center space-x-4">
+            <input
+              type="text"
+              placeholder="Search customer..."
+              className="w-64 h-10 px-3 rounded bg-gray-700 text-white"
+              onChange={(e) => setSearchTerm(e.target.value)} // Update state to filter customer list
+            />
+
+            {/* Add New Customer Button */}
+            <button
+              className="bg-teal-400 text-gray-900 px-4 py-2 rounded-md"
+              onClick={() => setShowAddCustomerModal(true)}
+            >
+              Add New Customer
+            </button>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
@@ -84,8 +106,13 @@ const CustomerData = () => {
                   <td className="px-4 py-2">{customer.phoneNumber}</td>
                   <td className="px-4 py-2">₹{customer.creditAmount}</td>
                   <td className="px-4 py-2">₹{customer.paidAmount}</td>
-                  {/* Calculating due amount */}
-                  <td className="px-4 py-2">₹{calculateDueAmount(customer.creditAmount, customer.paidAmount)}</td>
+                  <td className="px-4 py-2">
+                    ₹
+                    {calculateDueAmount(
+                      customer.creditAmount,
+                      customer.paidAmount
+                    )}
+                  </td>
                   <td className="px-4 py-2">
                     <button className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-md">
                       Credit
@@ -150,6 +177,12 @@ const CustomerData = () => {
           customer={selectedCustomer}
         />
       )}
+
+      {/* Add Customer Modal */}
+      <AddCustomer
+        show={showAddCustomerModal}
+        onClose={() => setShowAddCustomerModal(false)}
+      />
     </div>
   );
 };
