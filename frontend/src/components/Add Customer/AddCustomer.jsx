@@ -42,7 +42,7 @@ const AddCustomer = ({ show, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
-      <div className="relative top-20 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-gray-800">
+      <div className="relative top-20 mx-auto p-5 border w-[700px] shadow-lg rounded-md bg-gray-800">
         <h3 className="text-lg text-teal-400 font-bold mb-4">Add Customer</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Form fields */}

@@ -1,31 +1,31 @@
 {
   "name": "sea-land",
   "version": "1.0.0",
+  "main": "main.js",
   "type": "module",
-  "chromium-args": "--enable-node",
-  "main": "frontend/dist/index.html",
   "scripts": {
-    "start": "nw ."
+    "start": "electron main.js",
+    "package": "npm run build-frontend && npx electron-packager . MyApp --platform=win32 --arch=x64 --icon=icon.ico",
+    "build-frontend": "cd frontend && npm install && npm run build"
   },
-  "window": {
-    "title": "Sea Land",
-    "width": 1024,
-    "height": 768,
-    "toolbar": true,
-    "debug": false, 
-    "show_in_taskbar": true,
-    "frame": true,
-    "web_preferences": {
-      "web_security": false
-    }
-  },
-  "node-remote": "<all_urls>",
-  "dependencies": {
-    "express": "^4.17.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "devDependencies": {
-    "nw": "^0.91.0"
+    "electron": "^32.1.2",
+    "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "winston": "^3.14.2"
+  },
+  "build": {
+    "files": [
+      "main.js",
+      "backend/**/*",
+      "frontend/**/*",
+      "preload.js",
+      "icon.ico"
+    ]
   }
 }

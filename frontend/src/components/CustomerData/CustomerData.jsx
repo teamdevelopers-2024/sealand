@@ -69,8 +69,8 @@ const CustomerData = () => {
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen p-6">
-      <div className="container mx-auto">
+    <div className="bg-gray-900 min-h-screen p-10">
+      <div className="container p-6 mx-auto">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold text-teal-400">Customer Data</h1>
 
@@ -93,7 +93,7 @@ const CustomerData = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto p-2">
           <table className="table-auto w-full text-left text-gray-300">
             <thead>
               <tr className="bg-gray-800">
