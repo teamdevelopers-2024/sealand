@@ -38,6 +38,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', router);
 
 // Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+function start(callback) {
+  app.listen(PORT, (err) => {
+    if (err) {
+      return callback(err);
+    }
+    console.log(`Backend server is running on port ${3000}`);
+    callback();
+  });
+}
+
+
+export default { start };
