@@ -48,37 +48,46 @@ async function login(req, res) {
 
 async function addcustomer(req, res) {
     try {
-        const customerData = req.body
-        console.log(customerData);
-        const errors = validateCustomerData(customerData);
-
-        if (errors.length > 0) {
-            return res.status(400).json({
-                error: true,
-                message: "validation error",
-                errors: errors
-            });
-        }
-
-        await creditCustomerDb.create(customerData)
-
-        res.status(200).json({
-            error: false,
-            message: "customer added Successfully"
-        })
+      const customerData = req.body;
+      console.log(customerData);
 
 
+      if (typeof customerData.vehicleNumber === 'string') {
+        customerData.vehicleNumber = customerData.vehicleNumber
+          .split(',')
+          .map((v) => v.trim())
+          .filter((v) => v);
+      }
+  
+      // Validate customer data
+      const errors = validateCustomerData(customerData);
+      if (errors.length > 0) {
+        return res.status(400).json({
+          error: true,
+          message: "Validation error",
+          errors: errors,
+        });
+      }
+  
+      // Check if vehicleNumber is a string and convert it to an array
 
+  
+      // Save the customer data with the transformed vehicleNumber
+      await creditCustomerDb.create(customerData);
+  
+      res.status(200).json({
+        error: false,
+        message: "Customer added successfully",
+      });
     } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            error: true,
-            message: "internel server error"
-        })
+      console.log(error);
+      res.status(500).json({
+        error: true,
+        message: "Internal server error",
+      });
     }
-
-}
-
+  }
+  
 
 async function addIncome(req, res) {
     try {
@@ -182,11 +191,80 @@ async function getExpenses(req,res) {
 }
 
 
+async function getCustomers(req,res) {
+    try {
+        const customers = await creditCustomerDb.find().sort({ _id: -1 });
+        console.log(customers)
+        res.status(200).json({
+            error:false,
+            message:"customers fetched successfully",
+            data:customers
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            error:true,
+            message:"internel server error"
+        })
+    }
+}
+
+
+async function repayment(req, res) {
+    try {
+      const { customer, details } = req.body;
+  
+      const updatedCustomer = await creditCustomerDb.findByIdAndUpdate(
+        customer._id,
+        {
+          $inc: { creditAmount: -details.repaymentAmount },
+        },
+        { new: true }
+      );
+      if (!updatedCustomer) {
+        return res.status(404).json({ message: 'Customer not found' });
+      }
+
+      const updateIncomeData = new IncomeDb({
+        workDate:details.repaymentDate,
+        customerName:customer.customerName,
+        vehicleNumber:"Fron creditRepayment",
+        contactNumber:customer.phoneNumber,
+        paymentMethod:"Credit Repayment",
+        totalServiceCost:details.repaymentAmount,
+        workDescriptions:[{
+            description:"From creditRepayment",
+            amount:details.repaymentAmount,
+            reference:customer.phoneNumber
+        }]
+      })
+
+      if(updatedCustomer.creditAmount == 0){
+        await creditCustomerDb.deleteOne({_id:customer._id})
+      }
+
+      await updateIncomeData.save()
+  
+
+      res.status(200).json({
+        error:false,
+        message: 'Repayment successful',
+      });
+    } catch (error) {
+      console.error('Error during repayment:', error);
+      res.status(500).json({ message: 'Internal server error', error , error:true });
+    }
+  }
+  
+
+
 export default {
     login,
     addIncome,
     addcustomer,
     incomeHistory,
     addExpense,
-    getExpenses
+    getExpenses,
+    getCustomers,
+    repayment
 }

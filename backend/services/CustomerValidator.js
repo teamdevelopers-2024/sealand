@@ -26,8 +26,8 @@ export function validateCustomerData(data) {
     }
 
     // Validate vehicleNumber
-    if (!vehicleNumber || !validator.isAlphanumeric(vehicleNumber)) {
-        errors.push('Vehicle number is required and must be alphanumeric.');
+    if (!Array.isArray(vehicleNumber) || vehicleNumber.length === 0 || !vehicleNumber.every(num => validator.isAlphanumeric(num))) {
+        errors.push('Vehicle number is required, must be an array, and each entry must be alphanumeric.');
     }
 
     // Validate contactNumber

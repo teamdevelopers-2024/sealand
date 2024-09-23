@@ -3,6 +3,7 @@ import AddCustomer from "../Add Customer/AddCustomer"; // Adjust the path accord
 import History from "../History/History";
 import PaymentModal from "../Pay Modal/PaymentModal"; // Import the Payment Modal
 import CreditForm from "../Credit Form/CreditForm";
+import api from "../../services/api";
 
 const CustomerData = () => {
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
@@ -24,7 +25,7 @@ const CustomerData = () => {
       }
     };
     fetchCustomers();
-  }, []);
+  }, [showAddCustomerModal]);
 
   // Function to calculate the due amount
   const calculateDueAmount = (creditAmount, paidAmount) => {
@@ -104,8 +105,8 @@ const CustomerData = () => {
             <tbody className="bg-gray-700">
               {customers.map((customer, index) => (
                 <tr key={index} className="border-t border-gray-600">
-                  <td className="px-4 py-2">{customer.date}</td>
-                  <td className="px-4 py-2">{customer.name}</td>
+                  <td className="px-4 py-2">{customer.dateOfService}</td>
+                  <td className="px-4 py-2">{customer.customerName}</td>
                   <td className="px-4 py-2">{customer.vehicleNumber}</td>
                   <td className="px-4 py-2">{customer.phoneNumber}</td>
                   <td className="px-4 py-2">₹{customer.creditAmount}</td>
