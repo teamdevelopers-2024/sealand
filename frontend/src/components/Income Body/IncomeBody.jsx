@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import api from "../../services/api";
 
 // Monthly data
 const monthlyData = [
@@ -39,28 +40,33 @@ const dailyData = Array.from({ length: 7 }, (_, index) => {
   const date = new Date();
   date.setDate(date.getDate() - (index + 1)); // Shift to start from Sunday
   return {
-    name: date.toLocaleDateString(undefined, { weekday: 'long' }),
+    name: date.toLocaleDateString(undefined, { weekday: "long" }),
     income: Math.floor(Math.random() * 5000) + 1000,
   };
 }).reverse(); // Reverse to show from Sunday to Saturday
 
-const incomeHistoryData = [
-  // Example income history data
-  { id: 1, date: '2024-09-20', customerName: 'John Doe', vehicleNumber: 'XYZ 1234', paymentType: 'Cash', phoneNumber: '1234567890', amount: 5000 },
-  { id: 2, date: '2024-09-19', customerName: 'Jane Smith', vehicleNumber: 'ABC 5678', paymentType: 'Card', phoneNumber: '0987654321', amount: 7000 },
-  { id: 3, date: '2024-09-18', customerName: 'Sam Wilson', vehicleNumber: 'LMN 9101', paymentType: 'Cash', phoneNumber: '1122334455', amount: 6000 },
-  { id: 4, date: '2024-09-17', customerName: 'Peter Parker', vehicleNumber: 'QRS 3456', paymentType: 'Card', phoneNumber: '5566778899', amount: 8000 },
-  { id: 5, date: '2024-09-16', customerName: 'Clark Kent', vehicleNumber: 'TUV 7890', paymentType: 'Cash', phoneNumber: '1234567890', amount: 5500 },
-  { id: 6, date: '2024-09-15', customerName: 'Bruce Wayne', vehicleNumber: 'WXY 1357', paymentType: 'Card', phoneNumber: '0987654321', amount: 6500 },
-];
 
 const IncomeBody = () => {
+  const [incomeHistoryData, setIncomeHistoryData] = useState([]);
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [income, setIncome] = useState(106480); // Default for monthly
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // State for current year
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 5;
+
+  useEffect(() => {
+    const fetchIncomeHistory = async () => {
+      try {
+        const response = await api.showIncome();
+        setIncomeHistoryData(response.data);
+      } catch (error) {
+        console.error("Error fetching income history data", error);
+      }
+    };
+
+    fetchIncomeHistory();
+  }, []);
 
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
@@ -109,13 +115,13 @@ const IncomeBody = () => {
 
   const handleNextYear = () => {
     if (timePeriod === "Monthly") {
-      setCurrentYear(prevYear => prevYear + 1);
+      setCurrentYear((prevYear) => prevYear + 1);
     }
   };
 
   const handlePrevYear = () => {
     if (timePeriod === "Monthly" && currentYear > 2020) {
-      setCurrentYear(prevYear => prevYear - 1);
+      setCurrentYear((prevYear) => prevYear - 1);
     }
   };
 
@@ -128,22 +134,32 @@ const IncomeBody = () => {
       <main className="mt-8">
         {/* Income Overview */}
         <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
-        <div className="text-left space-y-3 w-1/3">
-              <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
-              <h3 className="text-3xl text-green-300 font-bold">
-              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
-              </h3>
-              <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-              <h2 className="text-3xl font-bold text-cyan-400">
-                {timePeriod} income
-              </h2>
-              <h3 className="text-3xl text-green-300 font-bold">
-              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
-              </h3>
-              <p className="text-xl text-cyan-400">
-                This {timePeriod.toLowerCase()}:   {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
-              </p>
-            </div>
+          <div className="text-left space-y-3 w-1/3">
+            <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
+            <h3 className="text-3xl text-green-300 font-bold">
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(income)}
+            </h3>
+            <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
+            <h2 className="text-3xl font-bold text-cyan-400">
+              {timePeriod} income
+            </h2>
+            <h3 className="text-3xl text-green-300 font-bold">
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(income)}
+            </h3>
+            <p className="text-xl text-cyan-400">
+              This {timePeriod.toLowerCase()}:{" "}
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(income)}
+            </p>
+          </div>
 
           {/* Graph and Dropdown */}
           <div className="w-2/4 relative">
@@ -160,7 +176,10 @@ const IncomeBody = () => {
             </div>
 
             {/* Graph */}
-            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: '45px' }}>
+            <div
+              className="mt-5 relative"
+              style={{ width: "600px", height: "300px", marginBottom: "45px" }}
+            >
               <div className="flex justify-center mb-2 text-gray-300">
                 {timePeriod === "Daily" ? (
                   <span className="text-lg font-semibold">Last 7 Days</span>
@@ -192,14 +211,28 @@ const IncomeBody = () => {
                   <button
                     onClick={handlePrevYear}
                     className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{ marginLeft: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{
+                      marginLeft: "-80px",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     &lt; {/* Left arrow */}
                   </button>
                   <button
                     onClick={handleNextYear}
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{ marginRight: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{
+                      marginRight: "-80px",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     &gt; {/* Right arrow */}
                   </button>
@@ -255,10 +288,15 @@ const IncomeBody = () => {
             >
               &lt; {/* Left arrow */}
             </button>
-            <span className="text-gray-400">{`Page ${currentPage} of ${Math.ceil(incomeHistoryData.length / entriesPerPage)}`}</span>
+            <span className="text-gray-400">{`Page ${currentPage} of ${Math.ceil(
+              incomeHistoryData.length / entriesPerPage
+            )}`}</span>
             <button
               onClick={handleNextPage}
-              disabled={currentPage === Math.ceil(incomeHistoryData.length / entriesPerPage)}
+              disabled={
+                currentPage ===
+                Math.ceil(incomeHistoryData.length / entriesPerPage)
+              }
               className="p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
             >
               &gt; {/* Right arrow */}
