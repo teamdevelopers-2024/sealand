@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import Navbar from "../Navbar/Navbar";
+import api from "../../services/api";
 
 // Sample expense history data
 const expenseHistoryData = [
@@ -63,7 +64,22 @@ const Expense = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentYear, setCurrentYear] = useState(2023);
   const entriesPerPage = 5;
+  const [expenseHistoryData , setExpenseHistoryData] = useState([])
 
+
+  useEffect(() => {
+    const fetchIncomeHistory = async () => {
+      try {
+        const response = await api.showExpense();
+        setExpenseHistoryData(response.data);
+        console.log("expense history", response.data);
+      } catch (error) {
+        console.error("Error fetching income history data", error);
+      }
+    };
+
+    fetchIncomeHistory();
+  }, []);
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
@@ -247,8 +263,8 @@ const Expense = () => {
             <thead>
               <tr className="text-gray-500">
                 <th className="pb-2">Date</th>
-                <th className="pb-2">Customer Name</th>
-                <th className="pb-2">Vehicle Number</th>
+                <th className="pb-2">Payee Name</th>
+                <th className="pb-2">Expense Type</th>
                 <th className="pb-2">Payment Type</th>
                 <th className="pb-2">Phone Number</th>
                 <th className="pb-2">Amount</th>
@@ -260,16 +276,16 @@ const Expense = () => {
                 .slice(indexOfFirstEntry, indexOfLastEntry)
                 .map((entry, index) => (
                   <tr key={index} className="border-t border-gray-700">
-                    <td className="py-4">{entry.date}</td>
-                    <td className="py-4">{entry.customerName}</td>
-                    <td className="py-4">{entry.vehicleNumber}</td>
-                    <td className="py-4">{entry.paymentType}</td>
-                    <td className="py-4">{entry.phoneNumber}</td>
+                    <td className="py-4">{new Date(entry.date).toLocaleDateString("en-GB")}</td>
+                    <td className="py-4">{entry.payeeName}</td>
+                    <td className="py-4">{entry.expenseType}</td>
+                    <td className="py-4">{entry.paymentMethod}</td>
+                    <td className="py-4">{entry.contactNumber}</td>
                     <td className="py-4">
                       {new Intl.NumberFormat("en-IN", {
                         style: "currency",
                         currency: "INR",
-                      }).format(entry.amount)}
+                      }).format(entry.totalExpense)}
                     </td>
                     <td className="py-4">
                       <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">View</button>

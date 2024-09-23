@@ -1,57 +1,57 @@
 import validator from 'validator';
 
-// Function to validate customer entry data
-export function validateCustomerData(data) {
+// Function to validate expense entry data
+export function validateExpenseData(data) {
     const {
-        dateOfService,
-        customerName,
-        vehicleNumber,
-        phoneNumber,
+        date,
+        payeeName,
+        expenseType,
+        contactNumber,
         paymentMethod,
-        creditAmount,
-        workDetails,
+        totalExpense,
+        expenseDetails
     } = data;
 
     // Array to collect validation errors
     const errors = [];
 
-    // Validate workDate
-    if (!dateOfService || !validator.isDate(dateOfService)) {
-        errors.push('Work date is required and must be a valid date.');
+    // Validate date
+    if (!date || !validator.isDate(date.toString())) {
+        errors.push('Date is required and must be a valid date.');
     }
 
-    // Validate customerName
-    if (!customerName || !validator.isLength(customerName, { min: 2 })) {
-        errors.push('Customer name is required and must be at least 2 characters long.');
+    // Validate payeeName
+    if (!payeeName || !validator.isLength(payeeName, { min: 2 })) {
+        errors.push('Payee name is required and must be at least 2 characters long.');
     }
 
-    // Validate vehicleNumber
-    if (!vehicleNumber || !validator.isAlphanumeric(vehicleNumber)) {
-        errors.push('Vehicle number is required and must be alphanumeric.');
+    // Validate expenseType
+    if (!expenseType || !validator.isLength(expenseType, { min: 2 })) {
+        errors.push('Expense type is required and must be at least 2 characters long.');
     }
 
     // Validate contactNumber
-    if (!phoneNumber || !validator.isMobilePhone(phoneNumber, 'en-IN')) {
+    if (!contactNumber || !validator.isMobilePhone(contactNumber, 'en-IN')) {
         errors.push('Contact number is required and must be a valid phone number.');
     }
 
     // Validate paymentMethod
-    const validPaymentMethods = ['Cash', 'UPI', 'online Transfer'];
+    const validPaymentMethods = ['Cash', 'UPI', 'Online Transfer'];
     if (!paymentMethod || !validPaymentMethods.includes(paymentMethod)) {
         errors.push('Payment method is required and must be one of Cash, UPI, or Online Transfer.');
     }
 
-    // Validate totalCost
-    if (!creditAmount || !validator.isFloat(creditAmount.toString(), { gt: 0 })) {
-        errors.push('Total service cost is required and must be a positive number.');
+    // Validate totalExpense
+    if (!totalExpense || !validator.isFloat(totalExpense.toString(), { gt: 0 })) {
+        errors.push('Total expense is required and must be a positive number.');
     }
 
     // Validate workDescriptions
-    if (!Array.isArray(workDetails) || workDetails.length === 0) {
+    if (!Array.isArray(expenseDetails) || expenseDetails    .length === 0) {
         errors.push('At least one work description is required.');
     } else {
         // Validate each work description item
-        workDetails.forEach((work, index) => {
+        expenseDetails.forEach((work, index) => {
             const { description, amount, reference } = work;
 
             if (!description || validator.isEmpty(description)) {

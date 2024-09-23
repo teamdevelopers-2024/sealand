@@ -39,6 +39,6 @@ const creditCustomerSchema = new mongoose.Schema({
     ]
 });
 
-const creditCustomerDb = mongoose.model("Credit Customers", creditCustomerSchema);
+const creditCustomerDb = mongoose.model("CreditCustomers", creditCustomerSchema);
 
 export default creditCustomerDb;
