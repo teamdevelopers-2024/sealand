@@ -47,7 +47,7 @@ const AddCustomer = ({ show, onClose }) => {
 
     const response = await api.addcustomer(formData);
     console.log('Response:', response);
-    onClose();
+    onClose()
   };
 
   if (!show) {

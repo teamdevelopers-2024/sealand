@@ -8,7 +8,7 @@ const Income = () => {
   return (
     <>
       <Navbar setAddIncomeModal={setAddIncomeModal} />
-      <IncomeBody />
+      <IncomeBody addIncomeModal={addIncomeModal} />
       {addIncomeModal && <AddIncome setAddIncomeModal={setAddIncomeModal} />}
     </>
   );

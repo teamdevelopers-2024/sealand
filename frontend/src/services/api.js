@@ -44,7 +44,7 @@ async function addcustomer(data) {
     console.log("Data submitted successfully:", response.data);
     return response.data
   } catch (error) {
-    console.error("Error submitting the data:", error);
+    console.log("Error submitting the data:", error);
   }
 }
 
@@ -59,13 +59,36 @@ async function showIncome() {
     
   } catch (error) {
     console.error("Error fetching income history data", error);
+  } 
+}
+
+
+async function addExpense(body) {
+  try {
+    const response = await api.post("/addExpense",body)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
   }
-  
+}
+
+async function showExpense() {
+  try {
+    const response = await api.get("/getExpenses")
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
 }
 
 export default {
   login,
   addIncome,
   addcustomer,
-  showIncome
+  showIncome,
+  addExpense,
+  showExpense
 };

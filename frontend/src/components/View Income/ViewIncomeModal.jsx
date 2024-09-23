@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const ViewIncomeModal = ({ entry, setViewIncomeModal }) => {
+const ViewIncomeModal = ({ entry, onClose }) => {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(null); // Error state
 
@@ -83,7 +83,7 @@ const ViewIncomeModal = ({ entry, setViewIncomeModal }) => {
           {/* Close Button */}
           <div className="flex justify-end">
             <button
-              onClick={() => setViewIncomeModal(false)}
+              onClick={() => onClose()}
               className="bg-gray-600 text-white px-4 py-2 rounded"
             >
               Close

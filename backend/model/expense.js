@@ -14,7 +14,7 @@ const expenseSchema = new mongoose.Schema({
         required:true
     },
     contactNumber:{
-        typer:Number,
+        type:Number,
         required:true
     },
     paymentMethod:{

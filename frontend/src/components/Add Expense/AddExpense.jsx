@@ -1,112 +1,244 @@
 import React, { useState } from "react";
-const AddExpense = ({setAddExpenseModal}) => {
-  // State for popup visibility
-  const [isOpen, setIsOpen] = useState(false);
+import api from "../../services/api";
+
+const AddExpense = ({ setAddExpenseModal }) => {
+  // State for form fields
+  const [date, setDate] = useState("");
+  const [payeeName, setPayeeName] = useState("");
+  const [expenseType, setExpenseType] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [totalExpense, setTotalExpense] = useState("");
 
   // State to handle the dynamic fields
-  const [workDescriptions, setWorkDescriptions] = useState([
+  const [expenseDetails, setexpenseDetails] = useState([
     { description: "", amount: "", reference: "" },
   ]);
 
-  // Function to handle input change
+  // State for validation errors
+  const [errors, setErrors] = useState({
+    date: "",
+    payeeName: "",
+    expenseType: "",
+    contactNumber: "",
+    paymentMethod: "",
+    totalExpense: "",
+    expenseDetails: [],
+  });
+
+  // Function to handle dynamic field input change
   const handleInputChange = (index, event) => {
     const { name, value } = event.target;
-    const updatedFields = [...workDescriptions];
+    const updatedFields = [...expenseDetails];
     updatedFields[index][name] = value;
-    setWorkDescriptions(updatedFields);
+    setexpenseDetails(updatedFields);
+
+    // Update validation errors if they exist
+    const updatedErrors = [...errors.expenseDetails];
+    if (value === "") {
+      updatedErrors[index] = { ...updatedErrors[index], [name]: "This field is required." };
+    } else {
+      updatedErrors[index] = { ...updatedErrors[index], [name]: "" };
+    }
+    setErrors({ ...errors, expenseDetails: updatedErrors });
+  };
+
+  // Function to handle static input changes
+  const handleFieldChange = (setter, fieldName) => (event) => {
+    setter(event.target.value);
+
+    // Clear the error if the field is valid
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [fieldName]: event.target.value === "" ? "This field is required." : "",
+    }));
+  };
+
+  // Validation function
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {
+      date: "",
+      payeeName: "",
+      expenseType: "",
+      contactNumber: "",
+      paymentMethod: "",
+      totalExpense: "",
+      expenseDetails: [],
+    };
+
+    if (!date) {
+      newErrors.date = "Date is required.";
+      isValid = false;
+    }
+    if (!payeeName) {
+      newErrors.payeeName = "Payee name is required.";
+      isValid = false;
+    }
+    if (!expenseType) {
+      newErrors.expenseType = "Expense type is required.";
+      isValid = false;
+    }
+    if (!contactNumber) {
+      newErrors.contactNumber = "Contact number is required.";
+      isValid = false;
+    }
+    if (!paymentMethod) {
+      newErrors.paymentMethod = "Payment method is required.";
+      isValid = false;
+    }
+    if (!totalExpense) {
+      newErrors.totalExpense = "Total expense is required.";
+      isValid = false;
+    }
+
+    expenseDetails.forEach((work, index) => {
+      const workErrors = {};
+      if (!work.description) {
+        workErrors.description = "Description is required.";
+        isValid = false;
+      }
+      if (!work.amount) {
+        workErrors.amount = "Amount is required.";
+        isValid = false;
+      }
+      if (!work.reference) {
+        workErrors.reference = "Reference is required.";
+        isValid = false;
+      }
+      newErrors.expenseDetails[index] = workErrors;
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  // Handle Save button click
+  const handleSave = async () => {
+    const formData = {
+      date,
+      payeeName,
+      expenseType,
+      contactNumber,
+      paymentMethod,
+      totalExpense,
+      expenseDetails
+    }
+    console.log(formData)
+    if (validateForm()) {
+      const result = await api.addExpense(formData)
+    } else {
+      console.log("Form has errors.");
+    }
   };
 
   // Function to add a new work description field
   const addField = () => {
-    setWorkDescriptions([
-      ...workDescriptions,
+    setexpenseDetails([
+      ...expenseDetails,
       { description: "", amount: "", reference: "" },
     ]);
+    setErrors({
+      ...errors,
+      expenseDetails: [...errors.expenseDetails, {}],
+    });
   };
 
   // Function to remove a field
   const removeField = (index) => {
-    const updatedFields = workDescriptions.filter((_, i) => i !== index);
-    setWorkDescriptions(updatedFields);
-  };
-
-  // Function to calculate the total amount
-  const calculateTotal = () => {
-    return workDescriptions.reduce((total, work) => {
-      const amount = parseFloat(work.amount) || 0;
-      return total + amount;
-    }, 0);
+    const updatedFields = expenseDetails.filter((_, i) => i !== index);
+    const updatedErrors = errors.expenseDetails.filter((_, i) => i !== index);
+    setexpenseDetails(updatedFields);
+    setErrors({ ...errors, expenseDetails: updatedErrors });
   };
 
   return (
     <>
-      {/* Button to trigger the popup */}
-
       {/* Popup Modal */}
       <>
-        {/* Backdrop */}
         <div className="fixed inset-0 bg-black bg-opacity-50 z-20"></div>
 
-        {/* Popup Form */}
         <div className="fixed inset-0 flex items-center justify-center z-30">
           <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
             <h2 className="text-xl mb-4">Expense Entry</h2>
 
-            {/* Form inputs */}
             <div className="grid grid-cols-3 gap-4 mb-6">
               <label className="block">
                 <span className="text-white">Date</span>
                 <input
                   type="date"
-                  placeholder="Select Date"
+                  value={date}
+                  onChange={handleFieldChange(setDate, "date")}
                   className="p-2 bg-gray-700 rounded w-full"
                 />
+                {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
               </label>
 
               <label className="block">
                 <span className="text-white">Payee Name</span>
                 <input
                   type="text"
-                  placeholder="To whom?"
+                  value={payeeName}
+                  placeholder="Enter Payee Name"
+                  onChange={handleFieldChange(setPayeeName, "payeeName")}
                   className="p-2 bg-gray-700 rounded w-full"
                 />
+                {errors.payeeName && <p className="text-red-500 text-sm">{errors.payeeName}</p>}
               </label>
 
               <label className="block">
                 <span className="text-white">Expense Type</span>
                 <input
                   type="text"
-                  placeholder="Plate ID for this vehicle?"
+                  value={expenseType}
+                  placeholder="Enter Expense type"
+                  onChange={handleFieldChange(setExpenseType, "expenseType")}
                   className="p-2 bg-gray-700 rounded w-full"
                 />
+                {errors.expenseType && <p className="text-red-500 text-sm">{errors.expenseType}</p>}
               </label>
 
               <label className="block">
                 <span className="text-white">Contact Number</span>
                 <input
                   type="tel"
-                  placeholder="Preferred contact for updates?"
+                  value={contactNumber}
+                  placeholder="Enter ContactNumber"
+                  onChange={handleFieldChange(setContactNumber, "contactNumber")}
                   className="p-2 bg-gray-700 rounded w-full"
                 />
+                {errors.contactNumber && <p className="text-red-500 text-sm">{errors.contactNumber}</p>}
               </label>
 
               <label className="block">
                 <span className="text-white">Payment Method</span>
-                <select className="p-2 bg-gray-700 rounded w-full">
-                  <option>How did you pay?</option>
-                  <option>Cash</option>
-                  <option>UPI</option>
-                  <option>Online Transfer</option>
+                <select
+                  value={paymentMethod}
+                  onChange={handleFieldChange(setPaymentMethod, "paymentMethod")}
+                  className="p-2 bg-gray-700 rounded w-full"
+                >
+                  <option value="">How did you pay?</option>
+                  <option value="Cash">Cash</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Online Transfer">Online Transfer</option>
                 </select>
+                {errors.paymentMethod && (
+                  <p className="text-red-500 text-sm">{errors.paymentMethod}</p>
+                )}
               </label>
 
               <label className="block">
                 <span className="text-white">Total Expense</span>
                 <input
                   type="number"
-                  placeholder="Total service cost?"
+                  value={totalExpense}
+                  placeholder="Total Expense"
+                  onChange={handleFieldChange(setTotalExpense, "totalExpense")}
                   className="p-2 bg-gray-700 rounded w-full"
                 />
+                {errors.totalExpense && (
+                  <p className="text-red-500 text-sm">{errors.totalExpense}</p>
+                )}
               </label>
             </div>
 
@@ -122,7 +254,7 @@ const AddExpense = ({setAddExpenseModal}) => {
                 </tr>
               </thead>
               <tbody>
-                {workDescriptions.map((work, index) => (
+                {expenseDetails.map((work, index) => (
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>
@@ -133,8 +265,13 @@ const AddExpense = ({setAddExpenseModal}) => {
                           value={work.description}
                           onChange={(event) => handleInputChange(index, event)}
                           className="p-2 bg-gray-700 rounded w-full"
-                          placeholder="Name of the work"
+                          placeholder="Description"
                         />
+                        {errors.expenseDetails[index]?.description && (
+                          <p className="text-red-500 text-sm">
+                            {errors.expenseDetails[index].description}
+                          </p>
+                        )}
                       </label>
                     </td>
                     <td>
@@ -145,8 +282,13 @@ const AddExpense = ({setAddExpenseModal}) => {
                           value={work.amount}
                           onChange={(event) => handleInputChange(index, event)}
                           className="p-2 bg-gray-700 rounded w-full"
-                          placeholder="Amount of work"
+                          placeholder="Amount"
                         />
+                        {errors.expenseDetails[index]?.amount && (
+                          <p className="text-red-500 text-sm">
+                            {errors.expenseDetails[index].amount}
+                          </p>
+                        )}
                       </label>
                     </td>
                     <td>
@@ -157,8 +299,13 @@ const AddExpense = ({setAddExpenseModal}) => {
                           value={work.reference}
                           onChange={(event) => handleInputChange(index, event)}
                           className="p-2 bg-gray-700 rounded w-full"
-                          placeholder="Additional information"
+                          placeholder="Reference"
                         />
+                        {errors.expenseDetails[index]?.reference && (
+                          <p className="text-red-500 text-sm">
+                            {errors.expenseDetails[index].reference}
+                          </p>
+                        )}
                       </label>
                     </td>
                     <td>
@@ -174,7 +321,6 @@ const AddExpense = ({setAddExpenseModal}) => {
               </tbody>
             </table>
 
-            {/* Button to add more fields */}
             <button
               onClick={addField}
               className="bg-teal-500 text-white px-4 py-2 rounded mb-4"
@@ -182,19 +328,19 @@ const AddExpense = ({setAddExpenseModal}) => {
               + Add Field
             </button>
 
-            {/* Total Amount and Action Buttons */}
             <div className="flex justify-between items-center">
-              {/* Total Amount Display */}
               <div className="text-lg font-semibold">
-                Total Amount: ₹ {calculateTotal().toLocaleString()}
+                Total Amount: ₹ {totalExpense}
               </div>
 
-              {/* Cancel and Save Buttons */}
               <div className="flex space-x-4">
-                <button onClick={()=> setAddExpenseModal(false)} className="bg-gray-600 text-white px-4 py-2 rounded">
+                <button
+                  onClick={() => setAddExpenseModal(false)}
+                  className="bg-gray-600 text-white px-4 py-2 rounded"
+                >
                   Cancel
                 </button>
-                <button className="bg-teal-500 text-white px-4 py-2 rounded">
+                <button onClick={handleSave} className="bg-teal-500 text-white px-4 py-2 rounded">
                   Save
                 </button>
               </div>

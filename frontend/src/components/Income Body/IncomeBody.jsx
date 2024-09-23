@@ -16,7 +16,45 @@ import ViewIncomeModal from "../View Income/ViewIncomeModal";
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
-const IncomeBody = () => {
+
+// Monthly data
+const monthlyData = [
+  { name: "Jan", income: 1500 },
+  { name: "Feb", income: 3000 },
+  { name: "Mar", income: 4500 },
+  { name: "Apr", income: 3500 },
+  { name: "May", income: 5000 },
+  { name: "Jun", income: 7000 },
+  { name: "Jul", income: 8000 },
+  { name: "Aug", income: 9000 },
+  { name: "Sep", income: 12000 },
+  { name: "Oct", income: 11000 },
+  { name: "Nov", income: 9000 },
+  { name: "Dec", income: 13000 },
+];
+
+// Weekly data
+const weeklyData = [
+  { name: "Sun", income: 1000 },
+  { name: "Mon", income: 2000 },
+  { name: "Tue", income: 3000 },
+  { name: "Wed", income: 1500 },
+  { name: "Thu", income: 2500 },
+  { name: "Fri", income: 4000 },
+  { name: "Sat", income: 3500 },
+];
+
+// Yearly data
+const yearlyData = [
+  { name: "2019", income: 50000 },
+  { name: "2020", income: 100000 },
+  { name: "2021", income: 110000 },
+  { name: "2022", income: 120000 },
+  { name: "2023", income: 130000 },
+  { name: "2024", income: 140000 },
+];
+
+const IncomeBody = ({addIncomeModal}) => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -34,7 +72,7 @@ const IncomeBody = () => {
     };
 
     fetchIncomeHistory();
-  }, []);
+  }, [addIncomeModal]);
 
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
