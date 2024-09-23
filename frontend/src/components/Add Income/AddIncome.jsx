@@ -48,7 +48,7 @@ const AddIncome = ({ setAddIncomeModal }) => {
     }, 0);
   };
 
-  // Function to handle form validation
+  // Function to handle form validation worked
   const validate = () => {
     let tempErrors = {};
     if (!workDate) tempErrors.workDate = "Work date is required.";
