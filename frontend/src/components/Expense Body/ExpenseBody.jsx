@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { Line } from "react-chartjs-2"; // Import Line from Chart.js
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Navbar from "../Navbar/Navbar";
 import api from "../../services/api"; 
-import ExpenseModal from "../View Expense/ExpenseModal";
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-// Monthly data
+ChartJS.register(LineElement, CategoryScale, PointElement, LinearScale, Tooltip, Legend);
+
 const monthlyData = [
   { name: "Jan", expense: 1500 },
   { name: "Feb", expense: 3000 },
@@ -26,7 +30,6 @@ const monthlyData = [
   { name: "Dec", expense: 13000 },
 ];
 
-// Weekly data
 const weeklyData = [
   { name: "Sun", expense: 1000 },
   { name: "Mon", expense: 2000 },
@@ -37,7 +40,6 @@ const weeklyData = [
   { name: "Sat", expense: 3500 },
 ];
 
-// Yearly data
 const yearlyData = [
   { name: "2016", expense: 60000 },
   { name: "2017", expense: 70000 },
@@ -51,16 +53,12 @@ const yearlyData = [
 
 const Expense = () => {
   const [timePeriod, setTimePeriod] = useState("Monthly");
-  const [expense, setExpense] = useState(106480); // Default for monthly
+  const [expense, setExpense] = useState(106480);
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentYear, setCurrentYear] = useState(2023);
   const entriesPerPage = 5;
   const [expenseHistoryData, setExpenseHistoryData] = useState([]);
-  
-  // State for modal visibility and selected expense
-  const [selectedExpense, setSelectedExpense] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchIncomeHistory = async () => {
@@ -75,11 +73,6 @@ const Expense = () => {
 
     fetchIncomeHistory();
   }, []);
-
-  const handleViewExpense = (entry) => {
-    setSelectedExpense(entry);
-    setIsModalOpen(true);
-  };
 
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
@@ -99,7 +92,27 @@ const Expense = () => {
     }
   };
 
-  const graphData = timePeriod === "Weekly" ? weeklyData : timePeriod === "Yearly" ? yearlyData : monthlyData;
+  const graphData =
+    timePeriod === "Weekly"
+      ? weeklyData
+      : timePeriod === "Yearly"
+      ? yearlyData
+      : monthlyData;
+
+  const data = {
+    labels: graphData.map(data => data.name),
+    datasets: [
+      {
+        label: "Expenses",
+        data: graphData.map(data => data.expense),
+        borderColor: "#00d8ff",
+        backgroundColor: "rgba(0, 216, 255, 0.2)",
+        borderWidth: 3,
+        tension: 0.1, // Smoother line
+      },
+    ],
+  };
+
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = showAll ? expenseHistoryData : expenseHistoryData.slice(0, 3);
@@ -144,7 +157,9 @@ const Expense = () => {
               {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(expense)}
             </h3>
             <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-            <h2 className="text-3xl font-bold text-cyan-400">{timePeriod} Expense</h2>
+            <h2 className="text-3xl font-bold text-cyan-400">
+              {timePeriod} Expense
+            </h2>
             <h3 className="text-3xl text-red-400 font-bold">
               {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(expense)}
             </h3>
@@ -154,92 +169,146 @@ const Expense = () => {
             </p>
           </div>
 
-          {/* Graph Section */}
           <div className="w-2/4 relative">
             <div className="absolute z-10 bottom--4 left-0 p-2">
               <select value={timePeriod} onChange={handleTimePeriodChange} className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500">
                 <option value="Daily">Daily</option>
-                <option value="Monthly">Month</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
                 <option value="Yearly">Yearly</option>
               </select>
             </div>
 
             <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: "45px" }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={graphData}>
-                  <XAxis dataKey="name" stroke="#999" />
-                  <YAxis stroke="#999" hide />
-                  <Tooltip cursor={false} />
-                  <Line type="monotone" dataKey="expense" stroke="#00d8ff" strokeWidth={3} dot={{ stroke: "#00d8ff", strokeWidth: 2 }} activeDot={false} />
-                </LineChart>
-              </ResponsiveContainer>
+              <div className="flex justify-center mb-2 text-gray-300">
+                {timePeriod === "Daily" ? (
+                  <span className="text-lg font-semibold">Last 7 Days</span>
+                ) : timePeriod === "Monthly" ? (
+                  <span className="text-lg font-semibold">{currentYear}</span>
+                ) : (
+                  <span className="text-lg font-semibold">Last 5 Years</span>
+                )}
+              </div>
+              <Line
+                data={data}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    tooltip: {
+                      backgroundColor: "#333",
+                      titleColor: "#fff",
+                      bodyColor: "#fff",
+                    },
+                  },
+                  scales: {
+                    x: {
+                      grid: {
+                        display: false, 
+                      },
+                      ticks: {
+                        color: "#999", 
+                      },
+                    },
+                    y: {
+                      display: false, 
+                      grid: {
+                        display: false,
+                      },
+                    },
+                  },
+                }}
+              />
 
               {timePeriod === "Monthly" && (
                 <>
-                  <button onClick={handlePrevYear} className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition" style={{ marginLeft: "-80px", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    &lt;
-                  </button>
-                  <button onClick={handleNextYear} className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition" style={{ marginRight: "-80px", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    &gt;
-                  </button>
+                  <div
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{
+                      marginLeft: "-60px",
+                      width: "40px",
+                      height: "40px",
+                      cursor: "pointer",
+                    }}
+                    onClick={handlePrevYear}
+                  >
+                    <FaChevronLeft />
+                  </div>
+                  <div
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{
+                      marginRight: "-60px",
+                      width: "40px",
+                      height: "40px",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleNextYear}
+                  >
+                    <FaChevronRight />
+                  </div>
                 </>
               )}
             </div>
           </div>
         </div>
 
-        {/* Expense History Section */}
         <div className="bg-gray-800 p-8 rounded-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-3xl font-bold">Expense History</h2>
-          </div>
-
-          <table className="w-full text-left">
-            <thead>
-              <tr className="text-gray-500">
-                <th className="pb-2">Date</th>
-                <th className="pb-2">Payee Name</th>
-                <th className="pb-2">Expense Type</th>
-                <th className="pb-2">Payment Type</th>
-                <th className="pb-2">Phone number</th>
-                <th className="pb-2">Amount</th>
-                <th className="pb-2">Receipt</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentEntries.map((entry,index) => (
-                <tr key={entry.id} className="border-b border-gray-700">
-                  <td className="py-2">
-                    {new Date(entry.date).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="py-2">{entry.payeeName}</td>
-                  <td className="py-2">{entry.expenseType}</td>
-                  <td className="py-2">{entry.paymentMethod}</td>
-                  <td className="py-2">{entry.contactNumber}</td>
-                  <td className="py-2">{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(entry.totalExpense)}</td>
-                  <td className="py-2">
-                    <button
-                     onClick={() => handleViewExpense(entry)}
-                      className="text-cyan-400"
-                    >
-                      View
-                    </button>
-                  </td>
+          <h3 className="text-xl font-bold mb-4 text-cyan-400">Expense History</h3>
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-left border-separate border-spacing-y-2">
+              <thead>
+                <tr className="text-gray-400">
+                  <th className="py-2 px-4">#</th>
+                  <th className="py-2 px-4">Name</th>
+                  <th className="py-2 px-4">Amount</th>
+                  <th className="py-2 px-4">Description</th>
+                  <th className="py-2 px-4">Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentEntries.map((entry, index) => (
+                  <tr key={index} className="bg-gray-700 text-gray-200">
+                    <td className="py-2 px-4">{index + 1}</td>
+                    <td className="py-2 px-4">{entry.name}</td>
+                    <td className="py-2 px-4">{entry.amount}</td>
+                    <td className="py-2 px-4">{entry.description}</td>
+                    <td className="py-2 px-4">{entry.date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-          {!showAll && expenseHistoryData.length > 3 && (
-            <div className="flex justify-center mt-4">
-              <button onClick={handleShowAll} className="bg-gray-700 text-white px-4 py-2 rounded">Show All</button>
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={handleShowAll}
+                className="px-4 py-2 bg-cyan-500 rounded text-white hover:bg-cyan-600"
+              >
+                Show All
+              </button>
+
+              <div className="flex space-x-2">
+                <button
+                  onClick={handlePrevPage}
+                  className={`px-4 py-2 bg-gray-600 rounded text-white ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={handleNextPage}
+                  className={`px-4 py-2 bg-gray-600 rounded text-white ${currentPage === pageCount ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
+                  disabled={currentPage === pageCount}
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          )}
+          </div>
         </div>
-
-        {/* Modal for Viewing Expense */}
-        <ExpenseModal isOpen={isModalOpen} expense={selectedExpense} onClose={() => setIsModalOpen(false)} />
       </main>
+      <Navbar />
     </div>
   );
 };
