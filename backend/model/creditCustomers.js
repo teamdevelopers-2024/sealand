@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const creditCustomerSchema = new mongoose.Schema({
-    workDate:{
+    dateOfService:{
         type:Date,
         required:true
     },
@@ -12,8 +12,7 @@ const creditCustomerSchema = new mongoose.Schema({
     vehicleNumber:{
         type:String,
         required:true
-    },
-    contactNumber:{
+    phoneNumber:{
         typer:Number,
         required:true
     },

@@ -62,7 +62,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-//   startBackend(); 
+  // startBackend(); // Start backend server
   createWindow();
 });
 

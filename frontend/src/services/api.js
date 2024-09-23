@@ -4,7 +4,7 @@ import axios from "axios";
 const api = axios.create({
   baseURL: "http://localhost:3001/api",
   headers: {
-    "Content-Type": "application/json", 
+    "Content-Type": "application/json",
   },
   withCredentials: true,
 });
@@ -34,9 +34,19 @@ async function addIncome(body) {
     console.log(error)
     return error.response.data
   }
+async functin addcustomer(data) {
+  try {
+    console.log(data);
+    const response = await api.post("/addcustomer", data);
+    console.log("Data submitted successfully:", response.data);
+    return response.data
+  } catch (error) {
+    console.error("Error submitting the data:", error);
+  }
 }
 
 export default {
   login,
   addIncome
+  addcustomer
 };
