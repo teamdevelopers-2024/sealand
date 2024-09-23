@@ -270,37 +270,35 @@ const IncomeBody = () => {
             <thead>
               <tr className="text-gray-500">
                 <th className="pb-2">Date</th>
-                <th className="pb-2">Customer Name</th>
-                <th className="pb-2">Vehicle Number</th>
-                <th className="pb-2">Payment Type</th>
-                <th className="pb-2">Phone Number</th>
+                <th className="pb-2">Customer name</th>
+                <th className="pb-2">Vehicle number</th>
+                <th className="pb-2">Payment type</th>
+                <th className="pb-2">Phone number</th>
                 <th className="pb-2">Amount</th>
                 <th className="pb-2">Receipt</th>
               </tr>
             </thead>
             <tbody>
-              {currentEntries
-                .slice(indexOfFirstEntry, indexOfLastEntry)
-                .map((entry, index) => (
-                  <tr key={index} className="border-t border-gray-700">
-                    <td className="py-4">{entry.date}</td>
-                    <td className="py-4">{entry.customerName}</td>
-                    <td className="py-4">{entry.vehicleNumber}</td>
-                    <td className="py-4">{entry.paymentType}</td>
-                    <td className="py-4">{entry.phoneNumber}</td>
-                    <td className="py-4">
-                      {new Intl.NumberFormat("en-IN", {
-                        style: "currency",
-                        currency: "INR",
-                      }).format(entry.amount)}
-                    </td>
-                    <td className="py-4">
-                      <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded" onClick={() => handleViewClick(entry)}>
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+              {currentEntries.map((entry) => (
+                <tr key={entry.id} className="border-b border-gray-700">
+                  <td className="py-2">
+                    {new Date(entry.workDate).toLocaleDateString("en-GB")}
+                  </td>
+                  <td className="py-2">{entry.customerName}</td>
+                  <td className="py-2">{entry.vehicleNumber}</td>
+                  <td className="py-2">{entry.paymentMethod}</td>
+                  <td className="py-2">{entry.contactNumber}</td>
+                  <td className="py-2">₹ {entry.totalServiceCost}</td>
+                  <td className="py-2">
+                    <button
+                      onClick={() => handleViewClick(entry)}
+                      className="text-cyan-400"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
 
