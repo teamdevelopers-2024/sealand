@@ -9,7 +9,15 @@ import {
 } from "recharts";
 import Navbar from "../Navbar/Navbar";
 
-// monthly data
+// Sample expense history data
+const expenseHistoryData = [
+  { date: "2023-09-01", customerName: "John Doe", vehicleNumber: "ABC123", paymentType: "Cash", phoneNumber: "1234567890", amount: "2000" },
+  { date: "2023-09-02", customerName: "Jane Smith", vehicleNumber: "XYZ456", paymentType: "Card", phoneNumber: "0987654321", amount: "1500" },
+  { date: "2023-09-03", customerName: "Alice Johnson", vehicleNumber: "LMN789", paymentType: "Cash", phoneNumber: "1231231234", amount: "2500" },
+  // Add more entries as needed
+];
+
+// Monthly data
 const monthlyData = [
   { name: "Jan", expense: 1500 },
   { name: "Feb", expense: 3000 },
@@ -25,7 +33,7 @@ const monthlyData = [
   { name: "Dec", expense: 13000 },
 ];
 
-// weekly data
+// Weekly data
 const weeklyData = [
   { name: "Sun", expense: 1000 },
   { name: "Mon", expense: 2000 },
@@ -36,7 +44,7 @@ const weeklyData = [
   { name: "Sat", expense: 3500 },
 ];
 
-// yearly data
+// Yearly data
 const yearlyData = [
   { name: "2016", expense: 60000 },
   { name: "2017", expense: 70000 },
@@ -48,87 +56,18 @@ const yearlyData = [
   { name: "2023", expense: 125000 },
 ];
 
-// expense history data
-const expenseHistoryData = [
-  {
-    date: "18-09-2024",
-    customerName: "Muhammed Danish",
-    vehicleNumber: "KL 13 A 5672",
-    paymentType: "By UPI",
-    phoneNumber: "8921405362",
-    amount: "1970",
-  },
-  {
-    date: "18-09-2024",
-    customerName: "Anjali Mehta",
-    vehicleNumber: "KL 14 B 1234",
-    paymentType: "Cash",
-    phoneNumber: "9876543210",
-    amount: "2500",
-  },
-  {
-    date: "18-09-2024",
-    customerName: "Rajesh Kumar",
-    vehicleNumber: "KL 15 C 5678",
-    paymentType: "By Card",
-    phoneNumber: "8765432109",
-    amount: "3000",
-  },
-  {
-    date: "18-09-2024",
-    customerName: "Sita Sharma",
-    vehicleNumber: "KL 16 D 1357",
-    paymentType: "By UPI",
-    phoneNumber: "7654321098",
-    amount: "2800",
-  },
-  {
-    date: "18-09-2024",
-    customerName: "Rahul Verma",
-    vehicleNumber: "KL 17 E 2468",
-    paymentType: "Cash",
-    phoneNumber: "6543210987",
-    amount: "1500",
-  },
-  {
-    date: "18-09-2024",
-    customerName: "Priya Singh",
-    vehicleNumber: "KL 18 F 9876",
-    paymentType: "By Card",
-    phoneNumber: "5432109876",
-    amount: "4000",
-  },
-  {
-    date: "18-09-2024",
-    customerName: "Vikram Rao",
-    vehicleNumber: "KL 19 G 5432",
-    paymentType: "By UPI",
-    phoneNumber: "4321098765",
-    amount: "3700",
-  },
-  {
-    date: "18-09-2024",
-    customerName: "Ravi Patel",
-    vehicleNumber: "KL 20 H 9876",
-    paymentType: "Cash",
-    phoneNumber: "3210987654",
-    amount: "2200",
-  },
-  // additional entries...
-];
-
 const Expense = () => {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [expense, setExpense] = useState(106480); // Default for monthly
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentYear, setCurrentYear] = useState(2023);
   const entriesPerPage = 5;
 
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
 
-    // expense based on time period
     if (period === "Daily") {
       const today = new Date().toISOString().split("T")[0];
       const dailyExpense = expenseHistoryData
@@ -140,11 +79,11 @@ const Expense = () => {
         );
       setExpense(dailyExpense);
     } else if (period === "Weekly") {
-      setExpense(24500); // weekly expense
+      setExpense(24500); // Weekly expense
     } else if (period === "Monthly") {
-      setExpense(106480); // monthly expense
+      setExpense(106480); // Monthly expense
     } else if (period === "Yearly") {
-      setExpense(120000); // yearly expense
+      setExpense(120000); // Yearly expense
     }
   };
 
@@ -155,7 +94,7 @@ const Expense = () => {
       ? yearlyData
       : monthlyData;
 
-  // entries to display
+  // Entries to display
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = showAll
@@ -181,166 +120,189 @@ const Expense = () => {
     setCurrentPage(1);
   };
 
-
   const handleNextYear = () => {
     if (timePeriod === "Monthly") {
-      setCurrentYear(prevYear => prevYear + 1);
+      setCurrentYear((prevYear) => prevYear + 1);
     }
   };
 
   const handlePrevYear = () => {
     if (timePeriod === "Monthly" && currentYear > 2020) {
-      setCurrentYear(prevYear => prevYear - 1);
+      setCurrentYear((prevYear) => prevYear - 1);
     }
   };
+
   return (
-    <>
-      <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
-        {/* Main Content */}
-        <main className="mt-8 p-2">
-          {/* Expense Overview */}
-          <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
-            <div className="text-left space-y-3 w-1/3">
-              <h2 className="text-5xl font-bold text-cyan-400">Total Expense</h2>
-              <h3 className="text-3xl text-red-400 font-bold">
-              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(expense)}
-              </h3>
-              <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-              <h2 className="text-3xl font-bold text-cyan-400">
-                {timePeriod} Expense
-              </h2>
-              <h3 className="text-3xl text-red-400 font-bold">
-              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(expense)}
-              </h3>
-              <p className="text-xl text-cyan-400">
-                This {timePeriod.toLowerCase()}:   {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(expense)}
-              </p>
+    <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
+      <main className="mt-8 p-2">
+        <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
+          <div className="text-left space-y-3 w-1/3">
+            <h2 className="text-5xl font-bold text-cyan-400">Total Expense</h2>
+            <h3 className="text-3xl text-red-400 font-bold">
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(expense)}
+            </h3>
+            <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
+            <h2 className="text-3xl font-bold text-cyan-400">{timePeriod} Expense</h2>
+            <h3 className="text-3xl text-red-400 font-bold">
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(expense)}
+            </h3>
+            <p className="text-xl text-cyan-400">
+              This {timePeriod.toLowerCase()}:{" "}
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(expense)}
+            </p>
+          </div>
+
+          <div className="w-2/4 relative">
+            <div className="absolute z-10 bottom--4 left-0 p-2">
+              <select
+                value={timePeriod}
+                onChange={handleTimePeriodChange}
+                className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
+              >
+                <option value="Daily">Daily</option>
+                <option value="Monthly">Month</option>
+                <option value="Yearly">Yearly</option>
+              </select>
             </div>
 
-            {/* Graph and Dropdown */}
-            <div className="w-2/4 relative">
-              <div className="absolute z-10 bottom--4 left-0 p-2">
-                <select
-                  value={timePeriod}
-                  onChange={handleTimePeriodChange}
-                  className="bg-gray-700 px-4 py-2 rounded-lg text-cyan-400"
-                >
-                  <option value="Daily">Daily</option>
-                  <option value="Weekly">Week</option>
-                  <option value="Monthly">Month</option>
-                  <option value="Yearly">Yearly</option>
-                </select>
+            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: "45px" }}>
+              <div className="flex justify-center mb-2 text-gray-300">
+                {timePeriod === "Daily" ? (
+                  <span className="text-lg font-semibold">Last 7 Days</span>
+                ) : timePeriod === "Monthly" ? (
+                  <span className="text-lg font-semibold">{currentYear}</span>
+                ) : (
+                  <span className="text-lg font-semibold">Last 5 Years</span>
+                )}
               </div>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={graphData}>
+                  <XAxis dataKey="name" stroke="#999" />
+                  <YAxis stroke="#999" hide />
+                  <Tooltip cursor={false} />
+                  <Line
+                    type="monotone"
+                    dataKey="expense"
+                    stroke="#00d8ff"
+                    strokeWidth={3}
+                    dot={{ stroke: "#00d8ff", strokeWidth: 2 }}
+                    activeDot={false}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
 
-              {/* Graph */}
-              <div className="mt-5" style={{ width: "600px", height: "300px" }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={graphData}>
-                    <XAxis dataKey="name" stroke="#999" />
-                    <YAxis stroke="#999" hide />
-                    <Tooltip cursor={false} />
-                    <Line
-                      type="monotone"
-                      dataKey="expense"
-                      stroke="#00d8ff"
-                      strokeWidth={3}
-                      dot={{ stroke: "#00d8ff", strokeWidth: 2 }}
-                      activeDot={false}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-
-                {timePeriod === "Monthly" && (
+              {timePeriod === "Monthly" && (
                 <>
                   <button
                     onClick={handlePrevYear}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{ marginLeft: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{
+                      marginLeft: "-80px",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    &lt; {/* Left arrow */}
+                    &lt;
                   </button>
                   <button
                     onClick={handleNextYear}
-                    className="absolute right-16 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{ marginRight: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{
+                      marginRight: "-80px",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    &gt; {/* Right arrow */}
+                    &gt;
                   </button>
                 </>
               )}
-              </div>
             </div>
           </div>
+        </div>
 
-          {/* Expense History */}
-          <div className="bg-gray-800 p-10 rounded-lg">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-cyan-400">
-                Expense History
-              </h3>
-              <button onClick={handleShowAll} className="text-cyan-400">
-                See all
+        <div className="bg-gray-800 p-10 rounded-lg">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-2xl font-bold text-cyan-400">Expense History</h3>
+            <button onClick={handleShowAll} className="text-cyan-400">
+              See all
+            </button>
+          </div>
+          <table className="w-full text-left">
+            <thead>
+              <tr className="text-gray-500">
+                <th className="pb-2">Date</th>
+                <th className="pb-2">Customer Name</th>
+                <th className="pb-2">Vehicle Number</th>
+                <th className="pb-2">Payment Type</th>
+                <th className="pb-2">Phone Number</th>
+                <th className="pb-2">Amount</th>
+                <th className="pb-2">Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentEntries
+                .slice(indexOfFirstEntry, indexOfLastEntry)
+                .map((entry, index) => (
+                  <tr key={index} className="border-t border-gray-700">
+                    <td className="py-4">{entry.date}</td>
+                    <td className="py-4">{entry.customerName}</td>
+                    <td className="py-4">{entry.vehicleNumber}</td>
+                    <td className="py-4">{entry.paymentType}</td>
+                    <td className="py-4">{entry.phoneNumber}</td>
+                    <td className="py-4">
+                      {new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      }).format(entry.amount)}
+                    </td>
+                    <td className="py-4">
+                      <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">View</button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+
+          {showAll && (
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="bg-cyan-400 px-4 py-2 rounded-lg"
+              >
+                &#8592;
+              </button>
+              <span className="text-gray-500">
+                Page {currentPage} of {pageCount}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === pageCount}
+                className="bg-cyan-400 px-4 py-2 rounded-lg"
+              >
+                &#8594;
               </button>
             </div>
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-gray-500">
-                  <th className="pb-2">Date</th>
-                  <th className="pb-2">Customer Name</th>
-                  <th className="pb-2">Vehicle Number</th>
-                  <th className="pb-2">Payment Type</th>
-                  <th className="pb-2">Phone Number</th>
-                  <th className="pb-2">Amount</th>
-                  <th className="pb-2">Receipt</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentEntries
-                  .slice(indexOfFirstEntry, indexOfLastEntry)
-                  .map((entry, index) => (
-                    <tr key={index} className="border-t border-gray-700">
-                      <td className="py-4">{entry.date}</td>
-                      <td className="py-4">{entry.customerName}</td>
-                      <td className="py-4">{entry.vehicleNumber}</td>
-                      <td className="py-4">{entry.paymentType}</td>
-                      <td className="py-4">{entry.phoneNumber}</td>
-                      <td className="py-4">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(entry.amount)}</td>
-                      <td className="py-4">
-                        <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">
-                          View
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-
-            {/* Pagination*/}
-            {showAll && (
-              <div className="flex justify-between items-center mt-4">
-                <button
-                  onClick={handlePrevPage}
-                  disabled={currentPage === 1}
-                  className="bg-cyan-400 px-4 py-2 rounded-lg"
-                >
-                  &#8592; {/* Left arrow */}
-                </button>
-                <span className="text-gray-500">
-                  Page {currentPage} of {pageCount}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  disabled={currentPage === pageCount}
-                  className="bg-cyan-400 px-4 py-2 rounded-lg"
-                >
-                  &#8594; {/* Right arrow */}
-                </button>
-              </div>
-            )}
-          </div>
-        </main>
-      </div>
-    </>
+          )}
+        </div>
+      </main>
+    </div>
   );
 };
 

@@ -7,68 +7,79 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import Navbar from "../Navbar/Navbar";
+
+// Sample income history data
+const incomeHistoryData = [
+  { date: "2023-09-01", customerName: "John Doe", vehicleNumber: "ABC123", paymentType: "Cash", phoneNumber: "1234567890", amount: "2000" },
+  { date: "2023-09-02", customerName: "Jane Smith", vehicleNumber: "XYZ456", paymentType: "Card", phoneNumber: "0987654321", amount: "1500" },
+  { date: "2023-09-03", customerName: "Alice Johnson", vehicleNumber: "LMN789", paymentType: "Cash", phoneNumber: "1231231234", amount: "2500" },
+  // Add more entries as needed
+];
 
 // Monthly data
 const monthlyData = [
-  { name: "Jan", income: 2000 },
-  { name: "Feb", income: 4500 },
-  { name: "Mar", income: 3200 },
-  { name: "Apr", income: 6100 },
-  { name: "May", income: 7200 },
-  { name: "Jun", income: 6800 },
-  { name: "Jul", income: 7900 },
-  { name: "Aug", income: 8600 },
-  { name: "Sep", income: 10000 },
+  { name: "Jan", income: 1500 },
+  { name: "Feb", income: 3000 },
+  { name: "Mar", income: 4500 },
+  { name: "Apr", income: 3500 },
+  { name: "May", income: 5000 },
+  { name: "Jun", income: 7000 },
+  { name: "Jul", income: 8000 },
+  { name: "Aug", income: 9000 },
+  { name: "Sep", income: 12000 },
   { name: "Oct", income: 11000 },
-  { name: "Nov", income: 12300 },
-  { name: "Dec", income: 14200 },
+  { name: "Nov", income: 9000 },
+  { name: "Dec", income: 13000 },
+];
+
+// Weekly data
+const weeklyData = [
+  { name: "Sun", income: 1000 },
+  { name: "Mon", income: 2000 },
+  { name: "Tue", income: 3000 },
+  { name: "Wed", income: 1500 },
+  { name: "Thu", income: 2500 },
+  { name: "Fri", income: 4000 },
+  { name: "Sat", income: 3500 },
 ];
 
 // Yearly data
 const yearlyData = [
-  { name: "2019", income: 50000 },
-  { name: "2020", income: 100000 },
-  { name: "2021", income: 110000 },
-  { name: "2022", income: 120000 },
-  { name: "2023", income: 130000 },
-  { name: "2024", income: 140000 },
+  { name: "2016", income: 60000 },
+  { name: "2017", income: 70000 },
+  { name: "2018", income: 80000 },
+  { name: "2019", income: 90000 },
+  { name: "2020", income: 95000 },
+  { name: "2021", income: 105000 },
+  { name: "2022", income: 115000 },
+  { name: "2023", income: 125000 },
 ];
 
-// Daily data (last 7 days, starting from Sunday)
-const dailyData = Array.from({ length: 7 }, (_, index) => {
-  const date = new Date();
-  date.setDate(date.getDate() - (index + 1)); // Shift to start from Sunday
-  return {
-    name: date.toLocaleDateString(undefined, { weekday: 'long' }),
-    income: Math.floor(Math.random() * 5000) + 1000,
-  };
-}).reverse(); // Reverse to show from Sunday to Saturday
-
-const incomeHistoryData = [
-  // Example income history data
-  { id: 1, date: '2024-09-20', customerName: 'John Doe', vehicleNumber: 'XYZ 1234', paymentType: 'Cash', phoneNumber: '1234567890', amount: 5000 },
-  { id: 2, date: '2024-09-19', customerName: 'Jane Smith', vehicleNumber: 'ABC 5678', paymentType: 'Card', phoneNumber: '0987654321', amount: 7000 },
-  { id: 3, date: '2024-09-18', customerName: 'Sam Wilson', vehicleNumber: 'LMN 9101', paymentType: 'Cash', phoneNumber: '1122334455', amount: 6000 },
-  { id: 4, date: '2024-09-17', customerName: 'Peter Parker', vehicleNumber: 'QRS 3456', paymentType: 'Card', phoneNumber: '5566778899', amount: 8000 },
-  { id: 5, date: '2024-09-16', customerName: 'Clark Kent', vehicleNumber: 'TUV 7890', paymentType: 'Cash', phoneNumber: '1234567890', amount: 5500 },
-  { id: 6, date: '2024-09-15', customerName: 'Bruce Wayne', vehicleNumber: 'WXY 1357', paymentType: 'Card', phoneNumber: '0987654321', amount: 6500 },
-];
-
-const IncomeBody = () => {
+const Income = () => {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [income, setIncome] = useState(106480); // Default for monthly
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // State for current year
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentYear, setCurrentYear] = useState(2023);
   const entriesPerPage = 5;
 
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
 
-    // Update income based on selected time period
     if (period === "Daily") {
-      setIncome(0); // Reset income or fetch daily total if necessary
+      const today = new Date().toISOString().split("T")[0];
+      const dailyIncome = incomeHistoryData
+        .filter((entry) => entry.date === today)
+        .reduce(
+          (total, entry) =>
+            total + parseInt(entry.amount.replace(/[^\d]/g, "")),
+          0
+        );
+      setIncome(dailyIncome);
+    } else if (period === "Weekly") {
+      setIncome(24500); // Weekly income
     } else if (period === "Monthly") {
       setIncome(106480); // Monthly income
     } else if (period === "Yearly") {
@@ -77,21 +88,23 @@ const IncomeBody = () => {
   };
 
   const graphData =
-    timePeriod === "Daily"
-      ? dailyData
+    timePeriod === "Weekly"
+      ? weeklyData
       : timePeriod === "Yearly"
       ? yearlyData
-      : monthlyData; // Show all 12 months when Monthly is selected
+      : monthlyData;
 
   // Entries to display
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = showAll
     ? incomeHistoryData
-    : incomeHistoryData.slice(indexOfFirstEntry, indexOfLastEntry);
+    : incomeHistoryData.slice(0, 3);
+
+  const pageCount = Math.ceil(incomeHistoryData.length / entriesPerPage);
 
   const handleNextPage = () => {
-    if (currentPage < Math.ceil(incomeHistoryData.length / entriesPerPage)) {
+    if (currentPage < pageCount) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -109,43 +122,45 @@ const IncomeBody = () => {
 
   const handleNextYear = () => {
     if (timePeriod === "Monthly") {
-      setCurrentYear(prevYear => prevYear + 1);
+      setCurrentYear((prevYear) => prevYear + 1);
     }
   };
 
   const handlePrevYear = () => {
     if (timePeriod === "Monthly" && currentYear > 2020) {
-      setCurrentYear(prevYear => prevYear - 1);
+      setCurrentYear((prevYear) => prevYear - 1);
     }
   };
 
-  // Get current date
-  const currentDate = new Date();
-
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
-      {/* Main Content */}
-      <main className="mt-8">
-        {/* Income Overview */}
+      <main className="mt-8 p-2">
         <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
-        <div className="text-left space-y-3 w-1/3">
-              <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
-              <h3 className="text-3xl text-green-300 font-bold">
-              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
-              </h3>
-              <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-              <h2 className="text-3xl font-bold text-cyan-400">
-                {timePeriod} income
-              </h2>
-              <h3 className="text-3xl text-green-300 font-bold">
-              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
-              </h3>
-              <p className="text-xl text-cyan-400">
-                This {timePeriod.toLowerCase()}:   {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(income)}
-              </p>
-            </div>
+          <div className="text-left space-y-3 w-1/3">
+            <h2 className="text-5xl font-bold text-cyan-400">Total Income</h2>
+            <h3 className="text-3xl text-red-400 font-bold">
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(income)}
+            </h3>
+            <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
+            <h2 className="text-3xl font-bold text-cyan-400">{timePeriod} Income</h2>
+            <h3 className="text-3xl text-red-400 font-bold">
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(income)}
+            </h3>
+            <p className="text-xl text-cyan-400">
+              This {timePeriod.toLowerCase()}:{" "}
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(income)}
+            </p>
+          </div>
 
-          {/* Graph and Dropdown */}
           <div className="w-2/4 relative">
             <div className="absolute z-10 bottom--4 left-0 p-2">
               <select
@@ -159,8 +174,7 @@ const IncomeBody = () => {
               </select>
             </div>
 
-            {/* Graph */}
-            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: '45px' }}>
+            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: "45px" }}>
               <div className="flex justify-center mb-2 text-gray-300">
                 {timePeriod === "Daily" ? (
                   <span className="text-lg font-semibold">Last 7 Days</span>
@@ -186,22 +200,35 @@ const IncomeBody = () => {
                 </LineChart>
               </ResponsiveContainer>
 
-              {/* Arrow Buttons */}
               {timePeriod === "Monthly" && (
                 <>
                   <button
                     onClick={handlePrevYear}
                     className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{ marginLeft: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{
+                      marginLeft: "-80px",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    &lt; {/* Left arrow */}
+                    &lt;
                   </button>
                   <button
                     onClick={handleNextYear}
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{ marginRight: '-80px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{
+                      marginRight: "-80px",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    &gt; {/* Right arrow */}
+                    &gt;
                   </button>
                 </>
               )}
@@ -209,10 +236,9 @@ const IncomeBody = () => {
           </div>
         </div>
 
-        {/* Income History */}
-        <div className="bg-gray-800 p-6 rounded-lg">
+        <div className="bg-gray-800 p-10 rounded-lg">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-cyan-400">Income history</h3>
+            <h3 className="text-2xl font-bold text-cyan-400">Income History</h3>
             <button onClick={handleShowAll} className="text-cyan-400">
               See all
             </button>
@@ -221,53 +247,63 @@ const IncomeBody = () => {
             <thead>
               <tr className="text-gray-500">
                 <th className="pb-2">Date</th>
-                <th className="pb-2">Customer name</th>
-                <th className="pb-2">Vehicle number</th>
-                <th className="pb-2">Payment type</th>
-                <th className="pb-2">Phone number</th>
+                <th className="pb-2">Customer Name</th>
+                <th className="pb-2">Vehicle Number</th>
+                <th className="pb-2">Payment Type</th>
+                <th className="pb-2">Phone Number</th>
                 <th className="pb-2">Amount</th>
                 <th className="pb-2">Receipt</th>
               </tr>
             </thead>
             <tbody>
-              {currentEntries.map((entry) => (
-                <tr key={entry.id} className="border-b border-gray-700">
-                  <td className="py-2">{entry.date}</td>
-                  <td className="py-2">{entry.customerName}</td>
-                  <td className="py-2">{entry.vehicleNumber}</td>
-                  <td className="py-2">{entry.paymentType}</td>
-                  <td className="py-2">{entry.phoneNumber}</td>
-                  <td className="py-2">₹ {entry.amount}</td>
-                  <td className="py-2">
-                    <button className="text-cyan-400">View</button>
-                  </td>
-                </tr>
-              ))}
+              {currentEntries
+                .slice(indexOfFirstEntry, indexOfLastEntry)
+                .map((entry, index) => (
+                  <tr key={index} className="border-t border-gray-700">
+                    <td className="py-4">{entry.date}</td>
+                    <td className="py-4">{entry.customerName}</td>
+                    <td className="py-4">{entry.vehicleNumber}</td>
+                    <td className="py-4">{entry.paymentType}</td>
+                    <td className="py-4">{entry.phoneNumber}</td>
+                    <td className="py-4">
+                      {new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      }).format(entry.amount)}
+                    </td>
+                    <td className="py-4">
+                      <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">View</button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
 
-          {/* Pagination Buttons */}
-          <div className="flex justify-between mt-4">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className="p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-            >
-              &lt; {/* Left arrow */}
-            </button>
-            <span className="text-gray-400">{`Page ${currentPage} of ${Math.ceil(incomeHistoryData.length / entriesPerPage)}`}</span>
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === Math.ceil(incomeHistoryData.length / entriesPerPage)}
-              className="p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-            >
-              &gt; {/* Right arrow */}
-            </button>
-          </div>
+          {showAll && (
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="bg-cyan-400 px-4 py-2 rounded-lg"
+              >
+                &#8592;
+              </button>
+              <span className="text-gray-500">
+                Page {currentPage} of {pageCount}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === pageCount}
+                className="bg-cyan-400 px-4 py-2 rounded-lg"
+              >
+                &#8594;
+              </button>
+            </div>
+          )}
         </div>
       </main>
     </div>
   );
 };
 
-export default IncomeBody;
+export default Income;
