@@ -3,7 +3,7 @@ import Logo from "../../assets/logoNoBackgroundCropped.png";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 
-const Navbar = ({setAddIncomeModal}) => {
+const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const {logout} = useAuth()
@@ -76,23 +76,23 @@ const Navbar = ({setAddIncomeModal}) => {
               </button>
             )}
             {pathSegment === 'expense' && (
-              <button onClick={()=> setAddIncomeModal(true)} className="bg-red-600 text-white px-4 py-2 rounded">
+              <button onClick={()=> setAddExpenseModal(true)} className="bg-red-600 text-white px-4 py-2 rounded">
                 Add Expense
               </button>
             )}
             {pathSegment !== 'expense' && pathSegment !== 'income' && (
-                   <button onClick={()=> setAddIncomeModal(true)} className="invisible bg-red-600 text-white px-4 py-2 rounded">
+                   <button onClick={()=> setAddExpenseModal(true)} className="invisible bg-red-600 text-white px-4 py-2 rounded">
                    Add Expense
                  </button>
             )}
           </div>
 
           {/* Icons */}
-          <button onClick={handleLogout}>logout</button>
+          <button className='cursor-pointer' onClick={handleLogout}>logout</button>
           <img
             src="https://via.placeholder.com/150" // Replace with profile image URL
             alt="Profile"
-            className="h-8 w-8 rounded-full"
+            className="h-8 w-8 cursor-pointer rounded-full"
             />
         </div>
 

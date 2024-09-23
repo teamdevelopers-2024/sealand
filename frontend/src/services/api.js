@@ -24,6 +24,19 @@ async function login(body) {
   }
 }
 
+
+async function addIncome(body) {
+  try {
+    const response = await api.post('/addIncome',body)
+    console.log("income result : ", response.data )
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
 export default {
   login,
+  addIncome
 };

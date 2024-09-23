@@ -4,6 +4,7 @@ import controller from './controller.js'
 const router = express.Router()
 
 router.post('/login',controller.login)
+router.post('/addIncome',controller.addIncome)
 
 export default router
 

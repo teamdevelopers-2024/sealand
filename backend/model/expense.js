@@ -1,39 +1,39 @@
 import mongoose from "mongoose";
 
 const expenseSchema = new mongoose.Schema({
-    Date:{
+    date:{
         type:Date,
         required:true
     },
-    PayeeName:{
+    payeeName:{
         type:String,
         required :true
     },
-    ExpenseType:{
+    expenseType:{
         type:String,
         required:true
     },
-    ContactNumber:{
+    contactNumber:{
         typer:Number,
         required:true
     },
-    PaymentMethod:{
+    paymentMethod:{
         type:String,
         required:true
     },
-    TotalExpense:{
+    totalExpense:{
         type:Number,
         required:true
     },
-    ExpenseDetails:[
+    expenseDetails:[
         {
-            Description:{
+            description:{
                 type:String,
             },
-            Amount:{
+            amount:{
                 type:Number
             },
-            Reference:{
+            reference:{
                 type:String
             }
         }
