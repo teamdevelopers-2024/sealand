@@ -60,6 +60,8 @@ const IncomeBody = () => {
       try {
         const response = await api.showIncome();
         setIncomeHistoryData(response.data);
+        console.log("income history",response.data);
+        
       } catch (error) {
         console.error("Error fetching income history data", error);
       }

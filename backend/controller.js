@@ -88,7 +88,7 @@ async function addIncome(req, res) {
     }
 }
 
-async function incomeHistory() {
+async function incomeHistory(req,res) {
     try {
 
         const incomeHistory = await IncomeDb.find();
