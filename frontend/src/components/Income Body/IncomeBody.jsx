@@ -268,12 +268,12 @@ const IncomeBody = () => {
             <tbody>
               {currentEntries.map((entry) => (
                 <tr key={entry.id} className="border-b border-gray-700">
-                  <td className="py-2">{entry.date}</td>
+                  <td className="py-2">{new Date(entry.workDate).toLocaleDateString('en-GB')}</td>
                   <td className="py-2">{entry.customerName}</td>
                   <td className="py-2">{entry.vehicleNumber}</td>
-                  <td className="py-2">{entry.paymentType}</td>
-                  <td className="py-2">{entry.phoneNumber}</td>
-                  <td className="py-2">₹ {entry.amount}</td>
+                  <td className="py-2">{entry.paymentMethod}</td>
+                  <td className="py-2">{entry.contactNumber}</td>
+                  <td className="py-2">₹ {entry.totalServiceCost}</td>
                   <td className="py-2">
                     <button className="text-cyan-400">View</button>
                   </td>
