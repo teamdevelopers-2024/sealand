@@ -34,7 +34,10 @@ async function addIncome(body) {
     console.log(error)
     return error.response.data
   }
-async functin addcustomer(data) {
+}
+
+
+async function addcustomer(data) {
   try {
     console.log(data);
     const response = await api.post("/addcustomer", data);
@@ -47,6 +50,6 @@ async functin addcustomer(data) {
 
 export default {
   login,
-  addIncome
+  addIncome,
   addcustomer
 };
