@@ -4,8 +4,6 @@ const ViewIncomeModal = ({ entry, setViewIncomeModal }) => {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(null); // Error state
 
-
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!entry) return null;
@@ -24,7 +22,9 @@ const ViewIncomeModal = ({ entry, setViewIncomeModal }) => {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <span className="text-white block">Work Date:</span>
-              <p className="text-gray-300">{new Date(entry.workDate).toLocaleDateString()}</p>
+              <p className="text-gray-300">
+                {new Date(entry.workDate).toLocaleDateString()}
+              </p>
             </div>
 
             <div>
@@ -49,28 +49,32 @@ const ViewIncomeModal = ({ entry, setViewIncomeModal }) => {
 
             <div>
               <span className="text-white block">Total Service Cost:</span>
-              <p className="text-gray-300">₹ {parseFloat(entry.totalServiceCost).toLocaleString()}</p>
+              <p className="text-gray-300">
+                ₹ {parseFloat(entry.totalServiceCost).toLocaleString()}
+              </p>
             </div>
           </div>
 
           {/* Work Descriptions */}
           <h3 className="text-lg mb-4">Work Descriptions</h3>
           <table className="w-full mb-4">
-            <thead>
+            <thead className="bg-gray-700">
               <tr>
-                <th>#</th>
-                <th>Work Description</th>
-                <th>Amount</th>
-                <th>Reference</th>
+                <th className="text-center">#</th>
+                <th className="text-center">Work Description</th>
+                <th className="text-center">Amount</th>
+                <th className="text-center">Reference</th>
               </tr>
             </thead>
             <tbody>
               {entry.workDescriptions.map((work, index) => (
                 <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{work.description}</td>
-                  <td>₹ {parseFloat(work.amount).toLocaleString()}</td>
-                  <td>{work.reference}</td>
+                  <td className="text-center">{index + 1}</td>
+                  <td className="text-center">{work.description}</td>
+                  <td className="text-center">
+                    ₹ {parseFloat(work.amount).toLocaleString()}
+                  </td>
+                  <td className="text-center">{work.reference}</td>
                 </tr>
               ))}
             </tbody>
