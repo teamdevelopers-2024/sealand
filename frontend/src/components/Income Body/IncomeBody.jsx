@@ -55,11 +55,11 @@ const IncomeBody = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 5;
   const [viewIncomeModal, setViewIncomeModal] = useState(false);
-  const [singleEntry , setSingleEntry] = useState({})
+  const [singleEntry, setSingleEntry] = useState({});
 
   const handleViewClick = (entry) => {
     setViewIncomeModal(true);
-    setSingleEntry(entry)
+    setSingleEntry(entry);
   };
 
   useEffect(() => {
@@ -322,7 +322,10 @@ const IncomeBody = () => {
       </main>
       {/* ViewIncomeModal */}
       {viewIncomeModal && (
-        <ViewIncomeModal entry={singleEntry} setViewIncomeModal={setViewIncomeModal} />
+        <ViewIncomeModal
+          entry={singleEntry}
+          setViewIncomeModal={setViewIncomeModal}
+        />
       )}
     </div>
   );
