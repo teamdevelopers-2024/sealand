@@ -52,7 +52,7 @@ const yearlyData = [
   { name: "2024", income: 140000 },
 ];
 
-const IncomeBody = () => {
+const IncomeBody = ({addIncomeModal}) => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [income, setIncome] = useState(106480); // Default for monthly
@@ -79,7 +79,7 @@ const IncomeBody = () => {
     };
 
     fetchIncomeHistory();
-  }, []);
+  }, [addIncomeModal]);
 
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
