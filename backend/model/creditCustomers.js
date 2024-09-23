@@ -1,39 +1,38 @@
 import mongoose from "mongoose";
 
 const creditCustomerSchema = new mongoose.Schema({
-    WorkDate:{
+    dateOfService:{
         type:Date,
         required:true
     },
-    CustomerName:{
+    customerName:{
         type:String,
         required :true
     },
-    VehicleNumber:{
+    vehicleNumber:{
         type:String,
-        required:true
-    },
-    ContactNumber:{
+        required:true},
+    phoneNumber:{
         typer:Number,
         required:true
     },
-    PaymentMethod:{
+    paymentMethod:{
         type:String,
         required:true
     },
-    CreditAmount:{
+    creditAmount:{
         type:Number,
         required:true
     },
-    WorkDetails:[
+    workDetails:[
         {
-            Description:{
+            description:{
                 type:String,
             },
-            Amount:{
+            amount:{
                 type:Number
             },
-            Reference:{
+            reference:{
                 type:String
             }
         }

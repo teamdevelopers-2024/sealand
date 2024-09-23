@@ -2,7 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import winston from 'winston';
-import backendServer from './backend/server.js'; // Adjust the path as needed
+// import backendServer from './backend/server.js'; // Adjust the path as needed
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,16 +28,16 @@ function logToFile(message) {
   logger.info(message);
 }
 
-function startBackend() {
-  logToFile('Starting backend server...');
-  backendServer.start((error) => {
-    if (error) {
-      logToFile('Failed to start backend: ' + error.message);
-    } else {
-      logToFile('Backend server started successfully.');
-    }
-  });
-}
+// function startBackend() {
+//   logToFile('Starting backend server...');
+//   backendServer.start((error) => {
+//     if (error) {
+//       logToFile('Failed to start backend: ' + error.message);
+//     } else {
+//       logToFile('Backend server started successfully.');
+//     }
+//   });
+// }
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -62,7 +62,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  startBackend(); // Start backend server
+  // startBackend(); // Start backend server
   createWindow();
 });
 
