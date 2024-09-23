@@ -8,6 +8,9 @@ router.post('/addIncome',controller.addIncome)
 router.post('/addcustomer',controller.addcustomer)
 
 
+router.get('/incomehistory',controller.incomeHistory)
+
+
 export default router
 
 

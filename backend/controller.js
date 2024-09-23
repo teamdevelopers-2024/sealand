@@ -46,7 +46,7 @@ async function addcustomer(req, res) {
     try {
         const data = req.body
         console.log(data);
-        
+
 
 
     } catch (error) {
@@ -59,39 +59,55 @@ async function addcustomer(req, res) {
 }
 
 
-async function addIncome(req,res) {
+async function addIncome(req, res) {
     try {
-    const incomeData = req.body;
-        
-    const errors = validateIncomeData(incomeData);
+        const incomeData = req.body;
 
-    if (errors.length > 0) {
-        return res.status(400).json({ 
-           error:true ,
-           message:"validation error",
-           errors : errors
-         });
-      }
+        const errors = validateIncomeData(incomeData);
 
-     await IncomeDb.create(incomeData)
+        if (errors.length > 0) {
+            return res.status(400).json({
+                error: true,
+                message: "validation error",
+                errors: errors
+            });
+        }
 
-     res.status(200).json({
-        error:false ,
-        message:"income added Successfully"
-      })
+        await IncomeDb.create(incomeData)
+
+        res.status(200).json({
+            error: false,
+            message: "income added Successfully"
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            error:true,
-            message:"internel server error"
+            error: true,
+            message: "internel server error"
         })
     }
-}  
+}
+
+async function incomeHistory() {
+    try {
+
+        const incomeHistory = await IncomeDb.find();
+        res.json(incomeHistory);
+
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: "internel server error"
+        })
+    }
+
+}
 
 
 
 export default {
     login,
     addIncome,
-    addcustomer
+    addcustomer,
+    incomeHistory
 }
