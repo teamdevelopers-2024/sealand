@@ -7,16 +7,8 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import Navbar from "../Navbar/Navbar";
-import api from "../../services/api";
-
-// Sample expense history data
-const expenseHistoryData = [
-  { date: "2023-09-01", customerName: "John Doe", vehicleNumber: "ABC123", paymentType: "Cash", phoneNumber: "1234567890", amount: "2000" },
-  { date: "2023-09-02", customerName: "Jane Smith", vehicleNumber: "XYZ456", paymentType: "Card", phoneNumber: "0987654321", amount: "1500" },
-  { date: "2023-09-03", customerName: "Alice Johnson", vehicleNumber: "LMN789", paymentType: "Cash", phoneNumber: "1231231234", amount: "2500" },
-  // Add more entries as needed
-];
+import api from "../../services/api"; 
+import ExpenseModal from "../View Expense/ExpenseModal";
 
 // Monthly data
 const monthlyData = [
@@ -64,8 +56,11 @@ const Expense = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentYear, setCurrentYear] = useState(2023);
   const entriesPerPage = 5;
-  const [expenseHistoryData , setExpenseHistoryData] = useState([])
-
+  const [expenseHistoryData, setExpenseHistoryData] = useState([]);
+  
+  // State for modal visibility and selected expense
+  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchIncomeHistory = async () => {
@@ -80,43 +75,34 @@ const Expense = () => {
 
     fetchIncomeHistory();
   }, []);
+
+  const handleViewExpense = (entry) => {
+    setSelectedExpense(entry);
+    setIsModalOpen(true);
+  };
+
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
-
     if (period === "Daily") {
       const today = new Date().toISOString().split("T")[0];
       const dailyExpense = expenseHistoryData
         .filter((entry) => entry.date === today)
-        .reduce(
-          (total, entry) =>
-            total + parseInt(entry.amount.replace(/[^\d]/g, "")),
-          0
-        );
+        .reduce((total, entry) => total + parseInt(entry.amount.replace(/[^\d]/g, "")), 0);
       setExpense(dailyExpense);
     } else if (period === "Weekly") {
-      setExpense(24500); // Weekly expense
+      setExpense(24500);
     } else if (period === "Monthly") {
-      setExpense(106480); // Monthly expense
+      setExpense(106480);
     } else if (period === "Yearly") {
-      setExpense(120000); // Yearly expense
+      setExpense(120000);
     }
   };
 
-  const graphData =
-    timePeriod === "Weekly"
-      ? weeklyData
-      : timePeriod === "Yearly"
-      ? yearlyData
-      : monthlyData;
-
-  // Entries to display
+  const graphData = timePeriod === "Weekly" ? weeklyData : timePeriod === "Yearly" ? yearlyData : monthlyData;
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = showAll
-    ? expenseHistoryData
-    : expenseHistoryData.slice(0, 3);
-
+  const currentEntries = showAll ? expenseHistoryData : expenseHistoryData.slice(0, 3);
   const pageCount = Math.ceil(expenseHistoryData.length / entriesPerPage);
 
   const handleNextPage = () => {
@@ -155,35 +141,23 @@ const Expense = () => {
           <div className="text-left space-y-3 w-1/3">
             <h2 className="text-5xl font-bold text-cyan-400">Total Expense</h2>
             <h3 className="text-3xl text-red-400 font-bold">
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(expense)}
+              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(expense)}
             </h3>
             <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
             <h2 className="text-3xl font-bold text-cyan-400">{timePeriod} Expense</h2>
             <h3 className="text-3xl text-red-400 font-bold">
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(expense)}
+              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(expense)}
             </h3>
             <p className="text-xl text-cyan-400">
               This {timePeriod.toLowerCase()}:{" "}
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(expense)}
+              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(expense)}
             </p>
           </div>
 
+          {/* Graph Section */}
           <div className="w-2/4 relative">
             <div className="absolute z-10 bottom--4 left-0 p-2">
-              <select
-                value={timePeriod}
-                onChange={handleTimePeriodChange}
-                className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
-              >
+              <select value={timePeriod} onChange={handleTimePeriodChange} className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500">
                 <option value="Daily">Daily</option>
                 <option value="Monthly">Month</option>
                 <option value="Yearly">Yearly</option>
@@ -191,59 +165,21 @@ const Expense = () => {
             </div>
 
             <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: "45px" }}>
-              <div className="flex justify-center mb-2 text-gray-300">
-                {timePeriod === "Daily" ? (
-                  <span className="text-lg font-semibold">Last 7 Days</span>
-                ) : timePeriod === "Monthly" ? (
-                  <span className="text-lg font-semibold">{currentYear}</span>
-                ) : (
-                  <span className="text-lg font-semibold">Last 5 Years</span>
-                )}
-              </div>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={graphData}>
                   <XAxis dataKey="name" stroke="#999" />
                   <YAxis stroke="#999" hide />
                   <Tooltip cursor={false} />
-                  <Line
-                    type="monotone"
-                    dataKey="expense"
-                    stroke="#00d8ff"
-                    strokeWidth={3}
-                    dot={{ stroke: "#00d8ff", strokeWidth: 2 }}
-                    activeDot={false}
-                  />
+                  <Line type="monotone" dataKey="expense" stroke="#00d8ff" strokeWidth={3} dot={{ stroke: "#00d8ff", strokeWidth: 2 }} activeDot={false} />
                 </LineChart>
               </ResponsiveContainer>
 
               {timePeriod === "Monthly" && (
                 <>
-                  <button
-                    onClick={handlePrevYear}
-                    className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{
-                      marginLeft: "-80px",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <button onClick={handlePrevYear} className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition" style={{ marginLeft: "-80px", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     &lt;
                   </button>
-                  <button
-                    onClick={handleNextYear}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{
-                      marginRight: "-80px",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <button onClick={handleNextYear} className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition" style={{ marginRight: "-80px", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     &gt;
                   </button>
                 </>
@@ -252,13 +188,12 @@ const Expense = () => {
           </div>
         </div>
 
-        <div className="bg-gray-800 p-10 rounded-lg">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-cyan-400">Expense History</h3>
-            <button onClick={handleShowAll} className="text-cyan-400">
-              See all
-            </button>
+        {/* Expense History Section */}
+        <div className="bg-gray-800 p-8 rounded-lg">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-3xl font-bold">Expense History</h2>
           </div>
+
           <table className="w-full text-left">
             <thead>
               <tr className="text-gray-500">
@@ -266,57 +201,44 @@ const Expense = () => {
                 <th className="pb-2">Payee Name</th>
                 <th className="pb-2">Expense Type</th>
                 <th className="pb-2">Payment Type</th>
-                <th className="pb-2">Phone Number</th>
+                <th className="pb-2">Phone number</th>
                 <th className="pb-2">Amount</th>
                 <th className="pb-2">Receipt</th>
               </tr>
             </thead>
             <tbody>
-              {currentEntries
-                .slice(indexOfFirstEntry, indexOfLastEntry)
-                .map((entry, index) => (
-                  <tr key={index} className="border-t border-gray-700">
-                    <td className="py-4">{new Date(entry.date).toLocaleDateString("en-GB")}</td>
-                    <td className="py-4">{entry.payeeName}</td>
-                    <td className="py-4">{entry.expenseType}</td>
-                    <td className="py-4">{entry.paymentMethod}</td>
-                    <td className="py-4">{entry.contactNumber}</td>
-                    <td className="py-4">
-                      {new Intl.NumberFormat("en-IN", {
-                        style: "currency",
-                        currency: "INR",
-                      }).format(entry.totalExpense)}
-                    </td>
-                    <td className="py-4">
-                      <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">View</button>
-                    </td>
-                  </tr>
-                ))}
+              {currentEntries.map((entry,index) => (
+                <tr key={entry.id} className="border-b border-gray-700">
+                  <td className="py-2">
+                    {new Date(entry.date).toLocaleDateString("en-GB")}
+                  </td>
+                  <td className="py-2">{entry.payeeName}</td>
+                  <td className="py-2">{entry.expenseType}</td>
+                  <td className="py-2">{entry.paymentMethod}</td>
+                  <td className="py-2">{entry.contactNumber}</td>
+                  <td className="py-2">{new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(entry.totalExpense)}</td>
+                  <td className="py-2">
+                    <button
+                     onClick={() => handleViewExpense(entry)}
+                      className="text-cyan-400"
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
 
-          {showAll && (
-            <div className="flex justify-between items-center mt-4">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className="bg-cyan-400 px-4 py-2 rounded-lg"
-              >
-                &#8592;
-              </button>
-              <span className="text-gray-500">
-                Page {currentPage} of {pageCount}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === pageCount}
-                className="bg-cyan-400 px-4 py-2 rounded-lg"
-              >
-                &#8594;
-              </button>
+          {!showAll && expenseHistoryData.length > 3 && (
+            <div className="flex justify-center mt-4">
+              <button onClick={handleShowAll} className="bg-gray-700 text-white px-4 py-2 rounded">Show All</button>
             </div>
           )}
         </div>
+
+        {/* Modal for Viewing Expense */}
+        <ExpenseModal isOpen={isModalOpen} expense={selectedExpense} onClose={() => setIsModalOpen(false)} />
       </main>
     </div>
   );
