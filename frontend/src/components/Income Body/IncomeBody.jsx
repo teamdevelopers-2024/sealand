@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
   Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+  Legend,
+} from "chart.js";
 import api from "../../services/api";
 import ViewIncomeModal from "../View Income/ViewIncomeModal";
+
+// Register Chart.js components
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
 // Monthly data
 const monthlyData = [
@@ -47,16 +52,6 @@ const yearlyData = [
   { name: "2024", income: 140000 },
 ];
 
-// Daily data (last 7 days, starting from Sunday)
-const dailyData = Array.from({ length: 7 }, (_, index) => {
-  const date = new Date();
-  date.setDate(date.getDate() - (index + 1)); // Shift to start from Sunday
-  return {
-    name: date.toLocaleDateString(undefined, { weekday: "long" }),
-    income: Math.floor(Math.random() * 5000) + 1000,
-  };
-}).reverse(); // Reverse to show from Sunday to Saturday
-
 const IncomeBody = () => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
   const [timePeriod, setTimePeriod] = useState("Monthly");
@@ -64,7 +59,6 @@ const IncomeBody = () => {
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentYear, setCurrentYear] = useState(2023);
-  const entriesPerPage = 5;
   const [viewIncomeModal, setViewIncomeModal] = useState(false);
   const [singleEntry, setSingleEntry] = useState({});
 
@@ -77,7 +71,6 @@ const IncomeBody = () => {
     const fetchIncomeHistory = async () => {
       try {
         const response = await api.showIncome();
-
         setIncomeHistoryData(response.data);
         console.log("income history", response.data);
       } catch (error) {
@@ -111,21 +104,66 @@ const IncomeBody = () => {
     }
   };
 
-  const graphData =
-    timePeriod === "Weekly"
-      ? weeklyData
-      : timePeriod === "Yearly"
-      ? yearlyData
-      : monthlyData;
+  // Determine the data based on timePeriod
+  const graphData = timePeriod === "Weekly"
+    ? weeklyData
+    : timePeriod === "Yearly"
+    ? yearlyData
+    : monthlyData;
+
+  // Chart.js data
+  const labels = graphData.map((data) => data.name);
+  const incomeValues = graphData.map((data) => data.income);
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Income",
+        data: incomeValues,
+        borderColor: "#00d8ff",
+        backgroundColor: "rgba(0, 216, 255, 0.2)",
+        tension: 0.3,
+        fill: true,
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: true,
+        },
+        ticks: {
+          display: false, // Hide the y-axis labels
+        },
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem) => `Income: ₹${tooltipItem.raw}`,
+        },
+      },
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+  };
 
   // Entries to display
-  const indexOfLastEntry = currentPage * entriesPerPage;
-  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const indexOfLastEntry = currentPage * 5;
+  const indexOfFirstEntry = indexOfLastEntry - 5;
   const currentEntries = showAll
     ? incomeHistoryData
     : incomeHistoryData.slice(0, 3);
 
-  const pageCount = Math.ceil(incomeHistoryData.length / entriesPerPage);
+  const pageCount = Math.ceil(incomeHistoryData.length / 5);
 
   const handleNextPage = () => {
     if (currentPage < pageCount) {
@@ -187,6 +225,7 @@ const IncomeBody = () => {
             </p>
           </div>
 
+          {/* Chart.js Graph */}
           <div className="w-2/4 relative">
             <div className="absolute z-10 bottom--4 left-0 p-2">
               <select
@@ -195,12 +234,12 @@ const IncomeBody = () => {
                 className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
               >
                 <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
                 <option value="Monthly">Month</option>
                 <option value="Yearly">Yearly</option>
               </select>
             </div>
 
-            {/* Graph */}
             <div
               className="mt-5 relative"
               style={{ width: "600px", height: "300px", marginBottom: "45px" }}
@@ -214,58 +253,12 @@ const IncomeBody = () => {
                   <span className="text-lg font-semibold">Last 5 Years</span>
                 )}
               </div>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={graphData}>
-                  <XAxis dataKey="name" stroke="#999" />
-                  <YAxis stroke="#999" hide />
-                  <Tooltip cursor={false} />
-                  <Line
-                    type="monotone"
-                    dataKey="income"
-                    stroke="#00d8ff"
-                    strokeWidth={3}
-                    dot={{ stroke: "#00d8ff", strokeWidth: 2 }}
-                    activeDot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-
-              {timePeriod === "Monthly" && (
-                <>
-                  <button
-                    onClick={handlePrevYear}
-                    className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{
-                      marginLeft: "-80px",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    &lt;
-                  </button>
-                  <button
-                    onClick={handleNextYear}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{
-                      marginRight: "-80px",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    &gt;
-                  </button>
-                </>
-              )}
+              <Line data={data} options={options} />
             </div>
           </div>
         </div>
 
+        {/* Income History Table */}
         <div className="bg-gray-800 p-10 rounded-lg">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-2xl font-bold text-cyan-400">Income History</h3>
@@ -286,61 +279,61 @@ const IncomeBody = () => {
               </tr>
             </thead>
             <tbody>
-              {currentEntries.map((entry) => (
-                <tr key={entry.id} className="border-b border-gray-700">
-                  <td className="py-2">
-                    {new Date(entry.workDate).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="py-2">{entry.customerName}</td>
-                  <td className="py-2">{entry.vehicleNumber}</td>
-                  <td className="py-2">{entry.paymentMethod}</td>
-                  <td className="py-2">{entry.contactNumber}</td>
-                  <td className="py-2">₹ {entry.totalServiceCost}</td>
-                  <td className="py-2">
-                    <button
-                      onClick={() => handleViewClick(entry)}
-                      className="text-cyan-400"
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {currentEntries
+                .slice(indexOfFirstEntry, indexOfLastEntry)
+                .map((entry, index) => (
+                  <tr key={index} className="border-t border-gray-700">
+                    <td className="py-4">{entry.date}</td>
+                    <td className="py-4">{entry.customerName}</td>
+                    <td className="py-4">{entry.vehicleNumber}</td>
+                    <td className="py-4">{entry.paymentType}</td>
+                    <td className="py-4">{entry.phoneNumber}</td>
+                    <td className="py-4">
+                      {new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      }).format(entry.amount)}
+                    </td>
+                    <td className="py-4">
+                      <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded" onClick={() => handleViewClick(entry)}>
+                        View
+                      </button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
 
-          {/* Pagination Buttons */}
-          <div className="flex justify-between mt-4">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className="p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-            >
-              &lt; {/* Left arrow */}
-            </button>
-            <span className="text-gray-400">{`Page ${currentPage} of ${Math.ceil(
-              incomeHistoryData.length / entriesPerPage
-            )}`}</span>
-            <button
-              onClick={handleNextPage}
-              disabled={
-                currentPage ===
-                Math.ceil(incomeHistoryData.length / entriesPerPage)
-              }
-              className="p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-            >
-              &gt; {/* Right arrow */}
-            </button>
-          </div>
+          {showAll && (
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="bg-cyan-400 px-4 py-2 rounded-lg"
+              >
+                &#8592;
+              </button>
+              <span className="text-gray-500">
+                Page {currentPage} of {pageCount}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === pageCount}
+                className="bg-cyan-400 px-4 py-2 rounded-lg"
+              >
+                &#8594;
+              </button>
+            </div>
+          )}
         </div>
+
+        {viewIncomeModal && (
+          <ViewIncomeModal
+            entry={singleEntry}
+            onClose={() => setViewIncomeModal(false)}
+          />
+        )}
       </main>
-      {/* ViewIncomeModal */}
-      {viewIncomeModal && (
-        <ViewIncomeModal
-          entry={singleEntry}
-          setViewIncomeModal={setViewIncomeModal}
-        />
-      )}
     </div>
   );
 };
