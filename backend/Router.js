@@ -11,7 +11,10 @@ router.post("/addExpense",controller.addExpense)
 
 router.get('/incomehistory',controller.incomeHistory)
 router.get("/getExpenses",controller.getExpenses)
+router.get("/getCustomers",controller.getCustomers)
 
+
+router.put('/repayment',controller.repayment)
 export default router
 
 
