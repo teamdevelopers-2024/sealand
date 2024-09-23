@@ -51,7 +51,7 @@ async function addcustomer(data) {
 async function showIncome() {
   try {
     const response = await api.get(
-      "/incomeHistory"
+      "/incomehistory"
     );
     console.log("income history",response.data);
     return response.data
