@@ -1,4 +1,7 @@
 import 'dotenv/config'
+import IncomeDb from './model/income.js'
+import { validateIncomeData } from './services/IncomeValidator.js'
+
 
 async function login(req, res) {
     try {
@@ -56,8 +59,39 @@ async function addcustomer(req, res) {
 }
 
 
+async function addIncome(req,res) {
+    try {
+    const incomeData = req.body;
+        
+    const errors = validateIncomeData(incomeData);
+
+    if (errors.length > 0) {
+        return res.status(400).json({ 
+           error:true ,
+           message:"validation error",
+           errors : errors
+         });
+      }
+
+     await IncomeDb.create(incomeData)
+
+     res.status(200).json({
+        error:false ,
+        message:"income added Successfully"
+      })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            error:true,
+            message:"internel server error"
+        })
+    }
+}  
+
+
 
 export default {
     login,
+    addIncome,
     addcustomer
 }

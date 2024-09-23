@@ -24,10 +24,21 @@ async function login(body) {
   }
 }
 
+
+async function addIncome(body) {
+  try {
+    const response = await api.post('/addIncome',body)
+    console.log("income result : ", response.data )
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
 async function addcustomer(data) {
   try {
     console.log(data);
-    
     const response = await api.post("/addcustomer", data);
     console.log("Data submitted successfully:", response.data);
     return response.data
@@ -53,5 +64,6 @@ async function showIncome() {
 export default {
   login,
   addcustomer,
-  showIncome
+  showIncome,
+  addIncome,
 };
