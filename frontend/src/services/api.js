@@ -36,7 +36,22 @@ async function addcustomer(data) {
   }
 }
 
+async function showIncome() {
+  try {
+    const response = await api.get(
+      "/incomeHistory"
+    );
+    console.log("income history",response.data);
+    return response.data
+    
+  } catch (error) {
+    console.error("Error fetching income history data", error);
+  }
+  
+}
+
 export default {
   login,
-  addcustomer
+  addcustomer,
+  showIncome
 };
