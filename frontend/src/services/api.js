@@ -54,7 +54,8 @@ async function showIncome() {
       "/incomehistory"
     );
     console.log("income history",response.data);
-    return response.data
+    const data = response.data
+    return data
     
   } catch (error) {
     console.error("Error fetching income history data", error);
