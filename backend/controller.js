@@ -88,12 +88,14 @@ async function addIncome(req, res) {
     }
 }
 
-async function incomeHistory() {
+async function incomeHistory(req,res) {
     try {
-
         const incomeHistory = await IncomeDb.find();
-        res.json(incomeHistory);
-
+        res.status(200).json({
+            error:false,
+            message:"income fetched successfully",
+            data : incomeHistory
+        });
     } catch (error) {
         res.status(500).json({
             error: true,
