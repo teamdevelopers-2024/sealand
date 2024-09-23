@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -14,6 +15,7 @@ import ViewIncomeModal from "../View Income/ViewIncomeModal";
 
 // Register Chart.js components
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
+
 
 // Monthly data
 const monthlyData = [
@@ -55,24 +57,15 @@ const yearlyData = [
 const IncomeBody = ({addIncomeModal}) => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
   const [timePeriod, setTimePeriod] = useState("Monthly");
-  const [income, setIncome] = useState(106480); // Default for monthly
-  const [showAll, setShowAll] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentYear, setCurrentYear] = useState(2023);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [viewIncomeModal, setViewIncomeModal] = useState(false);
   const [singleEntry, setSingleEntry] = useState({});
-
-  const handleViewClick = (entry) => {
-    setViewIncomeModal(true);
-    setSingleEntry(entry);
-  };
 
   useEffect(() => {
     const fetchIncomeHistory = async () => {
       try {
         const response = await api.showIncome();
         setIncomeHistoryData(response.data);
-        console.log("income history", response.data);
       } catch (error) {
         console.error("Error fetching income history data", error);
       }
@@ -84,34 +77,80 @@ const IncomeBody = ({addIncomeModal}) => {
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
-
-    if (period === "Daily") {
-      const today = new Date().toISOString().split("T")[0];
-      const dailyIncome = incomeHistoryData
-        .filter((entry) => entry.date === today)
-        .reduce(
-          (total, entry) =>
-            total + parseInt(entry.amount.replace(/[^\d]/g, "")),
-          0
-        );
-      setIncome(dailyIncome);
-    } else if (period === "Weekly") {
-      setIncome(24500); // Weekly income
-    } else if (period === "Monthly") {
-      setIncome(106480); // Monthly income
-    } else if (period === "Yearly") {
-      setIncome(120000); // Yearly income
+    if (period !== "Monthly") {
+      setCurrentYear(new Date().getFullYear()); // Reset to current year when switching from Monthly
     }
   };
 
-  // Determine the data based on timePeriod
-  const graphData = timePeriod === "Weekly"
-    ? weeklyData
-    : timePeriod === "Yearly"
-    ? yearlyData
-    : monthlyData;
+  const getMonthlyData = () => {
+    const monthlyIncome = Array(12).fill(0);
+    const currentYearData = incomeHistoryData.filter(entry => new Date(entry.date).getFullYear() === currentYear);
 
-  // Chart.js data
+    currentYearData.forEach(entry => {
+      const entryDate = new Date(entry.date);
+      const month = entryDate.getMonth();
+      monthlyIncome[month] += parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+    });
+
+    return monthlyIncome.map((income, index) => ({
+      name: new Date(0, index).toLocaleString('default', { month: 'short' }),
+      income,
+    }));
+  };
+
+  const getDailyData = () => {
+    const today = new Date();
+    const last7Days = Array(7).fill(0);
+    const labels = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const dayName = date.toLocaleString('default', { weekday: 'short' });
+      labels.push(dayName);
+    }
+
+    incomeHistoryData.forEach(entry => {
+      const entryDate = new Date(entry.date);
+      const dayIndex = Math.floor((today - entryDate) / (1000 * 60 * 60 * 24));
+      if (dayIndex >= 0 && dayIndex < 7) {
+        last7Days[6 - dayIndex] += parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+      }
+    });
+
+    return labels.map((label, index) => ({
+      name: label,
+      income: last7Days[index],
+    }));
+  };
+
+  const getYearlyData = () => {
+    const yearlyIncome = Array(5).fill(0);
+    const labels = [];
+
+    for (let i = 0; i < 5; i++) {
+      const year = currentYear - 4 + i; // Generate years from currentYear - 4 to currentYear
+      labels.push(year);
+    }
+
+    incomeHistoryData.forEach(entry => {
+      const entryDate = new Date(entry.date);
+      const yearIndex = entryDate.getFullYear() - (currentYear - 4);
+      if (yearIndex >= 0 && yearIndex < 5) {
+        yearlyIncome[yearIndex] += parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+      }
+    });
+
+    return labels.map((label, index) => ({
+      name: label,
+      income: yearlyIncome[index],
+    }));
+  };
+
+  const graphData = timePeriod === "Monthly" ? getMonthlyData() 
+                : timePeriod === "Daily" ? getDailyData() 
+                : getYearlyData();
+
   const labels = graphData.map((data) => data.name);
   const incomeValues = graphData.map((data) => data.income);
 
@@ -131,19 +170,8 @@ const IncomeBody = ({addIncomeModal}) => {
 
   const options = {
     scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        grid: {
-          display: true,
-        },
-        ticks: {
-          display: false, // Hide the y-axis labels
-        },
-      },
+      x: { grid: { display: false } },
+      y: { grid: { display: true }, ticks: { color: "#ffffff" } },
     },
     plugins: {
       tooltip: {
@@ -156,42 +184,21 @@ const IncomeBody = ({addIncomeModal}) => {
     maintainAspectRatio: false,
   };
 
-  // Entries to display
-  const indexOfLastEntry = currentPage * 5;
-  const indexOfFirstEntry = indexOfLastEntry - 5;
-  const currentEntries = showAll
-    ? incomeHistoryData
-    : incomeHistoryData.slice(0, 3);
-
-  const pageCount = Math.ceil(incomeHistoryData.length / 5);
-
-  const handleNextPage = () => {
-    if (currentPage < pageCount) {
-      setCurrentPage(currentPage + 1);
+  const handlePrevYear = () => {
+    if (currentYear > new Date().getFullYear() - 5) {
+      setCurrentYear((prevYear) => prevYear - 1);
     }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleShowAll = () => {
-    setShowAll(true);
-    setCurrentPage(1);
   };
 
   const handleNextYear = () => {
-    if (timePeriod === "Monthly") {
+    if (currentYear < new Date().getFullYear()) {
       setCurrentYear((prevYear) => prevYear + 1);
     }
   };
 
-  const handlePrevYear = () => {
-    if (timePeriod === "Monthly" && currentYear > 2020) {
-      setCurrentYear((prevYear) => prevYear - 1);
-    }
+  const handleViewClick = (entry) => {
+    setSingleEntry(entry);
+    setViewIncomeModal(true);
   };
 
   return (
@@ -201,31 +208,15 @@ const IncomeBody = ({addIncomeModal}) => {
           <div className="text-left space-y-3 w-1/3">
             <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
             <h3 className="text-3xl text-green-300 font-bold">
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(income)}
+              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(incomeValues.reduce((a, b) => a + b, 0))}
             </h3>
             <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-            <h2 className="text-3xl font-bold text-cyan-400">
-              {timePeriod} income
-            </h2>
+            <h2 className="text-3xl font-bold text-cyan-400">{timePeriod} income</h2>
             <h3 className="text-3xl text-green-300 font-bold">
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(income)}
-            </h3>
-            <p className="text-xl text-cyan-400">
-              This {timePeriod.toLowerCase()}:{" "}
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(income)}
-            </p>
+              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(incomeValues.reduce((a, b) => a + b, 0))}
+            </h3>   
           </div>
 
-          {/* Chart.js Graph */}
           <div className="w-2/4 relative">
             <div className="absolute z-10 bottom--4 left-0 p-2">
               <select
@@ -234,16 +225,12 @@ const IncomeBody = ({addIncomeModal}) => {
                 className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
               >
                 <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-                <option value="Monthly">Month</option>
+                <option value="Monthly">Monthly</option>
                 <option value="Yearly">Yearly</option>
               </select>
             </div>
 
-            <div
-              className="mt-5 relative"
-              style={{ width: "600px", height: "300px", marginBottom: "45px" }}
-            >
+            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: "45px" }}>
               <div className="flex justify-center mb-2 text-gray-300">
                 {timePeriod === "Daily" ? (
                   <span className="text-lg font-semibold">Last 7 Days</span>
@@ -253,6 +240,26 @@ const IncomeBody = ({addIncomeModal}) => {
                   <span className="text-lg font-semibold">Last 5 Years</span>
                 )}
               </div>
+
+              {timePeriod === "Monthly" && (
+                <>
+                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{ marginLeft: '-60px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <button onClick={handlePrevYear} className="text-cyan-400">
+                      <FaChevronLeft />
+                    </button>
+                  </div>
+                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{ marginRight: '-60px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <button onClick={handleNextYear} className="text-cyan-400">
+                      <FaChevronRight />
+                    </button>
+                  </div>
+                </>
+              )}
+
               <Line data={data} options={options} />
             </div>
           </div>
@@ -262,7 +269,7 @@ const IncomeBody = ({addIncomeModal}) => {
         <div className="bg-gray-800 p-10 rounded-lg">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-2xl font-bold text-cyan-400">Income History</h3>
-            <button onClick={handleShowAll} className="text-cyan-400">
+            <button onClick={() => {/* Show all logic */}} className="text-cyan-400">
               See all
             </button>
           </div>
@@ -279,7 +286,7 @@ const IncomeBody = ({addIncomeModal}) => {
               </tr>
             </thead>
             <tbody>
-              {currentEntries.map((entry) => (
+              {incomeHistoryData.map((entry) => (
                 <tr key={entry.id} className="border-b border-gray-700">
                   <td className="py-2">
                     {new Date(entry.workDate).toLocaleDateString("en-GB")}
@@ -302,35 +309,13 @@ const IncomeBody = ({addIncomeModal}) => {
             </tbody>
           </table>
 
-          {showAll && (
-            <div className="flex justify-between items-center mt-4">
-              <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className="bg-cyan-400 px-4 py-2 rounded-lg"
-              >
-                &#8592;
-              </button>
-              <span className="text-gray-500">
-                Page {currentPage} of {pageCount}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === pageCount}
-                className="bg-cyan-400 px-4 py-2 rounded-lg"
-              >
-                &#8594;
-              </button>
-            </div>
+          {viewIncomeModal && (
+            <ViewIncomeModal
+              entry={singleEntry}
+              onClose={() => setViewIncomeModal(false)}
+            />
           )}
         </div>
-
-        {viewIncomeModal && (
-          <ViewIncomeModal
-            entry={singleEntry}
-            onClose={() => setViewIncomeModal(false)}
-          />
-        )}
       </main>
     </div>
   );

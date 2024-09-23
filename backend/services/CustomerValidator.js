@@ -1,6 +1,6 @@
 import validator from 'validator';
 
-// Function to validate income entry data
+// Function to validate customer entry data
 export function validateCustomerData(data) {
     const {
         dateOfService,
