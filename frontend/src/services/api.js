@@ -36,6 +36,7 @@ async function addIncome(body) {
   }
 }
 
+
 async function addcustomer(data) {
   try {
     console.log(data);
@@ -63,7 +64,6 @@ async function showIncome() {
 
 export default {
   login,
-  addcustomer,
-  showIncome,
   addIncome,
+  addcustomer
 };
