@@ -114,8 +114,8 @@ const AddCustomer = ({ show, onClose }) => {
                   Payment Method
                 </option>
                 <option value="cash">Cash</option>
-                <option value="card">Card</option>
-                <option value="online">Online</option>
+                <option value="upi">UPI</option>
+                <option value="online Transfer">Online Transfer</option>
               </select>
             </div>
             <div>
