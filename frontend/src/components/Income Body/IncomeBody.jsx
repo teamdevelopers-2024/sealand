@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import api from "../../services/api";
+import ViewIncomeModal from "../View Income/ViewIncomeModal";
 
 // Monthly data
 const monthlyData = [
@@ -45,7 +46,6 @@ const dailyData = Array.from({ length: 7 }, (_, index) => {
   };
 }).reverse(); // Reverse to show from Sunday to Saturday
 
-
 const IncomeBody = () => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
   const [timePeriod, setTimePeriod] = useState("Monthly");
@@ -54,15 +54,19 @@ const IncomeBody = () => {
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const entriesPerPage = 5;
+  const [viewIncomeModal, setViewIncomeModal] = useState(false);
+
+  const handleViewClick = (entry) => {
+    setViewIncomeModal(entry);
+  };
 
   useEffect(() => {
     const fetchIncomeHistory = async () => {
       try {
         const response = await api.showIncome();
-        
+
         setIncomeHistoryData(response.data);
-        console.log("income history",response.data);
-        
+        console.log("income history", response.data);
       } catch (error) {
         console.error("Error fetching income history data", error);
       }
@@ -268,14 +272,21 @@ const IncomeBody = () => {
             <tbody>
               {currentEntries.map((entry) => (
                 <tr key={entry.id} className="border-b border-gray-700">
-                  <td className="py-2">{new Date(entry.workDate).toLocaleDateString('en-GB')}</td>
+                  <td className="py-2">
+                    {new Date(entry.workDate).toLocaleDateString("en-GB")}
+                  </td>
                   <td className="py-2">{entry.customerName}</td>
                   <td className="py-2">{entry.vehicleNumber}</td>
                   <td className="py-2">{entry.paymentMethod}</td>
                   <td className="py-2">{entry.contactNumber}</td>
                   <td className="py-2">₹ {entry.totalServiceCost}</td>
                   <td className="py-2">
-                    <button className="text-cyan-400">View</button>
+                    <button
+                      onClick={() => handleViewClick(entry)}
+                      className="text-cyan-400"
+                    >
+                      View
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -307,6 +318,10 @@ const IncomeBody = () => {
           </div>
         </div>
       </main>
+      {/* ViewIncomeModal */}
+      {viewIncomeModal && (
+        <ViewIncomeModal setViewIncomeModal={setViewIncomeModal} />
+      )}
     </div>
   );
 };
