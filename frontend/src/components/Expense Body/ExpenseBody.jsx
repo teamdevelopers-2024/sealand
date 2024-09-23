@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2"; // Import Line from Chart.js
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
-import api from "../../services/api"; 
+import api from "../../services/api";
 import {
   Chart as ChartJS,
   LineElement,
@@ -13,8 +13,39 @@ import {
   Legend,
 } from "chart.js";
 
-ChartJS.register(LineElement, CategoryScale, PointElement, LinearScale, Tooltip, Legend);
+// Register Chart.js components
+ChartJS.register(LineElement, CategoryScale,PointElement, LinearScale, Tooltip, Legend);
 
+// Sample expense history data
+const expenseHistoryData = [
+  {
+    date: "2023-09-01",
+    customerName: "John Doe",
+    vehicleNumber: "ABC123",
+    paymentType: "Cash",
+    phoneNumber: "1234567890",
+    amount: "2000",
+  },
+  {
+    date: "2023-09-02",
+    customerName: "Jane Smith",
+    vehicleNumber: "XYZ456",
+    paymentType: "Card",
+    phoneNumber: "0987654321",
+    amount: "1500",
+  },
+  {
+    date: "2023-09-03",
+    customerName: "Alice Johnson",
+    vehicleNumber: "LMN789",
+    paymentType: "Cash",
+    phoneNumber: "1231231234",
+    amount: "2500",
+  },
+  // Add more entries as needed
+];
+
+// Monthly data
 const monthlyData = [
   { name: "Jan", expense: 1500 },
   { name: "Feb", expense: 3000 },
@@ -30,6 +61,7 @@ const monthlyData = [
   { name: "Dec", expense: 13000 },
 ];
 
+// Weekly data
 const weeklyData = [
   { name: "Sun", expense: 1000 },
   { name: "Mon", expense: 2000 },
@@ -40,6 +72,7 @@ const weeklyData = [
   { name: "Sat", expense: 3500 },
 ];
 
+// Yearly data
 const yearlyData = [
   { name: "2016", expense: 60000 },
   { name: "2017", expense: 70000 },
@@ -53,7 +86,7 @@ const yearlyData = [
 
 const Expense = () => {
   const [timePeriod, setTimePeriod] = useState("Monthly");
-  const [expense, setExpense] = useState(106480);
+  const [expense, setExpense] = useState(106480); // Default for monthly
   const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentYear, setCurrentYear] = useState(2023);
@@ -74,26 +107,54 @@ const Expense = () => {
     fetchIncomeHistory();
   }, []);
 
+  const dailyData = [
+    { name: "Sun", expense: 0 },
+    { name: "Mon", expense: 0 },
+    { name: "Tue", expense: 0 },
+    { name: "Wed", expense: 0 },
+    { name: "Thu", expense: 0 },
+    { name: "Fri", expense: 0 },
+    { name: "Sat", expense: 0 },
+  ];
+
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
+
     if (period === "Daily") {
-      const today = new Date().toISOString().split("T")[0];
-      const dailyExpense = expenseHistoryData
-        .filter((entry) => entry.date === today)
-        .reduce((total, entry) => total + parseInt(entry.amount.replace(/[^\d]/g, "")), 0);
-      setExpense(dailyExpense);
+      const today = new Date();
+      const dayOfWeek = today.getDay(); // Get current day of the week
+      const startOfWeek = new Date(today);
+      startOfWeek.setDate(today.getDate() - dayOfWeek); // Get the start of the week (Sunday)
+
+      const expenses = expenseHistoryData.reduce((acc, entry) => {
+        const entryDate = new Date(entry.date);
+        const dayIndex = entryDate.getDay();
+        if (entryDate >= startOfWeek && entryDate <= today) {
+          acc[dayIndex] += parseInt(entry.amount.replace(/[^\d]/g, "")); // Update daily expenses
+        }
+        return acc;
+      }, dailyData.map(data => data.expense));
+
+      // Update dailyData with calculated expenses
+      dailyData.forEach((data, index) => {
+        data.expense = expenses[index];
+      });
+
+      setExpense(dailyData.reduce((total, day) => total + day.expense, 0)); // Calculate total daily expense
     } else if (period === "Weekly") {
-      setExpense(24500);
+      setExpense(24500); // Weekly expense
     } else if (period === "Monthly") {
-      setExpense(106480);
+      setExpense(106480); // Monthly expense
     } else if (period === "Yearly") {
-      setExpense(120000);
+      setExpense(120000); // Yearly expense
     }
   };
 
   const graphData =
-    timePeriod === "Weekly"
+    timePeriod === "Daily"
+      ? dailyData // Use dailyData when timePeriod is Daily
+      : timePeriod === "Weekly"
       ? weeklyData
       : timePeriod === "Yearly"
       ? yearlyData
@@ -113,9 +174,13 @@ const Expense = () => {
     ],
   };
 
+  // Entries to display
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = showAll ? expenseHistoryData : expenseHistoryData.slice(0, 3);
+  const currentEntries = showAll
+    ? expenseHistoryData
+    : expenseHistoryData.slice(0, 3);
+
   const pageCount = Math.ceil(expenseHistoryData.length / entriesPerPage);
 
   const handleNextPage = () => {
@@ -154,32 +219,47 @@ const Expense = () => {
           <div className="text-left space-y-3 w-1/3">
             <h2 className="text-5xl font-bold text-cyan-400">Total Expense</h2>
             <h3 className="text-3xl text-red-400 font-bold">
-              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(expense)}
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(expense)}
             </h3>
             <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
             <h2 className="text-3xl font-bold text-cyan-400">
               {timePeriod} Expense
             </h2>
             <h3 className="text-3xl text-red-400 font-bold">
-              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(expense)}
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(expense)}
             </h3>
             <p className="text-xl text-cyan-400">
               This {timePeriod.toLowerCase()}:{" "}
-              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(expense)}
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(expense)}
             </p>
           </div>
 
           <div className="w-2/4 relative">
             <div className="absolute z-10 bottom--4 left-0 p-2">
-              <select value={timePeriod} onChange={handleTimePeriodChange} className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500">
+              <select
+                value={timePeriod}
+                onChange={handleTimePeriodChange}
+                className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
+              >
                 <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-                <option value="Monthly">Monthly</option>
+                <option value="Monthly">Month</option>
                 <option value="Yearly">Yearly</option>
               </select>
             </div>
 
-            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: "45px" }}>
+            <div
+              className="mt-5 relative"
+              style={{ width: "600px", height: "300px", marginBottom: "45px" }}
+            >
               <div className="flex justify-center mb-2 text-gray-300">
                 {timePeriod === "Daily" ? (
                   <span className="text-lg font-semibold">Last 7 Days</span>
@@ -206,16 +286,16 @@ const Expense = () => {
                   scales: {
                     x: {
                       grid: {
-                        display: false, 
+                        display: false, // Disable x-axis grid lines
                       },
                       ticks: {
-                        color: "#999", 
+                        color: "#999", // X-axis label color
                       },
                     },
                     y: {
-                      display: false, 
+                      display: false, // Hide the entire y-axis including labels
                       grid: {
-                        display: false,
+                        display: false, // Disable y-axis grid lines
                       },
                     },
                   },
@@ -230,11 +310,14 @@ const Expense = () => {
                       marginLeft: "-60px",
                       width: "40px",
                       height: "40px",
-                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
-                    onClick={handlePrevYear}
                   >
-                    <FaChevronLeft />
+                    <button onClick={handlePrevYear} className="text-cyan-400">
+                      <FaChevronLeft />
+                    </button>
                   </div>
                   <div
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
@@ -242,11 +325,14 @@ const Expense = () => {
                       marginRight: "-60px",
                       width: "40px",
                       height: "40px",
-                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
-                    onClick={handleNextYear}
                   >
-                    <FaChevronRight />
+                    <button onClick={handleNextYear} className="text-cyan-400">
+                      <FaChevronRight />
+                    </button>
                   </div>
                 </>
               )}
@@ -254,63 +340,74 @@ const Expense = () => {
           </div>
         </div>
 
-        <div className="bg-gray-800 p-8 rounded-lg">
-          <h3 className="text-xl font-bold mb-4 text-cyan-400">Expense History</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full text-left border-separate border-spacing-y-2">
-              <thead>
-                <tr className="text-gray-400">
-                  <th className="py-2 px-4">#</th>
-                  <th className="py-2 px-4">Name</th>
-                  <th className="py-2 px-4">Amount</th>
-                  <th className="py-2 px-4">Description</th>
-                  <th className="py-2 px-4">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentEntries.map((entry, index) => (
-                  <tr key={index} className="bg-gray-700 text-gray-200">
-                    <td className="py-2 px-4">{index + 1}</td>
-                    <td className="py-2 px-4">{entry.name}</td>
-                    <td className="py-2 px-4">{entry.amount}</td>
-                    <td className="py-2 px-4">{entry.description}</td>
-                    <td className="py-2 px-4">{entry.date}</td>
+        <div className="bg-gray-800 p-10 rounded-lg">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-2xl font-bold text-cyan-400">Expense History</h3>
+            <button onClick={handleShowAll} className="text-cyan-400">
+              See all
+            </button>
+          </div>
+          <table className="w-full text-left">
+            <thead>
+              <tr className="text-gray-500">
+                <th className="pb-2">Date</th>
+                <th className="pb-2">Payee Name</th>
+                <th className="pb-2">Expense Type</th>
+                <th className="pb-2">Payment Type</th>
+                <th className="pb-2">Phone Number</th>
+                <th className="pb-2">Amount</th>
+                <th className="pb-2">Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentEntries
+                .slice(indexOfFirstEntry, indexOfLastEntry)
+                .map((entry, index) => (
+                  <tr key={index} className="border-t border-gray-700">
+                    <td className="py-4">{new Date(entry.date).toLocaleDateString("en-GB")}</td>
+                    <td className="py-4">{entry.payeeName}</td>
+                    <td className="py-4">{entry.expenseType}</td>
+                    <td className="py-4">{entry.paymentMethod}</td>
+                    <td className="py-4">{entry.contactNumber}</td>
+                    <td className="py-4">
+                      {new Intl.NumberFormat("en-IN", {
+                        style: "currency",
+                        currency: "INR",
+                      }).format(entry.totalExpense)}
+                    </td>
+                    <td className="py-4">
+                      <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">View</button>
+                    </td>
                   </tr>
                 ))}
-              </tbody>
-            </table>
+            </tbody>
+          </table>
 
+          {showAll && (
             <div className="flex justify-between items-center mt-4">
               <button
-                onClick={handleShowAll}
-                className="px-4 py-2 bg-cyan-500 rounded text-white hover:bg-cyan-600"
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="bg-cyan-400 px-4 py-2 rounded-lg"
               >
-                Show All
+                &#8592;
               </button>
-
-              <div className="flex space-x-2">
-                <button
-                  onClick={handlePrevPage}
-                  className={`px-4 py-2 bg-gray-600 rounded text-white ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={handleNextPage}
-                  className={`px-4 py-2 bg-gray-600 rounded text-white ${currentPage === pageCount ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-700"}`}
-                  disabled={currentPage === pageCount}
-                >
-                  Next
-                </button>
-              </div>
+              <span className="text-gray-500">
+                Page {currentPage} of {pageCount}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === pageCount}
+                className="bg-cyan-400 px-4 py-2 rounded-lg"
+              >
+                &#8594;
+              </button>
             </div>
-          </div>
+          )}
         </div>
       </main>
-      <Navbar />
     </div>
   );
 };
 
-export default Expense;
+export default Expense;
