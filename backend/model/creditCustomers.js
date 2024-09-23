@@ -12,7 +12,6 @@ const creditCustomerSchema = new mongoose.Schema({
     vehicleNumber:{
         type:String,
         required:true
-    },
     phoneNumber:{
         typer:Number,
         required:true

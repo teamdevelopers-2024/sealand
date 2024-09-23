@@ -4,12 +4,12 @@ import ExpenseBody from "../../components/Expense Body/ExpenseBody";
 import AddExpense from "../../components/Add Expense/AddExpense";
 
 const Expense = () => {
-    const [addIncomeModal, setAddIncomeModal] = useState(false);
+    const [addExpenseModal, setAddExpenseModal] = useState(false);
   return (
     <>
-      <Navbar setAddIncomeModal={setAddIncomeModal} />
+      <Navbar setAddExpenseModal={setAddExpenseModal} />
       <ExpenseBody />
-      {addIncomeModal && <AddExpense />}
+      {addExpenseModal && <AddExpense setAddExpenseModal={setAddExpenseModal} />}
     </>
   );
 };
