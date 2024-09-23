@@ -6,9 +6,9 @@ const CreditForm = ({ customer, onClose }) => {
     { description: "", amount: "", reference: "" },
   ]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [vehicleNumber, setVehicleNumber] = useState(customer.vehicleNumber); // Editable vehicle number
-  const [paymentType, setPaymentType] = useState(""); // New state for payment type
-  const [creditAmount, setCreditAmount] = useState(""); // New state for credit amount
+  const [vehicleNumber, setVehicleNumber] = useState(""); 
+  const [paymentType, setPaymentType] = useState(""); 
+  const [creditAmount, setCreditAmount] = useState(""); 
 
   // Handle form input changes for work details
   const handleInputChange = (index, field, value) => {
@@ -73,9 +73,10 @@ const CreditForm = ({ customer, onClose }) => {
             <label className="block mb-1">Vehicle Number</label>
             <input
               type="text"
-              value={vehicleNumber} // Make vehicle number editable
-              onChange={(e) => setVehicleNumber(e.target.value)} // Update vehicle number
+              value={vehicleNumber} 
+              onChange={(e) => setVehicleNumber(e.target.value)} 
               className="w-full px-3 py-2 rounded bg-gray-700 text-white"
+              placeholder="Enter Vehicle Number"
             />
           </div>
           <div>
