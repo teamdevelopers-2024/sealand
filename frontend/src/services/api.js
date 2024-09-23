@@ -65,5 +65,6 @@ async function showIncome() {
 export default {
   login,
   addIncome,
-  addcustomer
+  addcustomer,
+  showIncome
 };
