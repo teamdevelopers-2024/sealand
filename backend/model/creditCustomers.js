@@ -13,7 +13,7 @@ const creditCustomerSchema = new mongoose.Schema({
         type:String,
         required:true},
     phoneNumber:{
-        typer:Number,
+        type:Number,
         required:true
     },
     paymentMethod:{

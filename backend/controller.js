@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import IncomeDb from './model/income.js'
 import { validateIncomeData } from './services/IncomeValidator.js'
+import creditCustomerDb from './model/creditCustomers.js'
+import { validateCustomerData } from './services/CustomerValidator.js'
 
 
 async function login(req, res) {
@@ -44,8 +46,24 @@ async function login(req, res) {
 
 async function addcustomer(req, res) {
     try {
-        const data = req.body
-        console.log(data);
+        const customerData = req.body
+        console.log(customerData);
+        const errors = validateCustomerData(customerData);
+
+        if (errors.length > 0) {
+            return res.status(400).json({
+                error: true,
+                message: "validation error",
+                errors: errors
+            });
+        }
+
+        await creditCustomerDb.create(customerData)
+
+        res.status(200).json({
+            error: false,
+            message: "customer added Successfully"
+        })
 
 
 
@@ -88,13 +106,13 @@ async function addIncome(req, res) {
     }
 }
 
-async function incomeHistory(req,res) {
+async function incomeHistory(req, res) {
     try {
         const incomeHistory = await IncomeDb.find();
         res.status(200).json({
-            error:false,
-            message:"income fetched successfully",
-            data : incomeHistory
+            error: false,
+            message: "income fetched successfully",
+            data: incomeHistory
         });
     } catch (error) {
         console.log(error)
