@@ -1,19 +1,47 @@
-import React, { useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import React, { useEffect, useState } from "react";
+import { Line } from "react-chartjs-2"; // Import Line from Chart.js
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
+import api from "../../services/api";
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Register Chart.js components
+ChartJS.register(LineElement, CategoryScale,PointElement, LinearScale, Tooltip, Legend);
 
 // Sample expense history data
 const expenseHistoryData = [
-  { date: "2023-09-01", customerName: "John Doe", vehicleNumber: "ABC123", paymentType: "Cash", phoneNumber: "1234567890", amount: "2000" },
-  { date: "2023-09-02", customerName: "Jane Smith", vehicleNumber: "XYZ456", paymentType: "Card", phoneNumber: "0987654321", amount: "1500" },
-  { date: "2023-09-03", customerName: "Alice Johnson", vehicleNumber: "LMN789", paymentType: "Cash", phoneNumber: "1231231234", amount: "2500" },
+  {
+    date: "2023-09-01",
+    customerName: "John Doe",
+    vehicleNumber: "ABC123",
+    paymentType: "Cash",
+    phoneNumber: "1234567890",
+    amount: "2000",
+  },
+  {
+    date: "2023-09-02",
+    customerName: "Jane Smith",
+    vehicleNumber: "XYZ456",
+    paymentType: "Card",
+    phoneNumber: "0987654321",
+    amount: "1500",
+  },
+  {
+    date: "2023-09-03",
+    customerName: "Alice Johnson",
+    vehicleNumber: "LMN789",
+    paymentType: "Cash",
+    phoneNumber: "1231231234",
+    amount: "2500",
+  },
   // Add more entries as needed
 ];
 
@@ -63,6 +91,21 @@ const Expense = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentYear, setCurrentYear] = useState(2023);
   const entriesPerPage = 5;
+  const [expenseHistoryData, setExpenseHistoryData] = useState([]);
+
+  useEffect(() => {
+    const fetchIncomeHistory = async () => {
+      try {
+        const response = await api.showExpense();
+        setExpenseHistoryData(response.data);
+        console.log("expense history", response.data);
+      } catch (error) {
+        console.error("Error fetching income history data", error);
+      }
+    };
+
+    fetchIncomeHistory();
+  }, []);
 
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
@@ -93,6 +136,20 @@ const Expense = () => {
       : timePeriod === "Yearly"
       ? yearlyData
       : monthlyData;
+
+  const data = {
+  labels: graphData.map(data => data.name),
+  datasets: [
+    {
+      label: "Expenses",
+      data: graphData.map(data => data.expense),
+      borderColor: "#00d8ff",
+      backgroundColor: "rgba(0, 216, 255, 0.2)",
+      borderWidth: 3,
+      tension: 0.1, // Smoother line
+    },
+  ],
+};
 
   // Entries to display
   const indexOfLastEntry = currentPage * entriesPerPage;
@@ -145,7 +202,9 @@ const Expense = () => {
               }).format(expense)}
             </h3>
             <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-            <h2 className="text-3xl font-bold text-cyan-400">{timePeriod} Expense</h2>
+            <h2 className="text-3xl font-bold text-cyan-400">
+              {timePeriod} Expense
+            </h2>
             <h3 className="text-3xl text-red-400 font-bold">
               {new Intl.NumberFormat("en-IN", {
                 style: "currency",
@@ -174,7 +233,10 @@ const Expense = () => {
               </select>
             </div>
 
-            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: "45px" }}>
+            <div
+              className="mt-5 relative"
+              style={{ width: "600px", height: "300px", marginBottom: "45px" }}
+            >
               <div className="flex justify-center mb-2 text-gray-300">
                 {timePeriod === "Daily" ? (
                   <span className="text-lg font-semibold">Last 7 Days</span>
@@ -184,29 +246,45 @@ const Expense = () => {
                   <span className="text-lg font-semibold">Last 5 Years</span>
                 )}
               </div>
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={graphData}>
-                  <XAxis dataKey="name" stroke="#999" />
-                  <YAxis stroke="#999" hide />
-                  <Tooltip cursor={false} />
-                  <Line
-                    type="monotone"
-                    dataKey="expense"
-                    stroke="#00d8ff"
-                    strokeWidth={3}
-                    dot={{ stroke: "#00d8ff", strokeWidth: 2 }}
-                    activeDot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <Line
+                data={data}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    tooltip: {
+                      backgroundColor: "#333",
+                      titleColor: "#fff",
+                      bodyColor: "#fff",
+                    },
+                  },
+                  scales: {
+                    x: {
+                      grid: {
+                        display: false, // Disable x-axis grid lines
+                      },
+                      ticks: {
+                        color: "#999", // X-axis label color
+                      },
+                    },
+                    y: {
+                      display: false, // Hide the entire y-axis including labels
+                      grid: {
+                        display: false, // Disable y-axis grid lines
+                      },
+                    },
+                  },
+                }}
+              />
 
               {timePeriod === "Monthly" && (
                 <>
-                  <button
-                    onClick={handlePrevYear}
-                    className="absolute left-5 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                  <div
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
                     style={{
-                      marginLeft: "-80px",
+                      marginLeft: "-60px",
                       width: "40px",
                       height: "40px",
                       display: "flex",
@@ -214,13 +292,14 @@ const Expense = () => {
                       justifyContent: "center",
                     }}
                   >
-                    &lt;
-                  </button>
-                  <button
-                    onClick={handleNextYear}
+                    <button onClick={handlePrevYear} className="text-cyan-400">
+                      <FaChevronLeft />
+                    </button>
+                  </div>
+                  <div
                     className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
                     style={{
-                      marginRight: "-80px",
+                      marginRight: "-60px",
                       width: "40px",
                       height: "40px",
                       display: "flex",
@@ -228,8 +307,10 @@ const Expense = () => {
                       justifyContent: "center",
                     }}
                   >
-                    &gt;
-                  </button>
+                    <button onClick={handleNextYear} className="text-cyan-400">
+                      <FaChevronRight />
+                    </button>
+                  </div>
                 </>
               )}
             </div>
@@ -247,8 +328,8 @@ const Expense = () => {
             <thead>
               <tr className="text-gray-500">
                 <th className="pb-2">Date</th>
-                <th className="pb-2">Customer Name</th>
-                <th className="pb-2">Vehicle Number</th>
+                <th className="pb-2">Payee Name</th>
+                <th className="pb-2">Expense Type</th>
                 <th className="pb-2">Payment Type</th>
                 <th className="pb-2">Phone Number</th>
                 <th className="pb-2">Amount</th>
@@ -260,16 +341,16 @@ const Expense = () => {
                 .slice(indexOfFirstEntry, indexOfLastEntry)
                 .map((entry, index) => (
                   <tr key={index} className="border-t border-gray-700">
-                    <td className="py-4">{entry.date}</td>
-                    <td className="py-4">{entry.customerName}</td>
-                    <td className="py-4">{entry.vehicleNumber}</td>
-                    <td className="py-4">{entry.paymentType}</td>
-                    <td className="py-4">{entry.phoneNumber}</td>
+                    <td className="py-4">{new Date(entry.date).toLocaleDateString("en-GB")}</td>
+                    <td className="py-4">{entry.payeeName}</td>
+                    <td className="py-4">{entry.expenseType}</td>
+                    <td className="py-4">{entry.paymentMethod}</td>
+                    <td className="py-4">{entry.contactNumber}</td>
                     <td className="py-4">
                       {new Intl.NumberFormat("en-IN", {
                         style: "currency",
                         currency: "INR",
-                      }).format(entry.amount)}
+                      }).format(entry.totalExpense)}
                     </td>
                     <td className="py-4">
                       <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">View</button>
@@ -305,5 +386,3 @@ const Expense = () => {
     </div>
   );
 };
-
-export default Expense;
