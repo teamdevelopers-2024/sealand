@@ -198,6 +198,7 @@ function IncomeChart() {
               currency: "INR",
             }).format(incomeValues.reduce((a, b) => a + b, 0))}
           </h3>
+          <button className="relative top-16">Download</button>
         </div>
 
         <div className="w-2/4 relative">
