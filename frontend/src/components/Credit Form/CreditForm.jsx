@@ -41,7 +41,7 @@ const CreditForm = ({ customer, onClose }) => {
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
       <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-2/3">
-        <h2 className="text-2xl mb-4">Add Credit for {customer.name}</h2>
+        <h2 className="text-2xl mb-4">Add Credit for {customer.customerName}</h2>
 
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div>
@@ -55,7 +55,7 @@ const CreditForm = ({ customer, onClose }) => {
             <label className="block mb-1">Customer Name</label>
             <input
               type="text"
-              value={customer.name}
+              value={customer.customerName}
               disabled
               className="w-full px-3 py-2 rounded bg-gray-700 text-white"
             />
@@ -77,29 +77,6 @@ const CreditForm = ({ customer, onClose }) => {
               onChange={(e) => setVehicleNumber(e.target.value)} 
               className="w-full px-3 py-2 rounded bg-gray-700 text-white"
               placeholder="Enter Vehicle Number"
-            />
-          </div>
-          <div>
-            <label className="block mb-1">Payment Type</label>
-            <select
-              className="w-full px-3 py-2 rounded bg-gray-700 text-white"
-              value={paymentType}
-              onChange={(e) => setPaymentType(e.target.value)}
-            >
-              <option value="">Select Payment Type</option>
-              <option value="Cash">Cash</option>
-              <option value="Card">Card</option>
-              <option value="Online">Online</option>
-            </select>
-          </div>
-          <div>
-            <label className="block mb-1">Credit Amount</label>
-            <input
-              type="number"
-              value={creditAmount}
-              onChange={(e) => setCreditAmount(e.target.value)}
-              className="w-full px-3 py-2 rounded bg-gray-700 text-white"
-              placeholder="Enter credit amount"
             />
           </div>
         </div>
