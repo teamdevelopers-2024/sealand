@@ -1,4 +1,21 @@
+import { useEffect, useState } from "react";
+import api from "../../services/api";
+
 function HomeBody() {
+  const [data, setData] = useState({})
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await api.getTodayIncomeAndExpense()
+        if (!result.error) {
+          setData(result)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchData()
+  }, [])
   return (
     <>
       <div className="min-h-screen bg-gray-900 text-white p-16">
@@ -7,7 +24,10 @@ function HomeBody() {
           {/* Card 1 */}
           <div className="bg-gray-800 p-6 rounded-lg flex flex-col justify-between">
             <h2 className="text-lg text-[#00BDD6] mb-2">Today's Revenue</h2>
-            <p className="text-2xl font-bold">₹11,726</p>
+            <p className="text-2xl font-bold">   {data.todayIncome ? new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(data.todayIncome): "loading..."}</p>
             {/* Graph */}
             <div className="flex justify-between items-end mt-4 h-[135px]">
               <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[135px] w-[35px] rounded-3xl"></div>
@@ -23,7 +43,10 @@ function HomeBody() {
           {/* Card 2 */}
           <div className="bg-gray-800 p-6 rounded-lg flex flex-col justify-between">
             <h2 className="text-lg text-[#00BDD6] mb-2">Today's Expenses</h2>
-            <p className="text-2xl font-bold">₹4,237</p>
+            <p className="text-2xl font-bold">{data.todayExpense ? new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(data.todayExpense):"loading..."}</p>
             {/* Graph */}
             <div className="flex justify-between items-end mt-4 h-[135px]">
               <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[87px] w-[35px] rounded-3xl"></div>
@@ -40,7 +63,7 @@ function HomeBody() {
             {/* Card 3 */}
             <div className="bg-gray-800 p-6 rounded-lg flex flex-col justify-between">
               <h2 className="text-lg text-[#00BDD6] mb-2">Today's Customers</h2>
-              <p className="text-2xl font-bold">13</p>
+              <p className="text-2xl font-bold">{data.todayCustomerCount?data.todayCustomerCount:'loading...'}</p>
               <div className="mt-auto">
                 <i className="text-xl">&#128100;</i>
               </div>
@@ -51,7 +74,10 @@ function HomeBody() {
               <h2 className="text-lg text-[#00BDD6] mb-2">
                 Yesterday's Revenue
               </h2>
-              <p className="text-2xl font-bold">₹10,520</p>
+              <p className="text-2xl font-bold">{data.yesterdayIncome ? new Intl.NumberFormat("en-IN", {
+              style: "currency",
+              currency: "INR",
+            }).format(data.yesterdayIncome):"loading..."}</p>
               <div className="mt-auto">
                 <i className="text-xl">&#128200;</i>
               </div>
