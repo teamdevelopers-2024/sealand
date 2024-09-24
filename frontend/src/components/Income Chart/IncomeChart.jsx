@@ -13,82 +13,82 @@ import {
 
 // Register Chart.js components
 ChartJS.register(
-    LineElement,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    Tooltip,
-    Legend
-  );
-  
-  // Monthly data
-  const monthlyData = [
-    { name: "Jan", income: 1500 },
-    { name: "Feb", income: 3000 },
-    { name: "Mar", income: 4500 },
-    { name: "Apr", income: 3500 },
-    { name: "May", income: 5000 },
-    { name: "Jun", income: 7000 },
-    { name: "Jul", income: 8000 },
-    { name: "Aug", income: 9000 },
-    { name: "Sep", income: 12000 },
-    { name: "Oct", income: 11000 },
-    { name: "Nov", income: 9000 },
-    { name: "Dec", income: 13000 },
-  ];
-  
-  // Weekly data
-  const weeklyData = [
-    { name: "Sun", income: 1000 },
-    { name: "Mon", income: 2000 },
-    { name: "Tue", income: 3000 },
-    { name: "Wed", income: 1500 },
-    { name: "Thu", income: 2500 },
-    { name: "Fri", income: 4000 },
-    { name: "Sat", income: 3500 },
-  ];
-  
-  // Yearly data
-  const yearlyData = [
-    { name: "2019", income: 50000 },
-    { name: "2020", income: 100000 },
-    { name: "2021", income: 110000 },
-    { name: "2022", income: 120000 },
-    { name: "2023", income: 130000 },
-    { name: "2024", income: 140000 },
-  ];
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth(); // 0-11
-  const currentYear = currentDate.getFullYear();
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend
+);
 
-function IncomeChart({incomeHistoryData}) {
-    const [timePeriod, setTimePeriod] = useState("Monthly");
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-    const [totalIncome,setTotalIncome]=useState('')
-    const [totalIncomemonth,setTotalIncomemonth]=useState('')
-    
-    useEffect(() => {
+// Monthly data
+const monthlyData = [
+  { name: "Jan", income: 1500 },
+  { name: "Feb", income: 3000 },
+  { name: "Mar", income: 4500 },
+  { name: "Apr", income: 3500 },
+  { name: "May", income: 5000 },
+  { name: "Jun", income: 7000 },
+  { name: "Jul", income: 8000 },
+  { name: "Aug", income: 9000 },
+  { name: "Sep", income: 12000 },
+  { name: "Oct", income: 11000 },
+  { name: "Nov", income: 9000 },
+  { name: "Dec", income: 13000 },
+];
 
-      const total = incomeHistoryData.reduce((accumulator, entry) => {      
+// Weekly data
+const weeklyData = [
+  { name: "Sun", income: 1000 },
+  { name: "Mon", income: 2000 },
+  { name: "Tue", income: 3000 },
+  { name: "Wed", income: 1500 },
+  { name: "Thu", income: 2500 },
+  { name: "Fri", income: 4000 },
+  { name: "Sat", income: 3500 },
+];
+
+// Yearly data
+const yearlyData = [
+  { name: "2019", income: 50000 },
+  { name: "2020", income: 100000 },
+  { name: "2021", income: 110000 },
+  { name: "2022", income: 120000 },
+  { name: "2023", income: 130000 },
+  { name: "2024", income: 140000 },
+];
+const currentDate = new Date();
+const currentMonth = currentDate.getMonth(); // 0-11
+const currentYear = currentDate.getFullYear();
+
+function IncomeChart({ incomeHistoryData }) {
+  const [timePeriod, setTimePeriod] = useState("Monthly");
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [totalIncome, setTotalIncome] = useState('')
+  const [totalIncomemonth, setTotalIncomemonth] = useState('')
+
+  useEffect(() => {
+
+    const total = incomeHistoryData.reduce((accumulator, entry) => {
+      const serviceCost = entry.totalServiceCost
+      return accumulator + serviceCost;
+    }, 0);
+    const totalIncomeThisMonth = incomeHistoryData.reduce((total, entry) => {
+      const workDate = new Date(entry.workDate);
+
+      // Check if the workDate is in the current month and year
+      if (workDate.getMonth() === currentMonth && workDate.getFullYear() === currentYear) {
+        // Parse the totalServiceCost and add it to the total
         const serviceCost = entry.totalServiceCost
-        return accumulator + serviceCost;
-      }, 0);
-      const totalIncomeThisMonth = incomeHistoryData.reduce((total, entry) => {
-        const workDate = new Date(entry.workDate);
-        
-        // Check if the workDate is in the current month and year
-        if (workDate.getMonth() === currentMonth && workDate.getFullYear() === currentYear) {
-          // Parse the totalServiceCost and add it to the total
-          const serviceCost = entry.totalServiceCost
-          return total + serviceCost; // Accumulate the total
-        }
-        return total; // If not, return the total unchanged
-      }, 0);// Sum them up
+        return total + serviceCost; // Accumulate the total
+      }
+      return total; // If not, return the total unchanged
+    }, 0);// Sum them up
 
-  setTotalIncomemonth(totalIncomeThisMonth) 
-    setTotalIncome(total)   
-    }, [incomeHistoryData])
-    
+    setTotalIncomemonth(totalIncomeThisMonth)
+    setTotalIncome(total)
+  }, [incomeHistoryData])
+
 
 
   const handleTimePeriodChange = (event) => {
@@ -102,14 +102,13 @@ function IncomeChart({incomeHistoryData}) {
   const getMonthlyData = () => {
     const monthlyIncome = Array(12).fill(0);
     const currentYearData = incomeHistoryData.filter(
-      (entry) => new Date(entry.date).getFullYear() === currentYear
+      (entry) => new Date(entry.workDate).getFullYear() === currentYear
     );
 
     currentYearData.forEach((entry) => {
-      const entryDate = new Date(entry.date);
+      const entryDate = new Date(entry.workDate);
       const month = entryDate.getMonth();
-      monthlyIncome[month] +=
-        parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+      monthlyIncome[month] += entry.totalServiceCost || 0;
     });
 
     return monthlyIncome.map((income, index) => ({
@@ -131,11 +130,10 @@ function IncomeChart({incomeHistoryData}) {
     }
 
     incomeHistoryData.forEach((entry) => {
-      const entryDate = new Date(entry.date);
+      const entryDate = new Date(entry.workDate);
       const dayIndex = Math.floor((today - entryDate) / (1000 * 60 * 60 * 24));
       if (dayIndex >= 0 && dayIndex < 7) {
-        last7Days[6 - dayIndex] +=
-          parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+        last7Days[6 - dayIndex] += entry.totalServiceCost || 0;
       }
     });
 
@@ -155,11 +153,11 @@ function IncomeChart({incomeHistoryData}) {
     }
 
     incomeHistoryData.forEach((entry) => {
-      const entryDate = new Date(entry.date);
+      const entryDate = new Date(entry.workDate);
       const yearIndex = entryDate.getFullYear() - (currentYear - 4);
+
       if (yearIndex >= 0 && yearIndex < 5) {
-        yearlyIncome[yearIndex] +=
-          parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+        yearlyIncome[yearIndex] += entry.totalServiceCost || 0; // Parse amount correctly
       }
     });
 
@@ -173,8 +171,8 @@ function IncomeChart({incomeHistoryData}) {
     timePeriod === "Monthly"
       ? getMonthlyData()
       : timePeriod === "Daily"
-      ? getDailyData()
-      : getYearlyData();
+        ? getDailyData()
+        : getYearlyData();
 
   const labels = graphData.map((data) => data.name);
   const incomeValues = graphData.map((data) => data.income);
