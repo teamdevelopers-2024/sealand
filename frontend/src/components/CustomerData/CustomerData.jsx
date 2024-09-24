@@ -27,7 +27,7 @@ const CustomerData = () => {
       }
     };
     fetchCustomers();
-  }, [showAddCustomerModal ,showPaymentModal ,showCreditForm]);
+  }, [showAddCustomerModal, showPaymentModal, showCreditForm]);
 
   // Function to calculate the due amount
   const calculateDueAmount = (creditAmount, paidAmount) => {
@@ -63,7 +63,6 @@ const CustomerData = () => {
     setShowCreditForm(false);
     setSelectedCustomer(null);
   };
-
 
   // Calculate total pages based on customers per page
   const totalPages = Math.ceil(customers.length / customersPerPage);
@@ -112,76 +111,68 @@ const CustomerData = () => {
         </div>
 
         <div className="overflow-x-auto p-2">
-            <table className="table-auto w-full text-left text-gray-300">
-              <thead>
-                <tr className="bg-gray-800">
-                  <th className="px-4 py-2">Date</th>
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">Vehicle number</th>
-                  <th className="px-4 py-2">Phone number</th>
-                  <th className="px-4 py-2">Credit amount</th>
-                  <th className="px-4 py-2">Paid amount</th>
-                  <th className="px-4 py-2">Due amount</th>
-                  <th className="px-4 py-2">Credit / Repayment</th>
-                  <th className="px-4 py-2">History</th>
+          <table className="table-auto w-full text-left text-gray-300">
+            <thead>
+              <tr className="bg-gray-800">
+                <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Vehicle number</th>
+                <th className="px-4 py-2">Phone number</th>
+                <th className="px-4 py-2">Credit amount</th>
+                <th className="px-4 py-2">Paid amount</th>
+                <th className="px-4 py-2">Due amount</th>
+                <th className="px-4 py-2">Credit / Repayment</th>
+                <th className="px-4 py-2">History</th>
+              </tr>
+            </thead>
+            <tbody className="bg-gray-700">
+              {paginatedCustomers.map((customer, index) => (
+                <tr key={index} className="border-t border-gray-600">
+                  <td className="px-4 py-2">
+                    {new Date(customer.dateOfService).toLocaleDateString("en-GB")}
+                  </td>
+                  <td className="px-4 py-2">{customer.customerName}</td>
+                  <td className="px-4 py-2">{customer.vehicleNumber}</td>
+                  <td className="px-4 py-2">{customer.phoneNumber}</td>
+                  <td className="px-4 py-2">₹{customer.creditAmount}</td>
+                  <td className="px-4 py-2">₹{customer.paidAmount}</td>
+                  <td className="px-4 py-2">
+                    ₹{calculateDueAmount(customer.creditAmount, customer.paidAmount)}
+                  </td>
+                  <td className="px-4 py-2">
+                    <button
+                      className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-md"
+                      onClick={() => handleCreditClick(customer)}
+                    >
+                      Credit
+                    </button>
+                    <button
+                      className="bg-teal-400 text-gray-900 px-4 py-1 rounded-md ml-2"
+                      onClick={() => handlePayClick(customer)}
+                    >
+                      Pay
+                    </button>
+                  </td>
+                  <td className="px-4 py-2">
+                    <button
+                      className="bg-gray-600 text-gray-300 px-4 py-1 rounded-md"
+                      onClick={() => handleViewClick(customer)}
+                    >
+                      See history
+                    </button>
+                  </td>
                 </tr>
-
               ))}
-       
-            </tbody>
-            {customers.length == 0 && (
-                <h3 className="pt-6 font-medium">No Credit Customers...</h3>
+              {filteredCustomers.length === 0 && (
+                <tr>
+                  <td colSpan="9" className="text-center pt-6 font-medium">
+                    No Credit Customers...
+                  </td>
+                </tr>
               )}
+            </tbody>
           </table>
-              </thead>
-              <tbody className="bg-gray-700">
-                {paginatedCustomers.map((customer, index) => (
-                  <tr key={index} className="border-t border-gray-600">
-                    <td className="px-4 py-2">
-                      {new Date(customer.dateOfService).toLocaleDateString(
-                        "en-GB"
-                      )}
-                    </td>
-                    <td className="px-4 py-2">{customer.customerName}</td>
-                    <td className="px-4 py-2">{customer.vehicleNumber}</td>
-                    <td className="px-4 py-2">{customer.phoneNumber}</td>
-                    <td className="px-4 py-2">₹{customer.creditAmount}</td>
-                    <td className="px-4 py-2">₹{customer.paidAmount}</td>
-                    <td className="px-4 py-2">
-                      ₹
-                      {calculateDueAmount(
-                        customer.creditAmount,
-                        customer.paidAmount
-                      )}
-                    </td>
-                    <td className="px-4 py-2">
-                      <button
-                        className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-md"
-                        onClick={() => handleCreditClick(customer)}
-                      >
-                        Credit
-                      </button>
-                      <button
-                        className="bg-teal-400 text-gray-900 px-4 py-1 rounded-md ml-2"
-                        onClick={() => handlePayClick(customer)}
-                      >
-                        Pay
-                      </button>
-                    </td>
-                    <td className="px-4 py-2">
-                      <button
-                        className="bg-gray-600 text-gray-300 px-4 py-1 rounded-md"
-                        onClick={() => handleViewClick(customer)}
-                      >
-                        See history
-                      </button>
-                    </td>
-                  </tr>
-              </tbody>
-            </table>
-          )}
         </div>
-        
 
         {/* Pagination Controls */}
         {filteredCustomers.length > 0 && totalPages > 1 && (
@@ -198,21 +189,19 @@ const CustomerData = () => {
                   Previous
                 </button>
               )}
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    className={`px-3 py-1 rounded ${
-                      page === currentPage
-                        ? "bg-teal-400 text-gray-900"
-                        : "bg-gray-800 text-gray-300"
-                    }`}
-                    onClick={() => setCurrentPage(page)}
-                  >
-                    {page}
-                  </button>
-                )
-              )}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  className={`px-3 py-1 rounded ${
+                    page === currentPage
+                      ? "bg-teal-400 text-gray-900"
+                      : "bg-gray-800 text-gray-300"
+                  }`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              ))}
               {currentPage < totalPages && (
                 <button
                   className="px-3 py-1 rounded bg-gray-800 text-gray-300"
@@ -224,9 +213,6 @@ const CustomerData = () => {
             </div>
           </div>
         )}
-      </div>
-        )}
-
       </div>
 
       {/* Payment Modal */}
