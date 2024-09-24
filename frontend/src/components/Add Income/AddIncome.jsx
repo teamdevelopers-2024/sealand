@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 import swal from 'sweetalert';
+
 const AddIncome = ({ setAddIncomeModal }) => {
   // State to handle the dynamic fields
   const [workDescriptions, setWorkDescriptions] = useState([
@@ -12,12 +13,12 @@ const AddIncome = ({ setAddIncomeModal }) => {
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [totalServiceCost, setTotalServiceCost] = useState("");
+  const [totalServiceCost, setTotalServiceCost] = useState(0);
 
   const today = new Date();
   const options = { timeZone: "Asia/Kolkata" }; // Specify Indian timezone
   const todayString = today.toLocaleDateString("en-CA", options); // Format to YYYY-MM-DD
-  
+
   // Set dateOfService to today's date initially
   const [workDate, setWorkDate] = useState(todayString);
 
@@ -34,10 +35,7 @@ const AddIncome = ({ setAddIncomeModal }) => {
 
   // Function to add a new work description field
   const addField = () => {
-    setWorkDescriptions([
-      ...workDescriptions,
-      { description: "", amount: "", reference: "" },
-    ]);
+    setWorkDescriptions([...workDescriptions, { description: "", amount: "", reference: "" }]);
   };
 
   // Function to remove a field
@@ -48,13 +46,14 @@ const AddIncome = ({ setAddIncomeModal }) => {
 
   // Function to calculate the total amount
   const calculateTotal = () => {
-    return workDescriptions.reduce((total, work) => {
+    const total = workDescriptions.reduce((total, work) => {
       const amount = parseFloat(work.amount) || 0;
       return total + amount;
     }, 0);
+    return total; // Return total instead of setting it in state
   };
 
-  // Function to handle form validation worked
+  // Function to handle form validation
   const validate = () => {
     let tempErrors = {};
     if (!workDate) tempErrors.workDate = "Work date is required.";
@@ -62,7 +61,7 @@ const AddIncome = ({ setAddIncomeModal }) => {
     if (!vehicleNumber) tempErrors.vehicleNumber = "Vehicle number is required.";
     if (!contactNumber) tempErrors.contactNumber = "Contact number is required.";
     if (!paymentMethod) tempErrors.paymentMethod = "Select a payment method.";
-    if (!totalServiceCost) tempErrors.totalServiceCost = "Total cost is required.";
+    if (calculateTotal() <= 0) tempErrors.totalServiceCost = "Total cost must be greater than zero.";
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -73,26 +72,25 @@ const AddIncome = ({ setAddIncomeModal }) => {
     const formData = {
       workDate,
       customerName,
-      vehicleNumber:vehicleNumber.toUpperCase(),
+      vehicleNumber: vehicleNumber.toUpperCase(),
       contactNumber,
       paymentMethod,
-      totalServiceCost,
+      totalServiceCost: calculateTotal(),
       workDescriptions,
     };
-    try{
-    const result = await api.addIncome(formData);
-    if(result.error){
-      swal("Error!", result.errors[0], "error");
-      return
+    try {
+      const result = await api.addIncome(formData);
+      if (result.error) {
+        swal("Error!", result.errors[0], "error");
+        return;
+      }
+      // Show success message
+      swal("Success!", "Income added successfully!", "success");
+      setAddIncomeModal(false); // Close the modal after saving
+    } catch (err) {
+      console.error(err);
+      swal("Error!", "Failed to add income.", "error");
     }
-    // Show success message
-    swal("Success!", "income added successfully!", "success");
-    setAddIncomeModal(false); // Close the modal after saving
-  } catch (err) {
-    // Handle error (optional: show error message)
-    console.error(err);
-    swal("Error!", "Failed to add income.", "error");
-  }
   };
 
   return (
@@ -168,18 +166,6 @@ const AddIncome = ({ setAddIncomeModal }) => {
               </select>
               {errors.paymentMethod && <p className="text-red-500">{errors.paymentMethod}</p>}
             </label>
-
-            <label className="block">
-              <span className="text-white">Total Service Cost</span>
-              <input
-                type="number"
-                placeholder="Total service cost?"
-                className="p-2 bg-gray-700 rounded w-full"
-                value={totalServiceCost}
-                onChange={(e) => setTotalServiceCost(e.target.value)}
-              />
-              {errors.totalServiceCost && <p className="text-red-500">{errors.totalServiceCost}</p>}
-            </label>
           </div>
 
           {/* Work Description Table */}
@@ -190,7 +176,9 @@ const AddIncome = ({ setAddIncomeModal }) => {
                 <th>Work Description</th>
                 <th>Amount</th>
                 <th>Reference</th>
+                {workDescriptions.length > 1 && 
                 <th>Action</th>
+                }
               </tr>
             </thead>
             <tbody>
@@ -228,12 +216,14 @@ const AddIncome = ({ setAddIncomeModal }) => {
                     />
                   </td>
                   <td>
+                    {index > 0 && 
                     <button
-                      className="text-red-500"
-                      onClick={() => removeField(index)}
+                    className="text-red-500"
+                    onClick={() => removeField(index)}
                     >
                       🗑
                     </button>
+                    }
                   </td>
                 </tr>
               ))}

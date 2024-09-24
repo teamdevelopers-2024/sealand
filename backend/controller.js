@@ -350,11 +350,6 @@ async function repayment(req, res) {
 
         const yesterdayEnd = new Date(todayStart); // End of yesterday is today at 12 AM
 
-        console.log("Today Start : ", todayStart.toISOString());
-        console.log("Tomorrow Start : ", tomorrowStart.toISOString());
-        console.log("Yesterday Start : ", yesterdayStart.toISOString());
-        console.log("Yesterday End : ", yesterdayEnd.toISOString());
-
         // Fetch today's total income from IncomeDb
         const todayIncomeResult = await IncomeDb.aggregate([
             {
@@ -418,20 +413,29 @@ async function repayment(req, res) {
         // Fetch today's customer count from customerDb
         const todayCustomerCountResult = await IncomeDb.aggregate([
             {
-              $match: {
-                workDate: { $gte: todayStart, $lt: tomorrowStart }, // Filter documents within the specified date range
-              },
+                $match: {
+                    workDate: { $gte: todayStart, $lt: tomorrowStart }, // Filter documents within the specified date range
+                },
             },
             {
-              $group: {
-                _id: "$contactNumber", // Group by contactNumber to find unique numbers
-              },
+                $group: {
+                    _id: "$contactNumber", // Group by contactNumber to find unique numbers
+                },
             },
             {
-              $count: "totalUniqueCustomers", // Count the total number of unique contactNumbers
+                $count: "totalUniqueCustomers", // Count the total number of unique contactNumbers
             },
-          ]);
-      
+        ]);
+
+        // Fetch latest 5 incomes
+        const latestIncomes = await IncomeDb.find()
+            .sort({ _id: -1 }) // Sort by workDate descending
+            .limit(5) // Limit to 5 results
+
+        // Fetch latest 5 expenses
+        const latestExpenses = await ExpenseDb.find()
+            .sort({ _id: -1 }) // Sort by date descending
+            .limit(5) // Limit to 5 results
 
         // Extract amounts or set to 0 if no results
         const todayIncome = todayIncomeResult[0]?.totalAmount || 0;
@@ -456,6 +460,8 @@ async function repayment(req, res) {
             yesterdayIncome,
             yesterdayExpense,
             todayCustomerCount,
+            latestIncomes,
+            latestExpenses,
         });
 
     } catch (error) {

@@ -7,6 +7,8 @@ import customersIcon from '../../assets/customersIcon.svg';
 
 function HomeBody() {
   const [data, setData] = useState({ todayIncome: 0, todayExpense: 0, todayCustomerCount: 0, yesterdayIncome: 0 });
+  const [incomes, setIncomes] = useState([])
+  const [expense, setExpense] = useState([])
   const [showShade, setShowShade] = useState(false);
 
   // Spring animations for numbers with scaling effect
@@ -52,6 +54,9 @@ function HomeBody() {
         const result = await api.getTodayIncomeAndExpense();
         if (!result.error) {
           setData(result);
+          console.log(result)
+          setExpense(result.latestExpenses)
+          setIncomes(result.latestIncomes)
           setShowShade(true); // Trigger shading effect
           setTimeout(() => setShowShade(false), 500); // Reset shading after animation
         }
@@ -222,34 +227,16 @@ function HomeBody() {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Muhammed Danish</td>
-                <td>KL 13 A 5672</td>
-                <td>By UPI</td>
-                <td>₹1970</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Ahmed Shehin</td>
-                <td>KL 56 R 7598</td>
-                <td>By Cash</td>
-                <td>₹1315</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Muhammed Sinan</td>
-                <td>KL 11 H 3260</td>
-                <td>By UPI</td>
-                <td>₹1420</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Dilshad</td>
-                <td>KL 11 A 0001</td>
-                <td>By UPI</td>
-                <td>₹3250</td>
-              </tr>
+              {incomes.map((income, index) => {
+                <tr id={index} className="border-t border-gray-700">
+                  <td>{income.workDate}</td>
+                  <td>Muhammed Danish</td>
+                  <td>KL 13 A 5672</td>
+                  <td>By UPI</td>
+                  <td>₹1970</td>
+                </tr>
+              })}
+
             </tbody>
           </table>
         </div>
