@@ -19,7 +19,7 @@ const incomeSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        required: true,
+        required: true , 
     },
     totalServiceCost: {
         type: Number,

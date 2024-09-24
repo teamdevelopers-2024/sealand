@@ -19,10 +19,6 @@ const creditCustomerSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
-    paymentMethod: {
-        type: String,
-        required: true,
-    },
     creditAmount: {
         type: Number,
         required: true,

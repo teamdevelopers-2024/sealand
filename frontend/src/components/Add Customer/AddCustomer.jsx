@@ -7,7 +7,6 @@ const AddCustomer = ({ show, onClose }) => {
   const [customerName, setCustomerName] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
   const [creditAmount, setCreditAmount] = useState("");
   const [workDetails, setWorkDetails] = useState([
     { description: "", amount: "", reference: "" },
@@ -40,7 +39,6 @@ const AddCustomer = ({ show, onClose }) => {
       customerName,
       vehicleNumber,
       phoneNumber,
-      paymentMethod,
       creditAmount,
       workDetails,
     };
@@ -102,21 +100,6 @@ const AddCustomer = ({ show, onClose }) => {
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
-            </div>
-            <div>
-              <label className="block text-gray-300 mb-2">Payment Method</label>
-              <select
-                className="w-full h-10 px-3 rounded bg-gray-700 text-white"
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              >
-                <option value="" disabled>
-                  Payment Method
-                </option>
-                <option value="Cash">Cash</option>
-                <option value="UPI">UPI</option>
-                <option value="online Transfer">Online Transfer</option>
-              </select>
             </div>
             <div>
               <label className="block text-gray-300 mb-2">Credit Amount</label>

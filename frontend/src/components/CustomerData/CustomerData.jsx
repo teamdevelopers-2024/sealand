@@ -27,7 +27,7 @@ const CustomerData = () => {
       }
     };
     fetchCustomers();
-  }, [showAddCustomerModal]);
+  }, [showAddCustomerModal ,showPaymentModal ,showCreditForm]);
 
   // Function to calculate the due amount
   const calculateDueAmount = (creditAmount, paidAmount) => {
@@ -63,6 +63,7 @@ const CustomerData = () => {
     setShowCreditForm(false);
     setSelectedCustomer(null);
   };
+
 
   // Calculate total pages based on customers per page
   const totalPages = Math.ceil(customers.length / customersPerPage);
@@ -111,9 +112,6 @@ const CustomerData = () => {
         </div>
 
         <div className="overflow-x-auto p-2">
-          {filteredCustomers.length === 0 ? (
-            <p className="text-gray-300">No customer data available.</p>
-          ) : (
             <table className="table-auto w-full text-left text-gray-300">
               <thead>
                 <tr className="bg-gray-800">
@@ -127,6 +125,14 @@ const CustomerData = () => {
                   <th className="px-4 py-2">Credit / Repayment</th>
                   <th className="px-4 py-2">History</th>
                 </tr>
+
+              ))}
+       
+            </tbody>
+            {customers.length == 0 && (
+                <h3 className="pt-6 font-medium">No Credit Customers...</h3>
+              )}
+          </table>
               </thead>
               <tbody className="bg-gray-700">
                 {paginatedCustomers.map((customer, index) => (
@@ -171,11 +177,11 @@ const CustomerData = () => {
                       </button>
                     </td>
                   </tr>
-                ))}
               </tbody>
             </table>
           )}
         </div>
+        
 
         {/* Pagination Controls */}
         {filteredCustomers.length > 0 && totalPages > 1 && (
@@ -218,6 +224,9 @@ const CustomerData = () => {
             </div>
           </div>
         )}
+      </div>
+        )}
+
       </div>
 
       {/* Payment Modal */}
