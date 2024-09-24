@@ -21,42 +21,6 @@ ChartJS.register(
   Legend
 );
 
-// Monthly data
-const monthlyData = [
-  { name: "Jan", income: 1500 },
-  { name: "Feb", income: 3000 },
-  { name: "Mar", income: 4500 },
-  { name: "Apr", income: 3500 },
-  { name: "May", income: 5000 },
-  { name: "Jun", income: 7000 },
-  { name: "Jul", income: 8000 },
-  { name: "Aug", income: 9000 },
-  { name: "Sep", income: 12000 },
-  { name: "Oct", income: 11000 },
-  { name: "Nov", income: 9000 },
-  { name: "Dec", income: 13000 },
-];
-
-// Weekly data
-const weeklyData = [
-  { name: "Sun", income: 1000 },
-  { name: "Mon", income: 2000 },
-  { name: "Tue", income: 3000 },
-  { name: "Wed", income: 1500 },
-  { name: "Thu", income: 2500 },
-  { name: "Fri", income: 4000 },
-  { name: "Sat", income: 3500 },
-];
-
-// Yearly data
-const yearlyData = [
-  { name: "2019", income: 50000 },
-  { name: "2020", income: 100000 },
-  { name: "2021", income: 110000 },
-  { name: "2022", income: 120000 },
-  { name: "2023", income: 130000 },
-  { name: "2024", income: 140000 },
-];
 const currentDate = new Date();
 const currentMonth = currentDate.getMonth(); // 0-11
 const currentYear = currentDate.getFullYear();
@@ -65,7 +29,7 @@ function IncomeChart({ incomeHistoryData }) {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [totalIncome, setTotalIncome] = useState('')
-  const [totalIncomemonth, setTotalIncomemonth] = useState('')
+  const [totalIncomemonth,  setTotalIncomemonth] = useState('')
 
   useEffect(() => {
 
@@ -204,33 +168,41 @@ function IncomeChart({ incomeHistoryData }) {
   };
   return (
     <>
-      <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
+      <div className="bg-gray-800 p-8 rounded-xl flex justify-between items-center mb-8">
         <div className="text-left space-y-3 w-1/3">
           <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {totalIncome}
+            {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(totalIncome)}
           </h3>
           <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
           <h2 className="text-3xl font-bold text-cyan-400">
             {timePeriod} income
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {totalIncomemonth}
+            {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(totalIncomemonth)}
           </h3>
           <button className="relative top-16">Download</button>
         </div>
 
         <div className="w-2/4 relative">
           <div className="absolute z-10 bottom--4 left-0 p-2">
+            <div className="bg-gray-700 px-1.5 py-1.5 rounded-full text-cyan-500">
             <select
               value={timePeriod}
               onChange={handleTimePeriodChange}
-              className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
+              className="bg-gray-700 rounded-full text-cyan-500 outline-none"
             >
               <option value="Daily">Daily</option>
               <option value="Monthly">Monthly</option>
               <option value="Yearly">Yearly</option>
             </select>
+            </div>
           </div>
 
           <div
