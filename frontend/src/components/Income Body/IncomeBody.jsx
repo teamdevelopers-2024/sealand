@@ -79,8 +79,11 @@ const IncomeBody = ({ addIncomeModal }) => {
         console.error("Error fetching income history data", error);
       }
     };
+    if(addIncomeModal==false){
+      fetchIncomeHistory();
+    }
 
-    fetchIncomeHistory();
+    
   }, [addIncomeModal]);
 
   const handleTimePeriodChange = (event) => {

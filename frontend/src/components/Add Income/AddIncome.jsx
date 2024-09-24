@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../../services/api";
-
+import swal from 'sweetalert';
 const AddIncome = ({ setAddIncomeModal }) => {
   // State to handle the dynamic fields
   const [workDescriptions, setWorkDescriptions] = useState([
@@ -73,13 +73,20 @@ const AddIncome = ({ setAddIncomeModal }) => {
       totalServiceCost,
       workDescriptions,
     };
+    try{
     const result = await api.addIncome(formData);
-    if (result.error) {
-      alert("Error adding income");
-    } else {
-      alert("Income added successfully");
-      setAddIncomeModal(false);
+    if(result.error){
+      swal("Error!", result.errors[0], "error");
+      return
     }
+    // Show success message
+    swal("Success!", "income added successfully!", "success");
+    setAddIncomeModal(false); // Close the modal after saving
+  } catch (err) {
+    // Handle error (optional: show error message)
+    console.error(err);
+    swal("Error!", "Failed to add income.", "error");
+  }
   };
 
   return (
