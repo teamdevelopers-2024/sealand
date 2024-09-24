@@ -65,29 +65,8 @@ const Expense = ({addExpenseModal}) => {
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">
         {/* Total Expense Section */}
-        <div className="bg-gray-800 p-8 rounded-lg flex justify-between  items-center mb-8">
-          <div className="text-left space-y-3 w-1/3">
-            <h2 className="text-5xl font-bold text-cyan-400">Total Expense</h2>
-            <h3 className="text-3xl text-red-400 font-bold">
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(expense)}
-            </h3>
-            <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-            <h2 className="text-3xl font-bold text-cyan-400">
-              {timePeriod} Expense
-            </h2>
-            <h3 className="text-3xl text-red-400 font-bold">
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(expense)}
-            </h3>
-          </div>
-
+      
           <ExpenseChart expenseHistoryData={expenseHistoryData}/>
-        </div>
 
         <div className="bg-gray-800 p-10 rounded-lg">
           <div className="flex justify-between items-center mb-6">
