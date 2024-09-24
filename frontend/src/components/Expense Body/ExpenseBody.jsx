@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
-
 import ExpenseModal from "../View Expense/ExpenseModal";
 import ExpenseChart from "../Expense Chart/ExpenseChart";
+import PDFDownloadModal from "../PDFDownloadModal/PDFDownloadModal";
+import jsPDF from "jspdf";
 
-
-
-const Expense = ({addExpenseModal}) => {
+const Expense = ({ addExpenseModal }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [expenseHistoryData, setExpenseHistoryData] = useState([]);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [customStartDate, setCustomStartDate] = useState(null);
+  const [customEndDate, setCustomEndDate] = useState(null);
+  const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const entriesPerPage = 5;
 
   useEffect(() => {
-
-
     const fetchExpenseHistory = async () => {
-
       try {
         const response = await api.showExpense();
         setExpenseHistoryData(response.data);
@@ -27,48 +26,86 @@ const Expense = ({addExpenseModal}) => {
       }
     };
 
-    if(addExpenseModal==false){
+    if (addExpenseModal == false) {
       fetchExpenseHistory();
     }
-      
-    
   }, [addExpenseModal]);
 
+  const generatePDF = (startDate, endDate) => {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
 
- 
+    const headers = [
+      "Date",
+      "Payee Name",
+      "Expense Type",
+      "Payment Type",
+      "Phone Number",
+      "Amount",
+    ];
 
+    const filteredData = expenseHistoryData.filter((entry) => {
+      const entryDate = new Date(entry.date);
+      return entryDate >= startDate && entryDate <= endDate;
+    });
+
+    doc.text("Expense History", 14, 10);
+    headers.forEach((header, index) => doc.text(header, 14 + index * 40, 20));
+
+    filteredData.forEach((entry, index) => {
+      const row = [
+        new Date(entry.date).toLocaleDateString("en-GB"),
+        entry.payeeName,
+        entry.expenseType,
+        entry.paymentMethod,
+        entry.contactNumber ? entry.contactNumber.toString() : "",
+        `₹ ${entry.totalExpense}`,
+      ];
+      row.forEach((cell, cellIndex) => {
+        doc.text(cell.toString(), 14 + cellIndex * 40, 30 + index * 10);
+      });
+    });
+
+    doc.save("expense_history.pdf");
+  };
 
   const handleViewExpense = (entry) => {
     setSelectedExpense(entry);
     setIsModalOpen(true);
   };
 
-  
-
   // Filter entries based on search query
   const filteredEntries = expenseHistoryData
-    .filter((entry) =>
-      entry.payeeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (entry.contactNumber && entry.contactNumber.toString().includes(searchQuery))
+    .filter(
+      (entry) =>
+        entry.payeeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (entry.contactNumber &&
+          entry.contactNumber.toString().includes(searchQuery))
     )
     .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort latest first
 
   // Calculate entries to display
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = filteredEntries.slice(indexOfFirstEntry, indexOfLastEntry);
+  const currentEntries = filteredEntries.slice(
+    indexOfFirstEntry,
+    indexOfLastEntry
+  );
   const pageCount = Math.ceil(filteredEntries.length / entriesPerPage);
 
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">
         {/* Total Expense Section */}
-      
-          <ExpenseChart expenseHistoryData={expenseHistoryData}/>
+
+        <ExpenseChart expenseHistoryData={expenseHistoryData}
+          setPdfModalOpen={setPdfModalOpen}/>
 
         <div className="bg-gray-800 p-10 rounded-xl">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-cyan-400">Expense History</h3>
+            <h3 className="text-2xl font-bold text-cyan-400">
+              Expense History
+            </h3>
             <input
               type="text"
               value={searchQuery}
@@ -141,10 +178,14 @@ const Expense = ({addExpenseModal}) => {
                 Page {currentPage} of {pageCount}
               </span>
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, pageCount))
+                }
                 disabled={currentPage === pageCount} // Disable if on the last page
                 className={`bg-cyan-400 px-4 py-2 rounded-lg ${
-                  currentPage === pageCount ? "opacity-50 cursor-not-allowed" : ""
+                  currentPage === pageCount
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
                 }`}
               >
                 &#8594;
@@ -160,6 +201,15 @@ const Expense = ({addExpenseModal}) => {
           onClose={() => setIsModalOpen(false)}
         />
       </main>
+      <PDFDownloadModal
+        isOpen={pdfModalOpen}
+        onClose={() => setPdfModalOpen(false)}
+        customStartDate={customStartDate}
+        setCustomStartDate={setCustomStartDate}
+        customEndDate={customEndDate}
+        setCustomEndDate={setCustomEndDate}
+        generatePDF={generatePDF}
+      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import jsPDF from "jspdf"; 
+import jsPDF from "jspdf";
 import api from "../../services/api";
 import ViewIncomeModal from "../View Income/ViewIncomeModal";
 import IncomeChart from "../Income Chart/IncomeChart";
@@ -15,14 +15,17 @@ const IncomeBody = ({ addIncomeModal }) => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTimeFrame, setSelectedTimeFrame] = useState("thisMonth");
   const entriesPerPage = 5;
 
   useEffect(() => {
     const fetchIncomeHistory = async () => {
       try {
         const response = await api.showIncome();
-        setIncomeHistoryData(response.data);
+        const sortedData = response.data.sort(
+          (a, b) => new Date(b.workDate) - new Date(a.workDate)
+        );
+        setIncomeHistoryData(sortedData);
+        console.log(sortedData); // Log sorted data
       } catch (error) {
         console.error("Error fetching income history data", error);
       }
@@ -36,48 +39,13 @@ const IncomeBody = ({ addIncomeModal }) => {
     const today = new Date();
     let filteredData = incomeHistoryData;
 
-    // Filter by search query
     if (searchQuery) {
       const lowerCaseQuery = searchQuery.toLowerCase();
-      filteredData = filteredData.filter(entry => 
-        entry.customerName.toLowerCase().includes(lowerCaseQuery) ||
-        entry.contactNumber.toString().includes(lowerCaseQuery)
+      filteredData = filteredData.filter(
+        (entry) =>
+          entry.customerName.toLowerCase().includes(lowerCaseQuery) ||
+          entry.contactNumber.toString().includes(lowerCaseQuery)
       );
-    }
-
-    // Apply time frame filters
-    switch (selectedTimeFrame) {
-      case "last7Days":
-        const last7Days = new Date(today);
-        last7Days.setDate(today.getDate() - 7);
-        filteredData = filteredData.filter(entry => 
-          new Date(entry.workDate) >= last7Days
-        );
-        break;
-      case "lastMonth":
-        const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-        const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
-        filteredData = filteredData.filter(entry => 
-          new Date(entry.workDate) >= lastMonthStart &&
-          new Date(entry.workDate) <= lastMonthEnd
-        );
-        break;
-      case "thisMonth":
-        const startOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        filteredData = filteredData.filter(entry => 
-          new Date(entry.workDate) >= startOfThisMonth
-        );
-        break;
-      case "customMonth":
-        if (customStartDate && customEndDate) {
-          filteredData = filteredData.filter(entry => 
-            new Date(entry.workDate) >= customStartDate &&
-            new Date(entry.workDate) <= customEndDate
-          );
-        }
-        break;
-      default:
-        break;
     }
 
     return filteredData;
@@ -86,17 +54,24 @@ const IncomeBody = ({ addIncomeModal }) => {
   const generatePDF = (startDate, endDate) => {
     const doc = new jsPDF();
     doc.setFontSize(12);
-    
-    const headers = ["Date", "Customer Name", "Vehicle Number", "Payment Type", "Phone Number", "Amount"];
-    
-    const filteredData = incomeHistoryData.filter(entry => {
+
+    const headers = [
+      "Date",
+      "Customer Name",
+      "Vehicle Number",
+      "Payment Type",
+      "Phone Number",
+      "Amount",
+    ];
+
+    const filteredData = incomeHistoryData.filter((entry) => {
       const entryDate = new Date(entry.workDate);
       return entryDate >= startDate && entryDate <= endDate;
     });
-  
+
     doc.text("Income History", 14, 10);
-    headers.forEach((header, index) => doc.text(header, 14 + (index * 40), 20));
-  
+    headers.forEach((header, index) => doc.text(header, 14 + index * 40, 20));
+
     filteredData.forEach((entry, index) => {
       const row = [
         new Date(entry.workDate).toLocaleDateString("en-GB"),
@@ -104,13 +79,13 @@ const IncomeBody = ({ addIncomeModal }) => {
         entry.vehicleNumber,
         entry.paymentMethod,
         entry.contactNumber ? entry.contactNumber.toString() : "",
-        `₹ ${entry.totalServiceCost}`
+        `₹ ${entry.totalServiceCost}`,
       ];
       row.forEach((cell, cellIndex) => {
-        doc.text(cell.toString(), 14 + (cellIndex * 40), 30 + (index * 10));
+        doc.text(cell.toString(), 14 + cellIndex * 40, 30 + index * 10);
       });
     });
-  
+
     doc.save("income_history.pdf");
   };
 
@@ -130,7 +105,10 @@ const IncomeBody = ({ addIncomeModal }) => {
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">
-        <IncomeChart incomeHistoryData={incomeHistoryData}  setIsModalOpen = {setIsModalOpen}/>
+        <IncomeChart
+          incomeHistoryData={incomeHistoryData}
+          setIsModalOpen={setIsModalOpen}
+        />
 
         {/* Income History Table */}
         <div className="bg-gray-800 p-10 rounded-lg">
@@ -161,20 +139,29 @@ const IncomeBody = ({ addIncomeModal }) => {
               {paginatedEntries.length > 0 ? (
                 paginatedEntries.map((entry) => (
                   <tr key={entry.id} className="border-b border-gray-700">
-                    <td className="py-2">{new Date(entry.workDate).toLocaleDateString("en-GB")}</td>
+                    <td className="py-2">
+                      {new Date(entry.workDate).toLocaleDateString("en-GB")}
+                    </td>
                     <td className="py-2">{entry.customerName}</td>
                     <td className="py-2">{entry.vehicleNumber}</td>
                     <td className="py-2">{entry.paymentMethod}</td>
                     <td className="py-2">{entry.contactNumber}</td>
                     <td className="py-2">₹ {entry.totalServiceCost}</td>
                     <td className="py-2">
-                      <button onClick={() => handleViewClick(entry)} className="text-cyan-400">View</button>
+                      <button
+                        onClick={() => handleViewClick(entry)}
+                        className="text-cyan-400"
+                      >
+                        View
+                      </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="py-4 text-center text-gray-500">No data available</td>
+                  <td colSpan="7" className="py-4 text-center text-gray-500">
+                    No data available
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -186,15 +173,25 @@ const IncomeBody = ({ addIncomeModal }) => {
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className={`text-cyan-400 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`text-cyan-400 ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 <FaChevronLeft />
               </button>
-              <span className="text-gray-300">Page {currentPage} of {totalPages}</span>
+              <span className="text-gray-300">
+                Page {currentPage} of {totalPages}
+              </span>
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
-                className={`text-cyan-400 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`text-cyan-400 ${
+                  currentPage === totalPages
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
               >
                 <FaChevronRight />
               </button>
@@ -210,14 +207,14 @@ const IncomeBody = ({ addIncomeModal }) => {
         </div>
       </main>
 
-      <PDFDownloadModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        customStartDate={customStartDate} 
-        setCustomStartDate={setCustomStartDate} 
-        customEndDate={customEndDate} 
-        setCustomEndDate={setCustomEndDate} 
-        generatePDF={generatePDF} 
+      <PDFDownloadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        customStartDate={customStartDate}
+        setCustomStartDate={setCustomStartDate}
+        customEndDate={customEndDate}
+        setCustomEndDate={setCustomEndDate}
+        generatePDF={generatePDF}
       />
     </div>
   );
