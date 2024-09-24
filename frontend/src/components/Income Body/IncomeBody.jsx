@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -14,8 +14,14 @@ import api from "../../services/api";
 import ViewIncomeModal from "../View Income/ViewIncomeModal";
 
 // Register Chart.js components
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
-
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend
+);
 
 // Monthly data
 const monthlyData = [
@@ -54,7 +60,7 @@ const yearlyData = [
   { name: "2024", income: 140000 },
 ];
 
-const IncomeBody = ({addIncomeModal}) => {
+const IncomeBody = ({ addIncomeModal }) => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -84,16 +90,19 @@ const IncomeBody = ({addIncomeModal}) => {
 
   const getMonthlyData = () => {
     const monthlyIncome = Array(12).fill(0);
-    const currentYearData = incomeHistoryData.filter(entry => new Date(entry.date).getFullYear() === currentYear);
+    const currentYearData = incomeHistoryData.filter(
+      (entry) => new Date(entry.date).getFullYear() === currentYear
+    );
 
-    currentYearData.forEach(entry => {
+    currentYearData.forEach((entry) => {
       const entryDate = new Date(entry.date);
       const month = entryDate.getMonth();
-      monthlyIncome[month] += parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+      monthlyIncome[month] +=
+        parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
     });
 
     return monthlyIncome.map((income, index) => ({
-      name: new Date(0, index).toLocaleString('default', { month: 'short' }),
+      name: new Date(0, index).toLocaleString("default", { month: "short" }),
       income,
     }));
   };
@@ -106,15 +115,16 @@ const IncomeBody = ({addIncomeModal}) => {
     for (let i = 6; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(today.getDate() - i);
-      const dayName = date.toLocaleString('default', { weekday: 'short' });
+      const dayName = date.toLocaleString("default", { weekday: "short" });
       labels.push(dayName);
     }
 
-    incomeHistoryData.forEach(entry => {
+    incomeHistoryData.forEach((entry) => {
       const entryDate = new Date(entry.date);
       const dayIndex = Math.floor((today - entryDate) / (1000 * 60 * 60 * 24));
       if (dayIndex >= 0 && dayIndex < 7) {
-        last7Days[6 - dayIndex] += parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+        last7Days[6 - dayIndex] +=
+          parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
       }
     });
 
@@ -133,11 +143,12 @@ const IncomeBody = ({addIncomeModal}) => {
       labels.push(year);
     }
 
-    incomeHistoryData.forEach(entry => {
+    incomeHistoryData.forEach((entry) => {
       const entryDate = new Date(entry.date);
       const yearIndex = entryDate.getFullYear() - (currentYear - 4);
       if (yearIndex >= 0 && yearIndex < 5) {
-        yearlyIncome[yearIndex] += parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+        yearlyIncome[yearIndex] +=
+          parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
       }
     });
 
@@ -147,9 +158,12 @@ const IncomeBody = ({addIncomeModal}) => {
     }));
   };
 
-  const graphData = timePeriod === "Monthly" ? getMonthlyData() 
-                : timePeriod === "Daily" ? getDailyData() 
-                : getYearlyData();
+  const graphData =
+    timePeriod === "Monthly"
+      ? getMonthlyData()
+      : timePeriod === "Daily"
+      ? getDailyData()
+      : getYearlyData();
 
   const labels = graphData.map((data) => data.name);
   const incomeValues = graphData.map((data) => data.income);
@@ -166,22 +180,6 @@ const IncomeBody = ({addIncomeModal}) => {
         fill: true,
       },
     ],
-  };
-
-  const options = {
-    scales: {
-      x: { grid: { display: false } },
-      y: { grid: { display: true }, ticks: { color: "#ffffff" } },
-    },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (tooltipItem) => `Income: ₹${tooltipItem.raw}`,
-        },
-      },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
   };
 
   const handlePrevYear = () => {
@@ -208,13 +206,21 @@ const IncomeBody = ({addIncomeModal}) => {
           <div className="text-left space-y-3 w-1/3">
             <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
             <h3 className="text-3xl text-green-300 font-bold">
-              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(incomeValues.reduce((a, b) => a + b, 0))}
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(incomeValues.reduce((a, b) => a + b, 0))}
             </h3>
             <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
-            <h2 className="text-3xl font-bold text-cyan-400">{timePeriod} income</h2>
+            <h2 className="text-3xl font-bold text-cyan-400">
+              {timePeriod} income
+            </h2>
             <h3 className="text-3xl text-green-300 font-bold">
-              {new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(incomeValues.reduce((a, b) => a + b, 0))}
-            </h3>   
+              {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(incomeValues.reduce((a, b) => a + b, 0))}
+            </h3>
           </div>
 
           <div className="w-2/4 relative">
@@ -230,7 +236,10 @@ const IncomeBody = ({addIncomeModal}) => {
               </select>
             </div>
 
-            <div className="mt-5 relative" style={{ width: "600px", height: "300px", marginBottom: "45px" }}>
+            <div
+              className="mt-5 relative"
+              style={{ width: "600px", height: "300px", marginBottom: "45px" }}
+            >
               <div className="flex justify-center mb-2 text-gray-300">
                 {timePeriod === "Daily" ? (
                   <span className="text-lg font-semibold">Last 7 Days</span>
@@ -243,15 +252,31 @@ const IncomeBody = ({addIncomeModal}) => {
 
               {timePeriod === "Monthly" && (
                 <>
-                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{ marginLeft: '-60px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  <div
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{
+                      marginLeft: "-60px",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     <button onClick={handlePrevYear} className="text-cyan-400">
                       <FaChevronLeft />
                     </button>
                   </div>
-                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{ marginRight: '-60px', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  <div
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
+                    style={{
+                      marginRight: "-60px",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
                     <button onClick={handleNextYear} className="text-cyan-400">
                       <FaChevronRight />
@@ -260,7 +285,38 @@ const IncomeBody = ({addIncomeModal}) => {
                 </>
               )}
 
-              <Line data={data} options={options} />
+              <Line
+                data={data}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    tooltip: {
+                      backgroundColor: "#333",
+                      titleColor: "#fff",
+                      bodyColor: "#fff",
+                    },
+                  },
+                  scales: {
+                    x: {
+                      grid: {
+                        display: false, // Disable x-axis grid lines
+                      },
+                      ticks: {
+                        color: "#999", // X-axis label color
+                      },
+                    },
+                    y: {
+                      display: false, // Hide the entire y-axis including labels
+                      grid: {
+                        display: false, // Disable y-axis grid lines
+                      },
+                    },
+                  },
+                }}
+              />
             </div>
           </div>
         </div>
@@ -269,7 +325,12 @@ const IncomeBody = ({addIncomeModal}) => {
         <div className="bg-gray-800 p-10 rounded-lg">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-2xl font-bold text-cyan-400">Income History</h3>
-            <button onClick={() => {/* Show all logic */}} className="text-cyan-400">
+            <button
+              onClick={() => {
+                /* Show all logic */
+              }}
+              className="text-cyan-400"
+            >
               See all
             </button>
           </div>
@@ -321,4 +382,4 @@ const IncomeBody = ({addIncomeModal}) => {
   );
 };
 
-export default IncomeBody;
+export default IncomeBody;

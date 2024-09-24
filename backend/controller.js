@@ -256,7 +256,134 @@ async function repayment(req, res) {
     }
   }
   
+  async function getIncomeAndExpense(req, res) {
+    try {
+        const today = new Date();
+        
+        // Set today's start and end dates
+        const todayStart = new Date(today);
+        todayStart.setHours(0, 0, 0, 0); // Set start to today at 12 AM
+        
+        const tomorrowStart = new Date(todayStart);
+        tomorrowStart.setDate(todayStart.getDate() + 1); // Tomorrow at 12 AM
 
+        // Set yesterday's start and end dates
+        const yesterdayStart = new Date(todayStart);
+        yesterdayStart.setDate(yesterdayStart.getDate() - 1); // Yesterday at 12 AM
+
+        const yesterdayEnd = new Date(todayStart); // End of yesterday is today at 12 AM
+
+        console.log("Today Start : ", todayStart.toISOString());
+        console.log("Tomorrow Start : ", tomorrowStart.toISOString());
+        console.log("Yesterday Start : ", yesterdayStart.toISOString());
+        console.log("Yesterday End : ", yesterdayEnd.toISOString());
+
+        // Fetch today's total income from IncomeDb
+        const todayIncomeResult = await IncomeDb.aggregate([
+            {
+                $match: {
+                    workDate: { $gte: todayStart, $lt: tomorrowStart }, // Only comparing date
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: '$totalServiceCost' },
+                },
+            },
+        ]);
+
+        // Fetch today's total expense from ExpenseDb
+        const todayExpenseResult = await ExpenseDb.aggregate([
+            {
+                $match: {
+                    date: { $gte: todayStart, $lt: tomorrowStart }, // Only comparing date
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: '$totalExpense' },
+                },
+            },
+        ]);
+
+        // Fetch yesterday's total income from IncomeDb
+        const yesterdayIncomeResult = await IncomeDb.aggregate([
+            {
+                $match: {
+                    workDate: { $gte: yesterdayStart, $lt: yesterdayEnd }, // Only comparing date
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: '$totalServiceCost' },
+                },
+            },
+        ]);
+
+        // Fetch yesterday's total expense from ExpenseDb
+        const yesterdayExpenseResult = await ExpenseDb.aggregate([
+            {
+                $match: {
+                    date: { $gte: yesterdayStart, $lt: yesterdayEnd }, // Only comparing date
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: '$totalExpense' },
+                },
+            },
+        ]);
+
+        // Fetch today's customer count from customerDb
+        const todayCustomerCountResult = await IncomeDb.aggregate([
+            {
+                $match: {
+                    workDate: { $gte: todayStart, $lt: tomorrowStart }, // Assuming 'createdAt' is the field that stores the customer's creation date
+                },
+            },
+            {
+                $count: "totalCustomers", // Count the total number of customers
+            },
+        ]);
+
+        // Extract amounts or set to 0 if no results
+        const todayIncome = todayIncomeResult[0]?.totalAmount || 0;
+        const todayExpense = todayExpenseResult[0]?.totalAmount || 0;
+        const yesterdayIncome = yesterdayIncomeResult[0]?.totalAmount || 0;
+        const yesterdayExpense = yesterdayExpenseResult[0]?.totalAmount || 0;
+        const todayCustomerCount = todayCustomerCountResult[0]?.totalCustomers || 0; // Get customer count
+
+        // Log results for debugging
+        console.log("todayIncome:", todayIncome);
+        console.log("todayExpense:", todayExpense);
+        console.log("yesterdayIncome:", yesterdayIncome);
+        console.log("yesterdayExpense:", yesterdayExpense);
+        console.log("todayCustomerCount:", todayCustomerCount);
+
+        // Send response
+        res.status(200).json({
+            error: false,
+            message: "Fetched successfully",
+            todayIncome,
+            todayExpense,
+            yesterdayIncome,
+            yesterdayExpense,
+            todayCustomerCount,
+        });
+
+    } catch (error) {
+        console.error('Error fetching income and expense:', error);
+        res.status(500).json({ message: 'Internal server error', error: true });
+    }
+}
+
+
+  
+  
 
 export default {
     login,
@@ -266,5 +393,6 @@ export default {
     addExpense,
     getExpenses,
     getCustomers,
-    repayment
+    repayment,
+    getIncomeAndExpense
 }

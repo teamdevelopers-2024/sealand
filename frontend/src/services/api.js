@@ -108,6 +108,17 @@ async function repayment(customer,details) {
   }
 }
 
+
+async function getTodayIncomeAndExpense() {
+  try {
+    const response = await api.get('/getTodayIncomeAndExpense')
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
 export default {
   login,
   addIncome,
@@ -116,5 +127,6 @@ export default {
   addExpense,
   showExpense,
   showCustomers,
-  repayment
+  repayment,
+  getTodayIncomeAndExpense
 };
