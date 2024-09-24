@@ -6,6 +6,7 @@ const ExpenseModal = ({ isOpen, expense, onClose }) => {
   if (!isOpen || !expense) return null;
 
   const generatePDF = () => {
+    
     const doc = new jsPDF();
 
 
