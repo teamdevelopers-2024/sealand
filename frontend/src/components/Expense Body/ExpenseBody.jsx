@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import ExpenseModal from "../View Expense/ExpenseModal";
 
+
 // Register Chart.js components
 ChartJS.register(
   LineElement,
@@ -38,7 +39,7 @@ const monthlyData = [
   { name: "Dec", expense: 13000 },
 ];
 
-const Expense = () => {
+const Expense = ({addExpenseModal}) => {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [expense, setExpense] = useState(106480); // Default for monthly
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +50,10 @@ const Expense = () => {
   const entriesPerPage = 5;
 
   useEffect(() => {
+
+
     const fetchExpenseHistory = async () => {
+
       try {
         const response = await api.showExpense();
         setExpenseHistoryData(response.data);
@@ -58,8 +62,16 @@ const Expense = () => {
       }
     };
 
-    fetchExpenseHistory();
-  }, [isModalOpen]);
+    if(addExpenseModal==false){
+      fetchExpenseHistory();
+    }
+      
+    
+  }, [addExpenseModal]);
+
+
+ 
+
 
   const handleViewExpense = (entry) => {
     setSelectedExpense(entry);
