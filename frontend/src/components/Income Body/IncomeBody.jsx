@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import jsPDF from "jspdf"; // Import jsPDF
-import DatePicker from "react-datepicker"; // Import DatePicker
-import "react-datepicker/dist/react-datepicker.css"; // Import styles
+import jsPDF from "jspdf"; 
 import api from "../../services/api";
 import ViewIncomeModal from "../View Income/ViewIncomeModal";
 import IncomeChart from "../Income Chart/IncomeChart";
+import PDFDownloadModal from "../PDFDownloadModal/PDFDownloadModal";
 
 const IncomeBody = ({ addIncomeModal }) => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
@@ -16,6 +15,7 @@ const IncomeBody = ({ addIncomeModal }) => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState("thisMonth");
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const entriesPerPage = 5;
 
   useEffect(() => {
@@ -27,13 +27,9 @@ const IncomeBody = ({ addIncomeModal }) => {
         console.error("Error fetching income history data", error);
       }
     };
-    if(addIncomeModal==false){
+    if (!addIncomeModal) {
       fetchIncomeHistory();
     }
-    console.log(incomeHistoryData);
-    
-
-    
   }, [addIncomeModal]);
 
   const filteredEntries = () => {
@@ -77,37 +73,38 @@ const IncomeBody = ({ addIncomeModal }) => {
     return filteredData;
   };
 
-  const generatePDF = () => {
+  const generatePDF = (startDate, endDate) => {
     const doc = new jsPDF();
     doc.setFontSize(12);
-  
-    // Add title
-    doc.text("Income History", 14, 10);
-  
-    // Add table headers
+    
     const headers = ["Date", "Customer Name", "Vehicle Number", "Payment Type", "Phone Number", "Amount"];
-    headers.forEach((header, index) => {
-      doc.text(header, 14 + (index * 40), 20);
+    
+    const filteredData = incomeHistoryData.filter(entry => {
+      const entryDate = new Date(entry.workDate);
+      return entryDate >= startDate && entryDate <= endDate;
     });
-
-    // Add entries
-    const currentEntries = filteredEntries();
-    currentEntries.forEach((entry, index) => {
+  
+    doc.text("Income History", 14, 10);
+    headers.forEach((header, index) => doc.text(header, 14 + (index * 40), 20));
+  
+    filteredData.forEach((entry, index) => {
       const row = [
         new Date(entry.workDate).toLocaleDateString("en-GB"),
         entry.customerName,
         entry.vehicleNumber,
         entry.paymentMethod,
         entry.contactNumber ? entry.contactNumber.toString() : "",
-        `₹ ${entry.totalServiceCost.toString()}`
+        `₹ ${entry.totalServiceCost}`
       ];
       row.forEach((cell, cellIndex) => {
-        doc.text(cell, 14 + (cellIndex * 40), 30 + (index * 10));
+        doc.text(cell.toString(), 14 + (cellIndex * 40), 30 + (index * 10));
       });
     });
-
+  
     doc.save("income_history.pdf");
   };
+  
+  
 
   const currentEntries = filteredEntries();
   const totalEntries = currentEntries.length;
@@ -116,6 +113,11 @@ const IncomeBody = ({ addIncomeModal }) => {
     (currentPage - 1) * entriesPerPage,
     currentPage * entriesPerPage
   );
+
+  const handleViewClick = (entry) => {
+    setSingleEntry(entry);
+    setViewIncomeModal(true);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
@@ -133,48 +135,13 @@ const IncomeBody = ({ addIncomeModal }) => {
               placeholder="Search by name or phone"
               className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg"
             />
-            <div className="flex items-center">
-              <select
-                value={selectedTimeFrame}
-                onChange={(e) => {
-                  setSelectedTimeFrame(e.target.value);
-                  if (e.target.value !== "customMonth") {
-                    setCustomStartDate(null);
-                    setCustomEndDate(null);
-                  }
-                }}
-                className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg"
-              >
-                <option value="thisMonth">This Month</option>
-                <option value="lastMonth">Last Month</option>
-                <option value="last7Days">Last 7 Days</option>
-                <option value="customMonth">Custom Range</option>
-              </select>
-              {selectedTimeFrame === "customMonth" && (
-                <div className="flex space-x-2 ml-2">
-                  <DatePicker
-                    selected={customStartDate}
-                    onChange={(date) => setCustomStartDate(date)}
-                    className="bg-gray-700 text-gray-100 rounded-lg px-4 py-2"
-                    placeholderText="From Date"
-                    dateFormat="dd/MM/yyyy"
-                  />
-                  <DatePicker
-                    selected={customEndDate}
-                    onChange={(date) => setCustomEndDate(date)}
-                    className="bg-gray-700 text-gray-100 rounded-lg px-4 py-2"
-                    placeholderText="To Date"
-                    dateFormat="dd/MM/yyyy"
-                  />
-                </div>
-              )}
-            </div>
             <button 
-              onClick={generatePDF} 
+              onClick={() => setIsModalOpen(true)} 
               className="bg-cyan-500 text-white px-4 py-2 rounded-lg">
               Download PDF
             </button>
           </div>
+
           <table className="w-full text-left">
             <thead>
               <tr className="text-gray-500">
@@ -191,29 +158,20 @@ const IncomeBody = ({ addIncomeModal }) => {
               {paginatedEntries.length > 0 ? (
                 paginatedEntries.map((entry) => (
                   <tr key={entry.id} className="border-b border-gray-700">
-                    <td className="py-2">
-                      {new Date(entry.workDate).toLocaleDateString("en-GB")}
-                    </td>
+                    <td className="py-2">{new Date(entry.workDate).toLocaleDateString("en-GB")}</td>
                     <td className="py-2">{entry.customerName}</td>
                     <td className="py-2">{entry.vehicleNumber}</td>
                     <td className="py-2">{entry.paymentMethod}</td>
                     <td className="py-2">{entry.contactNumber}</td>
                     <td className="py-2">₹ {entry.totalServiceCost}</td>
                     <td className="py-2">
-                      <button
-                        onClick={() => handleViewClick(entry)}
-                        className="text-cyan-400"
-                      >
-                        View
-                      </button>
+                      <button onClick={() => handleViewClick(entry)} className="text-cyan-400">View</button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="py-4 text-center text-gray-500">
-                    No data available
-                  </td>
+                  <td colSpan="7" className="py-4 text-center text-gray-500">No data available</td>
                 </tr>
               )}
             </tbody>
@@ -225,25 +183,15 @@ const IncomeBody = ({ addIncomeModal }) => {
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className={`text-cyan-400 ${
-                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`text-cyan-400 ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <FaChevronLeft />
               </button>
-              <span className="text-gray-300">
-                Page {currentPage} of {totalPages}
-              </span>
+              <span className="text-gray-300">Page {currentPage} of {totalPages}</span>
               <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className={`text-cyan-400 ${
-                  currentPage === totalPages
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
+                className={`text-cyan-400 ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <FaChevronRight />
               </button>
@@ -258,6 +206,16 @@ const IncomeBody = ({ addIncomeModal }) => {
           )}
         </div>
       </main>
+
+      <PDFDownloadModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        customStartDate={customStartDate} 
+        setCustomStartDate={setCustomStartDate} 
+        customEndDate={customEndDate} 
+        setCustomEndDate={setCustomEndDate} 
+        generatePDF={generatePDF} 
+      />
     </div>
   );
 };
