@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Line } from "react-chartjs-2"; // Import Line from Chart.js
+import { Line } from "react-chartjs-2";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import Navbar from "../Navbar/Navbar";
 import api from "../../services/api";
 import {
   Chart as ChartJS,
@@ -12,9 +11,17 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import ExpenseModal from "../View Expense/ExpenseModal";
 
 // Register Chart.js components
-ChartJS.register(LineElement, CategoryScale,PointElement, LinearScale, Tooltip, Legend);
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  PointElement,
+  LinearScale,
+  Tooltip,
+  Legend
+);
 
 // Sample expense history data
 const expenseHistoryData = [
@@ -93,6 +100,9 @@ const Expense = () => {
   const entriesPerPage = 5;
   const [expenseHistoryData, setExpenseHistoryData] = useState([]);
 
+  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     const fetchIncomeHistory = async () => {
       try {
@@ -106,6 +116,11 @@ const Expense = () => {
 
     fetchIncomeHistory();
   }, []);
+
+  const handleViewExpense = (entry) => {
+    setSelectedExpense(entry);
+    setIsModalOpen(true);
+  };
 
   const dailyData = [
     { name: "Sun", expense: 0 },
@@ -127,14 +142,17 @@ const Expense = () => {
       const startOfWeek = new Date(today);
       startOfWeek.setDate(today.getDate() - dayOfWeek); // Get the start of the week (Sunday)
 
-      const expenses = expenseHistoryData.reduce((acc, entry) => {
-        const entryDate = new Date(entry.date);
-        const dayIndex = entryDate.getDay();
-        if (entryDate >= startOfWeek && entryDate <= today) {
-          acc[dayIndex] += parseInt(entry.amount.replace(/[^\d]/g, "")); // Update daily expenses
-        }
-        return acc;
-      }, dailyData.map(data => data.expense));
+      const expenses = expenseHistoryData.reduce(
+        (acc, entry) => {
+          const entryDate = new Date(entry.date);
+          const dayIndex = entryDate.getDay();
+          if (entryDate >= startOfWeek && entryDate <= today) {
+            acc[dayIndex] += parseInt(entry.amount.replace(/[^\d]/g, "")); // Update daily expenses
+          }
+          return acc;
+        },
+        dailyData.map((data) => data.expense)
+      );
 
       // Update dailyData with calculated expenses
       dailyData.forEach((data, index) => {
@@ -161,11 +179,11 @@ const Expense = () => {
       : monthlyData;
 
   const data = {
-    labels: graphData.map(data => data.name),
+    labels: graphData.map((data) => data.name),
     datasets: [
       {
         label: "Expenses",
-        data: graphData.map(data => data.expense),
+        data: graphData.map((data) => data.expense),
         borderColor: "#00d8ff",
         backgroundColor: "rgba(0, 216, 255, 0.2)",
         borderWidth: 3,
@@ -342,7 +360,9 @@ const Expense = () => {
 
         <div className="bg-gray-800 p-10 rounded-lg">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-cyan-400">Expense History</h3>
+            <h3 className="text-2xl font-bold text-cyan-400">
+              Expense History
+            </h3>
             <button onClick={handleShowAll} className="text-cyan-400">
               See all
             </button>
@@ -364,7 +384,9 @@ const Expense = () => {
                 .slice(indexOfFirstEntry, indexOfLastEntry)
                 .map((entry, index) => (
                   <tr key={index} className="border-t border-gray-700">
-                    <td className="py-4">{new Date(entry.date).toLocaleDateString("en-GB")}</td>
+                    <td className="py-4">
+                      {new Date(entry.date).toLocaleDateString("en-GB")}
+                    </td>
                     <td className="py-4">{entry.payeeName}</td>
                     <td className="py-4">{entry.expenseType}</td>
                     <td className="py-4">{entry.paymentMethod}</td>
@@ -376,7 +398,12 @@ const Expense = () => {
                       }).format(entry.totalExpense)}
                     </td>
                     <td className="py-4">
-                      <button className="bg-cyan-400 text-gray-900 px-3 py-1 rounded">View</button>
+                      <button
+                        onClick={() => handleViewExpense(entry)}
+                        className="bg-cyan-400 text-gray-900 px-3 py-1 rounded"
+                      >
+                        View
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -405,9 +432,15 @@ const Expense = () => {
             </div>
           )}
         </div>
+        {/* Modal for Viewing Expense */}
+        <ExpenseModal
+          isOpen={isModalOpen}
+          expense={selectedExpense}
+          onClose={() => setIsModalOpen(false)}
+        />
       </main>
     </div>
   );
 };
 
-export default Expense;
+export default Expense;
