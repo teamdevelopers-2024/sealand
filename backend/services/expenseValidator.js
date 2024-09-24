@@ -31,7 +31,7 @@ export function validateExpenseData(data) {
     }
 
     // Validate contactNumber
-    if (!contactNumber || !validator.isMobilePhone(contactNumber, 'en-IN')) {
+    if (!contactNumber || contactNumber.length<10) {
         errors.push('Contact number is required and must be a valid phone number.');
     }
 

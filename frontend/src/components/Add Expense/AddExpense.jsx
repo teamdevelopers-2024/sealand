@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
+import swal from 'sweetalert';
 
 const AddExpense = ({ setAddExpenseModal }) => {
   // State for form fields
@@ -133,10 +134,23 @@ const AddExpense = ({ setAddExpenseModal }) => {
     }
     console.log(formData)
     if (validateForm()) {
-      const result = await api.addExpense(formData)
-    } else {
-      console.log("Form has errors.");
+    try {
+      const data=await api.addExpense(formData);
+      if(data.error){
+        swal("Error!", data.errors[0], "error");
+        return
+      }
+      // Show success message
+      swal("Success!", "Expense added successfully!", "success");
+      setAddExpenseModal(false); // Close the modal after saving
+    } catch (err) {
+      // Handle error (optional: show error message)
+      console.error(err);
+      swal("Error!", "Failed to add expense.", "error");
     }
+  } else {
+    console.log("Form has errors.");
+  }
   };
 
   // Function to add a new work description field
