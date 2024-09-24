@@ -104,7 +104,7 @@ const Expense = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchIncomeHistory = async () => {
+    const fetchExpenseHistory = async () => {
       try {
         const response = await api.showExpense();
         setExpenseHistoryData(response.data);
@@ -114,8 +114,8 @@ const Expense = () => {
       }
     };
 
-    fetchIncomeHistory();
-  }, []);
+    fetchExpenseHistory();
+  }, [isModalOpen]);
 
   const handleViewExpense = (entry) => {
     setSelectedExpense(entry);

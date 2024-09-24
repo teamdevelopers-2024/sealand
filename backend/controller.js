@@ -225,15 +225,16 @@ async function repayment(req, res) {
         return res.status(404).json({ message: 'Customer not found' });
       }
 
+      console.log(customer)
       const updateIncomeData = new IncomeDb({
         workDate:details.repaymentDate,
         customerName:customer.customerName,
-        vehicleNumber:customer.vehicleNumber,
+        vehicleNumber:customer.vehicleNumber[0],
         contactNumber:customer.phoneNumber,
         paymentMethod:"Credit Repayment",
         totalServiceCost:details.repaymentAmount,
         workDescriptions:[{
-            description:customer.workDescriptions[0].description,
+            description:customer.workDetails[0].description,
             amount:details.repaymentAmount,
             reference:customer.phoneNumber
         }]
