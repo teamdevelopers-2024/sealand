@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import api from "../../services/api";
 import {
   Chart as ChartJS,
@@ -24,35 +23,6 @@ ChartJS.register(
   Legend
 );
 
-// Sample expense history data
-const expenseHistoryData = [
-  {
-    date: "2023-09-01",
-    customerName: "John Doe",
-    vehicleNumber: "ABC123",
-    paymentType: "Cash",
-    phoneNumber: "1234567890",
-    amount: "2000",
-  },
-  {
-    date: "2023-09-02",
-    customerName: "Jane Smith",
-    vehicleNumber: "XYZ456",
-    paymentType: "Card",
-    phoneNumber: "0987654321",
-    amount: "1500",
-  },
-  {
-    date: "2023-09-03",
-    customerName: "Alice Johnson",
-    vehicleNumber: "LMN789",
-    paymentType: "Cash",
-    phoneNumber: "1231231234",
-    amount: "2500",
-  },
-  // Add more entries as needed
-];
-
 // Monthly data
 const monthlyData = [
   { name: "Jan", expense: 1500 },
@@ -69,39 +39,15 @@ const monthlyData = [
   { name: "Dec", expense: 13000 },
 ];
 
-// Weekly data
-const weeklyData = [
-  { name: "Sun", expense: 1000 },
-  { name: "Mon", expense: 2000 },
-  { name: "Tue", expense: 3000 },
-  { name: "Wed", expense: 1500 },
-  { name: "Thu", expense: 2500 },
-  { name: "Fri", expense: 4000 },
-  { name: "Sat", expense: 3500 },
-];
-
-// Yearly data
-const yearlyData = [
-  { name: "2016", expense: 60000 },
-  { name: "2017", expense: 70000 },
-  { name: "2018", expense: 80000 },
-  { name: "2019", expense: 90000 },
-  { name: "2020", expense: 95000 },
-  { name: "2021", expense: 105000 },
-  { name: "2022", expense: 115000 },
-  { name: "2023", expense: 125000 },
-];
-
 const Expense = ({addExpenseModal}) => {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [expense, setExpense] = useState(106480); // Default for monthly
-  const [showAll, setShowAll] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currentYear, setCurrentYear] = useState(2023);
-  const entriesPerPage = 5;
   const [expenseHistoryData, setExpenseHistoryData] = useState([]);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const entriesPerPage = 5;
 
   useEffect(() => {
 
@@ -111,9 +57,8 @@ const Expense = ({addExpenseModal}) => {
       try {
         const response = await api.showExpense();
         setExpenseHistoryData(response.data);
-        console.log("expense history", response.data);
       } catch (error) {
-        console.error("Error fetching income history data", error);
+        console.error("Error fetching expense history data", error);
       }
     };
 
@@ -133,117 +78,33 @@ const Expense = ({addExpenseModal}) => {
     setIsModalOpen(true);
   };
 
-  const dailyData = [
-    { name: "Sun", expense: 0 },
-    { name: "Mon", expense: 0 },
-    { name: "Tue", expense: 0 },
-    { name: "Wed", expense: 0 },
-    { name: "Thu", expense: 0 },
-    { name: "Fri", expense: 0 },
-    { name: "Sat", expense: 0 },
-  ];
-
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
     setTimePeriod(period);
-
-    if (period === "Daily") {
-      const today = new Date();
-      const dayOfWeek = today.getDay(); // Get current day of the week
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - dayOfWeek); // Get the start of the week (Sunday)
-
-      const expenses = expenseHistoryData.reduce(
-        (acc, entry) => {
-          const entryDate = new Date(entry.date);
-          const dayIndex = entryDate.getDay();
-          if (entryDate >= startOfWeek && entryDate <= today) {
-            acc[dayIndex] += parseInt(entry.amount.replace(/[^\d]/g, "")); // Update daily expenses
-          }
-          return acc;
-        },
-        dailyData.map((data) => data.expense)
-      );
-
-      // Update dailyData with calculated expenses
-      dailyData.forEach((data, index) => {
-        data.expense = expenses[index];
-      });
-
-      setExpense(dailyData.reduce((total, day) => total + day.expense, 0)); // Calculate total daily expense
-    } else if (period === "Weekly") {
-      setExpense(24500); // Weekly expense
-    } else if (period === "Monthly") {
+    if (period === "Monthly") {
       setExpense(106480); // Monthly expense
-    } else if (period === "Yearly") {
-      setExpense(120000); // Yearly expense
     }
+    // Additional logic for other periods can be added here
   };
 
-  const graphData =
-    timePeriod === "Daily"
-      ? dailyData // Use dailyData when timePeriod is Daily
-      : timePeriod === "Weekly"
-      ? weeklyData
-      : timePeriod === "Yearly"
-      ? yearlyData
-      : monthlyData;
+  // Filter entries based on search query
+  const filteredEntries = expenseHistoryData
+    .filter((entry) =>
+      entry.payeeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (entry.contactNumber && entry.contactNumber.toString().includes(searchQuery))
+    )
+    .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort latest first
 
-  const data = {
-    labels: graphData.map((data) => data.name),
-    datasets: [
-      {
-        label: "Expenses",
-        data: graphData.map((data) => data.expense),
-        borderColor: "#00d8ff",
-        backgroundColor: "rgba(0, 216, 255, 0.2)",
-        borderWidth: 3,
-        tension: 0.1, // Smoother line
-      },
-    ],
-  };
-
-  // Entries to display
+  // Calculate entries to display
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-  const currentEntries = showAll
-    ? expenseHistoryData
-    : expenseHistoryData.slice(0, 3);
-
-  const pageCount = Math.ceil(expenseHistoryData.length / entriesPerPage);
-
-  const handleNextPage = () => {
-    if (currentPage < pageCount) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleShowAll = () => {
-    setShowAll(true);
-    setCurrentPage(1);
-  };
-
-  const handleNextYear = () => {
-    if (timePeriod === "Monthly") {
-      setCurrentYear((prevYear) => prevYear + 1);
-    }
-  };
-
-  const handlePrevYear = () => {
-    if (timePeriod === "Monthly" && currentYear > 2020) {
-      setCurrentYear((prevYear) => prevYear - 1);
-    }
-  };
+  const currentEntries = filteredEntries.slice(indexOfFirstEntry, indexOfLastEntry);
+  const pageCount = Math.ceil(filteredEntries.length / entriesPerPage);
 
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">
+        {/* Total Expense Section */}
         <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
           <div className="text-left space-y-3 w-1/3">
             <h2 className="text-5xl font-bold text-cyan-400">Total Expense</h2>
@@ -263,43 +124,37 @@ const Expense = ({addExpenseModal}) => {
                 currency: "INR",
               }).format(expense)}
             </h3>
-            <p className="text-xl text-cyan-400">
-              This {timePeriod.toLowerCase()}:{" "}
-              {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(expense)}
-            </p>
           </div>
 
           <div className="w-2/4 relative">
-            <div className="absolute z-10 bottom--4 left-0 p-2">
-              <select
-                value={timePeriod}
-                onChange={handleTimePeriodChange}
-                className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
-              >
-                <option value="Daily">Daily</option>
-                <option value="Monthly">Month</option>
-                <option value="Yearly">Yearly</option>
-              </select>
-            </div>
-
+            <select
+              value={timePeriod}
+              onChange={handleTimePeriodChange}
+              className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
+            >
+              <option value="Daily">Daily</option>
+              <option value="Monthly">Monthly</option>
+              <option value="Yearly">Yearly</option>
+            </select>
+            {/* Chart Section */}
             <div
               className="mt-5 relative"
               style={{ width: "600px", height: "300px", marginBottom: "45px" }}
             >
-              <div className="flex justify-center mb-2 text-gray-300">
-                {timePeriod === "Daily" ? (
-                  <span className="text-lg font-semibold">Last 7 Days</span>
-                ) : timePeriod === "Monthly" ? (
-                  <span className="text-lg font-semibold">{currentYear}</span>
-                ) : (
-                  <span className="text-lg font-semibold">Last 5 Years</span>
-                )}
-              </div>
               <Line
-                data={data}
+                data={{
+                  labels: monthlyData.map((data) => data.name),
+                  datasets: [
+                    {
+                      label: "Expenses",
+                      data: monthlyData.map((data) => data.expense),
+                      borderColor: "#00d8ff",
+                      backgroundColor: "rgba(0, 216, 255, 0.2)",
+                      borderWidth: 3,
+                      tension: 0.1,
+                    },
+                  ],
+                }}
                 options={{
                   responsive: true,
                   plugins: {
@@ -315,68 +170,32 @@ const Expense = ({addExpenseModal}) => {
                   scales: {
                     x: {
                       grid: {
-                        display: false, // Disable x-axis grid lines
-                      },
-                      ticks: {
-                        color: "#999", // X-axis label color
+                        display: false,
                       },
                     },
                     y: {
-                      display: false, // Hide the entire y-axis including labels
+                      display: false,
                       grid: {
-                        display: false, // Disable y-axis grid lines
+                        display: false,
                       },
                     },
                   },
                 }}
               />
-
-              {timePeriod === "Monthly" && (
-                <>
-                  <div
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{
-                      marginLeft: "-60px",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <button onClick={handlePrevYear} className="text-cyan-400">
-                      <FaChevronLeft />
-                    </button>
-                  </div>
-                  <div
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
-                    style={{
-                      marginRight: "-60px",
-                      width: "40px",
-                      height: "40px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <button onClick={handleNextYear} className="text-cyan-400">
-                      <FaChevronRight />
-                    </button>
-                  </div>
-                </>
-              )}
             </div>
           </div>
         </div>
 
         <div className="bg-gray-800 p-10 rounded-lg">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-bold text-cyan-400">
-              Expense History
-            </h3>
-            <button onClick={handleShowAll} className="text-cyan-400">
-              See all
-            </button>
+            <h3 className="text-2xl font-bold text-cyan-400">Expense History</h3>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name or phone"
+              className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg"
+            />
           </div>
           <table className="w-full text-left">
             <thead>
@@ -391,9 +210,14 @@ const Expense = ({addExpenseModal}) => {
               </tr>
             </thead>
             <tbody>
-              {currentEntries
-                .slice(indexOfFirstEntry, indexOfLastEntry)
-                .map((entry, index) => (
+              {filteredEntries.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="py-4 text-center text-gray-500">
+                    No data available
+                  </td>
+                </tr>
+              ) : (
+                currentEntries.map((entry, index) => (
                   <tr key={index} className="border-t border-gray-700">
                     <td className="py-4">
                       {new Date(entry.date).toLocaleDateString("en-GB")}
@@ -417,16 +241,19 @@ const Expense = ({addExpenseModal}) => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                ))
+              )}
             </tbody>
           </table>
 
-          {showAll && (
+          {filteredEntries.length > 0 && (
             <div className="flex justify-between items-center mt-4">
               <button
-                onClick={handlePrevPage}
-                disabled={currentPage === 1}
-                className="bg-cyan-400 px-4 py-2 rounded-lg"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1} // Disable if on the first page
+                className={`bg-cyan-400 px-4 py-2 rounded-lg ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 &#8592;
               </button>
@@ -434,15 +261,18 @@ const Expense = ({addExpenseModal}) => {
                 Page {currentPage} of {pageCount}
               </span>
               <button
-                onClick={handleNextPage}
-                disabled={currentPage === pageCount}
-                className="bg-cyan-400 px-4 py-2 rounded-lg"
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, pageCount))}
+                disabled={currentPage === pageCount} // Disable if on the last page
+                className={`bg-cyan-400 px-4 py-2 rounded-lg ${
+                  currentPage === pageCount ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 &#8594;
               </button>
             </div>
           )}
         </div>
+
         {/* Modal for Viewing Expense */}
         <ExpenseModal
           isOpen={isModalOpen}
