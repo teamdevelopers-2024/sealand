@@ -12,10 +12,10 @@ const IncomeBody = ({ addIncomeModal }) => {
   const [singleEntry, setSingleEntry] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTimeFrame, setSelectedTimeFrame] = useState("thisMonth");
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTimeFrame, setSelectedTimeFrame] = useState("thisMonth");
   const entriesPerPage = 5;
 
   useEffect(() => {
@@ -36,31 +36,41 @@ const IncomeBody = ({ addIncomeModal }) => {
     const today = new Date();
     let filteredData = incomeHistoryData;
 
+    // Filter by search query
+    if (searchQuery) {
+      const lowerCaseQuery = searchQuery.toLowerCase();
+      filteredData = filteredData.filter(entry => 
+        entry.customerName.toLowerCase().includes(lowerCaseQuery) ||
+        entry.contactNumber.toString().includes(lowerCaseQuery)
+      );
+    }
+
+    // Apply time frame filters
     switch (selectedTimeFrame) {
       case "last7Days":
         const last7Days = new Date(today);
         last7Days.setDate(today.getDate() - 7);
-        filteredData = incomeHistoryData.filter(entry => 
+        filteredData = filteredData.filter(entry => 
           new Date(entry.workDate) >= last7Days
         );
         break;
       case "lastMonth":
         const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
         const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
-        filteredData = incomeHistoryData.filter(entry => 
+        filteredData = filteredData.filter(entry => 
           new Date(entry.workDate) >= lastMonthStart &&
           new Date(entry.workDate) <= lastMonthEnd
         );
         break;
       case "thisMonth":
         const startOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        filteredData = incomeHistoryData.filter(entry => 
+        filteredData = filteredData.filter(entry => 
           new Date(entry.workDate) >= startOfThisMonth
         );
         break;
       case "customMonth":
         if (customStartDate && customEndDate) {
-          filteredData = incomeHistoryData.filter(entry => 
+          filteredData = filteredData.filter(entry => 
             new Date(entry.workDate) >= customStartDate &&
             new Date(entry.workDate) <= customEndDate
           );
@@ -103,8 +113,6 @@ const IncomeBody = ({ addIncomeModal }) => {
   
     doc.save("income_history.pdf");
   };
-  
-  
 
   const currentEntries = filteredEntries();
   const totalEntries = currentEntries.length;
