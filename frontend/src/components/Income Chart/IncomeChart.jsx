@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Line } from "react-chartjs-2";
+import downloadIcon from "../../assets/downloadIcon.png";
 import {
   Chart as ChartJS,
   LineElement,
@@ -10,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import IncomeDownloadButton from "./IncomeDownloadButton";
 
 // Register Chart.js components
 ChartJS.register(
@@ -29,7 +31,7 @@ function IncomeChart({ incomeHistoryData }) {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [totalIncome, setTotalIncome] = useState('')
-  const [totalIncomemonth,  setTotalIncomemonth] = useState('')
+  const [totalIncomemonth, setTotalIncomemonth] = useState('')
 
   useEffect(() => {
 
@@ -173,9 +175,9 @@ function IncomeChart({ incomeHistoryData }) {
           <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
           <h3 className="text-3xl text-green-300 font-bold">
             {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(totalIncome)}
+              style: "currency",
+              currency: "INR",
+            }).format(totalIncome)}
           </h3>
           <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
           <h2 className="text-3xl font-bold text-cyan-400">
@@ -183,31 +185,32 @@ function IncomeChart({ incomeHistoryData }) {
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
             {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(totalIncomemonth)}
+              style: "currency",
+              currency: "INR",
+            }).format(totalIncomemonth)}
           </h3>
-          <button className="relative top-16">Download</button>
+          {/* Download Button Here */}
+          <IncomeDownloadButton/>
         </div>
 
         <div className="w-2/4 relative">
           <div className="absolute z-10 bottom--4 left-0 p-2">
             <div className="bg-gray-700 px-1.5 py-1.5 rounded-full text-cyan-500">
-            <select
-              value={timePeriod}
-              onChange={handleTimePeriodChange}
-              className="bg-gray-700 rounded-full text-cyan-500 outline-none"
-            >
-              <option value="Daily">Daily</option>
-              <option value="Monthly">Monthly</option>
-              <option value="Yearly">Yearly</option>
-            </select>
+              <select
+                value={timePeriod}
+                onChange={handleTimePeriodChange}
+                className="cursor-pointer bg-gray-700 rounded-full text-cyan-500 outline-none"
+              >
+                <option value="Daily">Daily</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Yearly">Yearly</option>
+              </select>
             </div>
           </div>
 
           <div
-            className="mt-5 relative"
-            style={{ width: "600px", height: "300px", marginBottom: "45px" }}
+            className="mt-5"
+            style={{ width: "100%", height: "300px", marginBottom: "45px" }}
           >
             <div className="flex justify-center mb-2 text-gray-300">
               {timePeriod === "Daily" ? (
@@ -224,9 +227,9 @@ function IncomeChart({ incomeHistoryData }) {
                 <div
                   className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
                   style={{
-                    marginLeft: "-60px",
-                    width: "40px",
-                    height: "40px",
+                    marginLeft: "-8%",
+                    width: "6%",
+                    height: "10%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -239,9 +242,9 @@ function IncomeChart({ incomeHistoryData }) {
                 <div
                   className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
                   style={{
-                    marginRight: "-60px",
-                    width: "40px",
-                    height: "40px",
+                    marginRight: '1%',
+                    width: "6%",
+                    height: "10%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",

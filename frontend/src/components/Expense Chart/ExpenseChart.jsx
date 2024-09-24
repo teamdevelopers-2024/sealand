@@ -10,6 +10,7 @@ import {
   } from "chart.js";
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import ExpenseDownloadButton from "./ExpenseDownloadButton";
 
   // Register Chart.js components
 ChartJS.register(
@@ -186,7 +187,8 @@ function ExpenseChart({expenseHistoryData}) {
                 currency: "INR",
               }).format(totalExpensemonth)}
           </h3>
-          <button className="relative top-16">Download</button>
+          {/* Download Button Here */}
+          <ExpenseDownloadButton/>
         </div>
 
         <div className="w-2/4 relative">
@@ -196,9 +198,9 @@ function ExpenseChart({expenseHistoryData}) {
             <select
               value={timePeriod}
               onChange={handleTimePeriodChange}
-              className="bg-gray-700 rounded-full text-cyan-500 outline-none"
+              className="cursor-pointer bg-gray-700 rounded-full text-cyan-500 outline-none"
             >
-              <option value="Daily">Daily</option>
+              <option value="Daily" className="cursor-pointer">Daily</option>
               <option value="Monthly">Monthly</option>
               <option value="Yearly">Yearly</option>
             </select>
@@ -207,7 +209,7 @@ function ExpenseChart({expenseHistoryData}) {
 
           <div
             className="mt-5 relative"
-            style={{ width: "600px", height: "300px", marginBottom: "45px" }}
+            style={{ width: "100%", height: "300px", marginBottom: "45px" }}
           >
             <div className="flex justify-center mb-2 text-gray-300">
               {timePeriod === "Daily" ? (
@@ -224,9 +226,9 @@ function ExpenseChart({expenseHistoryData}) {
                 <div
                   className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
                   style={{
-                    marginLeft: "-60px",
-                    width: "40px",
-                    height: "40px",
+                    marginLeft: "-8%",
+                    width: "6%",
+                    height: "10%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -239,9 +241,9 @@ function ExpenseChart({expenseHistoryData}) {
                 <div
                   className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
                   style={{
-                    marginRight: "-60px",
-                    width: "40px",
-                    height: "40px",
+                    marginRight: '1%',
+                    width: "6%",
+                    height: "10%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",

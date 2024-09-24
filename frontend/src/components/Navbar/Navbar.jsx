@@ -3,12 +3,12 @@ import Logo from "../../assets/logoNoBackgroundCropped.png";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 
-const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
+const Navbar = ({ setAddIncomeModal, setAddExpenseModal }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const {logout} = useAuth()
+  const { logout } = useAuth()
 
-  const handleLogout = (e)=>{
+  const handleLogout = (e) => {
     e.preventDefault()
     logout()
     navigate('/')
@@ -26,7 +26,7 @@ const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
             src={Logo}
             alt="Logo"
             className="h-12 w-28"
-            />
+          />
         </div>
 
         {/* Navigation Links */}
@@ -34,7 +34,7 @@ const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
           <li>
             <a
               onClick={() => navigate('/home')}
-              className={`cursor-pointer ${pathSegment=='home' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'}`}
+              className={`cursor-pointer ${pathSegment == 'home' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'}`}
             >
               Home
             </a>
@@ -43,7 +43,7 @@ const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
             <a
               onClick={() => navigate('/expense')}
               className={`${pathSegment === 'expense' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'} cursor-pointer`}
-              >
+            >
               Expenses
             </a>
           </li>
@@ -51,7 +51,7 @@ const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
             <a
               onClick={() => navigate('/income')}
               className={`${pathSegment === 'income' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'} cursor-pointer`}
-              >
+            >
               Income
             </a>
           </li>
@@ -59,7 +59,7 @@ const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
             <a
               onClick={() => navigate('/credit')}
               className={`${pathSegment === 'credit' ? 'text-red-600 font-semibold border-b-2 border-red-600' : 'hover:text-white'} cursor-pointer`}
-              >
+            >
               Credit Customers
             </a>
           </li>
@@ -67,33 +67,39 @@ const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
 
         {/* Icons and Add Income Button Placeholder */}
         <div className="flex items-center space-x-4">
-          {/* Add Income Button or Invisible Placeholder */}   
+          {/* Add Income Button or Invisible Placeholder */}
           {/* Add Expense Button or Invisible Placeholder */}
           <div className="flex items-center">
-          {pathSegment === 'income' && (
-              <button onClick={()=> setAddIncomeModal(true)} className="bg-red-600 text-white px-4 py-2 rounded">
+            {pathSegment === 'income' && (
+              <button onClick={() => setAddIncomeModal(true)} className="cursor-pointer border border-red-600 bg-red-600 text-white font-semibold py-2 px-3 rounded-lg shadow-md hover:bg-[#e93737] hover:bg-opacity-30 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2">
                 Add Income
               </button>
             )}
             {pathSegment === 'expense' && (
-              <button onClick={()=> setAddExpenseModal(true)} className="bg-red-600 text-white px-4 py-2 rounded">
+              <button onClick={() => setAddExpenseModal(true)} className="cursor-pointer border border-red-600 bg-red-600 text-white font-semibold py-2 px-3 rounded-lg shadow-md hover:bg-[#e93737] hover:bg-opacity-30 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2">
                 Add Expense
               </button>
             )}
             {pathSegment !== 'expense' && pathSegment !== 'income' && (
-                   <button onClick={()=> setAddExpenseModal(true)} className="invisible bg-red-600 text-white px-4 py-2 rounded">
-                   Add Expense
-                 </button>
+              <button onClick={() => setAddExpenseModal(true)} className="invisible bg-red-600 text-white px-4 py-2 rounded">
+                Add Expense
+              </button>
             )}
           </div>
 
           {/* Icons */}
-          <button className='cursor-pointer' onClick={handleLogout}>logout</button>
+          <button
+            className="cursor-pointer border border-cyan-600 bg-[#00A1B7] bg-opacity-20 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-cyan-500 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-300 focus:ring-opacity-50"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+
           <img
             src="https://via.placeholder.com/150" // Replace with profile image URL
             alt="Profile"
             className="h-8 w-8 cursor-pointer rounded-full"
-            />
+          />
         </div>
 
         {/* Mobile menu button */}
@@ -123,4 +129,4 @@ const Navbar = ({setAddIncomeModal , setAddExpenseModal}) => {
   );
 };
 
-export default Navbar;
+export default Navbar;
