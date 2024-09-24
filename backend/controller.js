@@ -172,23 +172,104 @@ async function addExpense(req,res) {
 
 
 
-async function getExpenses(req,res) {
+async function getExpenses(req, res) {
     try {
-        const expense = await ExpenseDb.find().sort({ _id: -1 });
-        res.status(200).json({
-            error: false,
-            message: "Income fetched successfully",
-            data: expense,
-        });
-    } catch (error) {
-        console.error("Error fetching income history:", error);
+      // Fetch all expenses sorted by the latest entry
+      const expenses = await ExpenseDb.find().sort({ _id: -1 });
+  
+      // Calculate total expense
+      const totalExpense = expenses.reduce((sum, expense) => sum + expense.totalExpense, 0);
+  
+      // Get the current date details
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1; // Months are 0-indexed in JavaScript
+      const currentDay = currentDate.getDate();
+        
+      console.log('currentDate ',currentDate)
+      console.log('currentYear ',currentYear)
+      console.log('currentMonth ',currentMonth)
+      console.log('currentDay ',currentDay)
 
-        res.status(500).json({
-            error: true,
-            message: "Internal server error",
-        });
+      // Aggregate total expenses for the current year
+      const currentYearTotal = await ExpenseDb.aggregate([
+        {
+          $match: {
+            date: {
+              $gte: new Date(`${currentYear}-01-01`),
+              $lte: new Date(`${currentYear}-12-31`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$totalExpense" },
+          },
+        },
+      ]);
+  
+      // Aggregate total expenses for the current month
+      const currentMonthTotal = await ExpenseDb.aggregate([
+        {
+          $match: {
+            date: {
+              $gte: new Date(`${currentYear}-${currentMonth}-01`),
+              $lte: new Date(`${currentYear}-${currentMonth}-31`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$totalExpense" },
+          },
+        },
+      ]);
+  
+      // Aggregate total expenses for the current day
+      const currentDayTotal = await ExpenseDb.aggregate([
+        {
+          $match: {
+            date: {
+              $gte: new Date(`${currentYear}-${currentMonth}-${currentDay}T00:00:00.000Z`),
+              $lte: new Date(`${currentYear}-${currentMonth}-${currentDay}T23:59:59.999Z`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$totalExpense" },
+          },
+        },
+      ]);
+  
+      // Log the totals for debugging purposes
+      console.log('Total Expense:', totalExpense);
+      console.log('Current Year Total:', currentYearTotal[0]?.total || 0);
+      console.log('Current Month Total:', currentMonthTotal[0]?.total || 0);
+      console.log('Current Day Total:', currentDayTotal[0]?.total || 0);
+  
+      // Format the response data
+      res.status(200).json({
+        error: false,
+        message: "Expenses fetched successfully",
+        data: expenses,
+        totalExpense,
+        currentYearTotal: currentYearTotal[0]?.total || 0,
+        currentMonthTotal: currentMonthTotal[0]?.total || 0,
+        currentDayTotal: currentDayTotal[0]?.total || 0,
+      });
+    } catch (error) {
+      console.error("Error fetching expense history:", error);
+  
+      res.status(500).json({
+        error: true,
+        message: "Internal server error",
+      });
     }
-}
+  }
 
 
 async function getCustomers(req,res) {
