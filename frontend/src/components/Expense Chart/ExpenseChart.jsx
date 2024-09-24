@@ -20,43 +20,7 @@ ChartJS.register(
     Tooltip,
     Legend
   );
-  
-// Monthly data
-const monthlyData = [
-    { name: "Jan", income: 1500 },
-    { name: "Feb", income: 3000 },
-    { name: "Mar", income: 4500 },
-    { name: "Apr", income: 3500 },
-    { name: "May", income: 5000 },
-    { name: "Jun", income: 7000 },
-    { name: "Jul", income: 8000 },
-    { name: "Aug", income: 9000 },
-    { name: "Sep", income: 12000 },
-    { name: "Oct", income: 11000 },
-    { name: "Nov", income: 9000 },
-    { name: "Dec", income: 13000 },
-  ];
-  
-  // Weekly data
-  const weeklyData = [
-    { name: "Sun", income: 1000 },
-    { name: "Mon", income: 2000 },
-    { name: "Tue", income: 3000 },
-    { name: "Wed", income: 1500 },
-    { name: "Thu", income: 2500 },
-    { name: "Fri", income: 4000 },
-    { name: "Sat", income: 3500 },
-  ];
-  
-  // Yearly data
-  const yearlyData = [
-    { name: "2019", income: 50000 },
-    { name: "2020", income: 100000 },
-    { name: "2021", income: 110000 },
-    { name: "2022", income: 120000 },
-    { name: "2023", income: 130000 },
-    { name: "2024", income: 140000 },
-  ];
+ 
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth(); // 0-11
   const currentYear = currentDate.getFullYear();
@@ -64,29 +28,29 @@ const monthlyData = [
 function ExpenseChart({expenseHistoryData}) {
     const [timePeriod, setTimePeriod] = useState("Monthly");
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-    const [totalIncome,setTotalIncome]=useState('')
-    const [totalIncomemonth,setTotalIncomemonth]=useState('')
+    const [totalExpense,setTotalExpense]=useState('')
+    const [totalExpensemonth,setTotalExpensemonth]=useState('')
     
     useEffect(() => {
 
       const total = expenseHistoryData.reduce((accumulator, entry) => {      
-        const serviceCost = entry.totalServiceCost
-        return accumulator + serviceCost;
+        const expenseCost = entry.totalExpense
+        return accumulator + expenseCost;
       }, 0);
-      const totalIncomeThisMonth = expenseHistoryData.reduce((total, entry) => {
-        const workDate = new Date(entry.workDate);
+      const totalExpenseThisMonth = expenseHistoryData.reduce((total, entry) => {
+        const workDate = new Date(entry.date);
         
         // Check if the workDate is in the current month and year
         if (workDate.getMonth() === currentMonth && workDate.getFullYear() === currentYear) {
-          // Parse the totalServiceCost and add it to the total
-          const serviceCost = entry.totalServiceCost
-          return total + serviceCost; // Accumulate the total
+          // Parse the totalExpense and add it to the total
+          const expenseCost = entry.totalExpense
+          return total + expenseCost; // Accumulate the total
         }
         return total; // If not, return the total unchanged
       }, 0);// Sum them up
 
-  setTotalIncomemonth(totalIncomeThisMonth) 
-    setTotalIncome(total)   
+  setTotalExpensemonth(totalExpenseThisMonth) 
+    setTotalExpense(total)   
     }, [expenseHistoryData])
     
 
@@ -100,7 +64,7 @@ function ExpenseChart({expenseHistoryData}) {
   };
 
   const getMonthlyData = () => {
-    const monthlyIncome = Array(12).fill(0);
+    const monthlyExpense = Array(12).fill(0);
     const currentYearData = expenseHistoryData.filter(
       (entry) => new Date(entry.date).getFullYear() === currentYear
     );
@@ -108,13 +72,12 @@ function ExpenseChart({expenseHistoryData}) {
     currentYearData.forEach((entry) => {
       const entryDate = new Date(entry.date);
       const month = entryDate.getMonth();
-      monthlyIncome[month] +=
-        entry.amount|| 0; // Parse amount correctly
+      monthlyExpense[month] += entry.totalExpense|| 0; // Parse amount correctly
     });
 
-    return monthlyIncome.map((income, index) => ({
+    return monthlyExpense.map((expense, index) => ({
       name: new Date(0, index).toLocaleString("default", { month: "short" }),
-      income,
+      expense,
     }));
   };
 
@@ -134,18 +97,18 @@ function ExpenseChart({expenseHistoryData}) {
       const entryDate = new Date(entry.date);
       const dayIndex = Math.floor((today - entryDate) / (1000 * 60 * 60 * 24));
       if (dayIndex >= 0 && dayIndex < 7) {
-        last7Days[6 - dayIndex] += entry.amount || 0; // Parse amount correctly
+        last7Days[6 - dayIndex] += entry.totalExpense || 0; // Parse amount correctly
       }
     });
 
     return labels.map((label, index) => ({
       name: label,
-      income: last7Days[index],
+      expense: last7Days[index],
     }));
   };
 
   const getYearlyData = () => {
-    const yearlyIncome = Array(5).fill(0);
+    const yearlyexpense = Array(5).fill(0);
     const labels = [];
 
     for (let i = 0; i < 5; i++) {
@@ -157,14 +120,13 @@ function ExpenseChart({expenseHistoryData}) {
       const entryDate = new Date(entry.date);
       const yearIndex = entryDate.getFullYear() - (currentYear - 4);
       if (yearIndex >= 0 && yearIndex < 5) {
-        yearlyIncome[yearIndex] +=
-          parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
+        yearlyexpense[yearIndex] += entry.totalExpense || 0;
       }
     });
 
     return labels.map((label, index) => ({
       name: label,
-      income: yearlyIncome[index],
+      expense: yearlyexpense[index],
     }));
   };
 
@@ -176,14 +138,14 @@ function ExpenseChart({expenseHistoryData}) {
       : getYearlyData();
 
   const labels = graphData.map((data) => data.name);
-  const incomeValues = graphData.map((data) => data.income);
+  const expenseValues = graphData.map((data) => data.expense);
 
   const data = {
     labels,
     datasets: [
       {
-        label: "Income",
-        data: incomeValues,
+        label: "expense",
+        data: expenseValues,
         borderColor: "#00d8ff",
         backgroundColor: "rgba(0, 216, 255, 0.2)",
         tension: 0.3,
@@ -205,33 +167,42 @@ function ExpenseChart({expenseHistoryData}) {
   };
     return(
         <>
-        <div className="bg-gray-800 p-8 rounded-lg flex justify-between items-center mb-8">
+        <div className="bg-gray-800 p-8 rounded-xl flex justify-between items-center mb-8">
         <div className="text-left space-y-3 w-1/3">
-          <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
+          <h2 className="text-5xl font-bold text-cyan-400">Total expense</h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {totalIncome}
+            {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(totalExpense)}
           </h3>
           <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
           <h2 className="text-3xl font-bold text-cyan-400">
-            {timePeriod} income
+            {timePeriod} expense
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {totalIncomemonth}
+            {new Intl.NumberFormat("en-IN", {
+                style: "currency",
+                currency: "INR",
+              }).format(totalExpensemonth)}
           </h3>
           <button className="relative top-16">Download</button>
         </div>
 
         <div className="w-2/4 relative">
           <div className="absolute z-10 bottom--4 left-0 p-2">
+            <div className="bg-gray-700 px-1.5 py-1.5 rounded-full text-cyan-500">
+
             <select
               value={timePeriod}
               onChange={handleTimePeriodChange}
-              className="bg-gray-700 px-4 py-2 rounded-full text-cyan-500"
+              className="bg-gray-700 rounded-full text-cyan-500 outline-none"
             >
               <option value="Daily">Daily</option>
               <option value="Monthly">Monthly</option>
               <option value="Yearly">Yearly</option>
             </select>
+            </div>
           </div>
 
           <div

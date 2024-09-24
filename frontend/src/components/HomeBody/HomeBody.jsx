@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../../services/api";
+import revenueIcon from '../../assets/revenueIcon.svg';
+import expenseIcon from '../../assets/expenseIcon.svg';
+import customersIcon from '../../assets/customersIcon.svg';
 
 function HomeBody() {
   const [data, setData] = useState({})
@@ -22,12 +25,17 @@ function HomeBody() {
         {/* Main Content */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 items-stretch">
           {/* Card 1 */}
-          <div className="bg-gray-800 p-6 rounded-lg flex flex-col justify-between">
-            <h2 className="text-lg text-[#00BDD6] mb-2">Today's Revenue</h2>
+          <div className="bg-gray-800 p-6 rounded-xl flex flex-col justify-between">
+            <div className="flex flex-row justify-between">
+              <h2 className="text-lg text-[#00BDD6] mb-2">Today's Revenue</h2>
+              <div className="px-0.5 py-0.5 border border-[#00BDD6] rounded-md">
+                <img src={revenueIcon} alt="" />
+              </div>
+            </div>
             <p className="text-2xl font-bold">   {data.todayIncome ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
-            }).format(data.todayIncome): <div className="font-normal text-base">loading...</div>}</p>
+            }).format(data.todayIncome) : <div className="font-normal text-base">loading...</div>}</p>
             {/* Graph */}
             <div className="flex justify-between items-end mt-4 h-[135px]">
               <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[135px] w-[35px] rounded-3xl"></div>
@@ -41,12 +49,17 @@ function HomeBody() {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-gray-800 p-6 rounded-lg flex flex-col justify-between">
-            <h2 className="text-lg text-[#00BDD6] mb-2">Today's Expenses</h2>
+          <div className="bg-gray-800 p-6 rounded-xl flex flex-col justify-between">
+            <div className="flex flex-row justify-between">
+              <h2 className="text-lg text-[#00BDD6] mb-2">Today's Expenses</h2>
+              <div className="px-0.5 py-0.5 border border-[#00BDD6] rounded-md">
+                <img src={expenseIcon} alt="" />
+              </div>
+            </div>
             <p className="text-2xl font-bold">{data.todayExpense ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
-            }).format(data.todayExpense):<div className="font-normal text-base">loading...</div>}</p>
+            }).format(data.todayExpense) : <div className="font-normal text-base">loading...</div>}</p>
             {/* Graph */}
             <div className="flex justify-between items-end mt-4 h-[135px]">
               <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[87px] w-[35px] rounded-3xl"></div>
@@ -61,25 +74,33 @@ function HomeBody() {
 
           <div className="space-y-4">
             {/* Card 3 */}
-            <div className="bg-gray-800 p-6 rounded-lg flex flex-col justify-between">
-              <h2 className="text-lg text-[#00BDD6] mb-2">Today's Customers</h2>
-              <p className="text-2xl font-bold">{data.todayCustomerCount?data.todayCustomerCount:<div className="font-normal text-base">loading...</div>}</p>
+            <div className="bg-gray-800 p-6 rounded-xl flex flex-col justify-between">
+              <div className="flex flex-row justify-between">
+                <h2 className="text-lg text-[#00BDD6] mb-2">Today's Customers</h2>
+                <div className="px-0.5 py-0.5 border border-[#00BDD6] rounded-md">
+                  <img src={customersIcon} alt="" />
+                </div>
+              </div>
+              <p className="text-2xl font-bold">{data.todayCustomerCount ? data.todayCustomerCount : <div className="font-normal text-base">loading...</div>}</p>
               <div className="mt-auto">
-                <i className="text-xl">&#128100;</i>
+                <i className="text-xl invisible">&#128200;</i>
               </div>
             </div>
 
             {/* Card 4 */}
-            <div className="bg-gray-800 p-6 rounded-lg flex flex-col justify-between">
-              <h2 className="text-lg text-[#00BDD6] mb-2">
-                Yesterday's Revenue
-              </h2>
+            <div className="bg-gray-800 p-6 rounded-xl flex flex-col justify-between">
+              <div className="flex flex-row justify-between">
+                <h2 className="text-lg text-[#00BDD6] mb-2">Yesterday's Revenue</h2>
+                <div className="px-0.5 py-0.5 border border-[#00BDD6] rounded-md">
+                  <img src={revenueIcon} alt="" />
+                </div>
+              </div>
               <p className="text-2xl font-bold">{data.yesterdayIncome ? new Intl.NumberFormat("en-IN", {
-              style: "currency",
-              currency: "INR",
-            }).format(data.yesterdayIncome):<div className="font-normal text-base">loading...</div>}</p>
+                style: "currency",
+                currency: "INR",
+              }).format(data.yesterdayIncome) : <div className="font-normal text-base">loading...</div>}</p>
               <div className="mt-auto">
-                <i className="text-xl">&#128200;</i>
+                <i className="text-xl invisible">&#128200;</i>
               </div>
             </div>
           </div>
@@ -88,7 +109,7 @@ function HomeBody() {
         {/* Recent Income Table */}
         <div className="mt-8">
           <h2 className="text-lg text-teal-400 mb-4">Recent Income</h2>
-          <div className="bg-gray-800 p-6 rounded-lg">
+          <div className="bg-gray-800 p-6 rounded-xl">
             <table className="w-full text-left">
               <thead>
                 <tr>

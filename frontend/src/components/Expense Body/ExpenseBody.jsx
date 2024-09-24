@@ -68,7 +68,7 @@ const Expense = ({addExpenseModal}) => {
       
           <ExpenseChart expenseHistoryData={expenseHistoryData}/>
 
-        <div className="bg-gray-800 p-10 rounded-lg">
+        <div className="bg-gray-800 p-10 rounded-xl">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-2xl font-bold text-cyan-400">Expense History</h3>
             <input

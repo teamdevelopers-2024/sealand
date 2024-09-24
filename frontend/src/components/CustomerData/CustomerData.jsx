@@ -4,6 +4,8 @@ import History from "../History/History";
 import PaymentModal from "../Pay Modal/PaymentModal"; // Import the Payment Modal
 import CreditForm from "../Credit Form/CreditForm";
 import api from "../../services/api";
+import searchIcon from "../../assets/searchIcon.svg";
+import addCustomerIcon from "../../assets/addCustomerIcon.svg";
 
 const CustomerData = () => {
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
@@ -93,19 +95,25 @@ const CustomerData = () => {
 
           {/* Search Bar */}
           <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="Search customer..."
-              className="w-64 h-10 px-3 rounded bg-gray-700 text-white"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="bg-[#00BDD6] bg-opacity-10 px-2 border border-[#00BDD6] rounded-lg">
+              <div className="flex flex-row">
+                <img src={searchIcon} alt="" />
+                <input
+                  type="text"
+                  placeholder="Search customer..."
+                  className="w-64 h-10 px-3 rounded bg-transparent text-white outline-none"
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
 
             {/* Add New Customer Button */}
             <button
-              className="bg-teal-400 text-gray-900 px-4 py-2 rounded-md"
+              className="flex flex-row bg-[#00A1B7] text-white font-semibold gap-1 px-4 py-2 rounded-md"
               onClick={() => setShowAddCustomerModal(true)}
             >
-              Add New Customer
+              <img src={addCustomerIcon} alt="" />
+              New Customer
             </button>
           </div>
         </div>
@@ -192,11 +200,10 @@ const CustomerData = () => {
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
-                  className={`px-3 py-1 rounded ${
-                    page === currentPage
+                  className={`px-3 py-1 rounded ${page === currentPage
                       ? "bg-teal-400 text-gray-900"
                       : "bg-gray-800 text-gray-300"
-                  }`}
+                    }`}
                   onClick={() => setCurrentPage(page)}
                 >
                   {page}
