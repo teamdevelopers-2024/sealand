@@ -1,16 +1,35 @@
-import React, { useState } from "react";
-import { FaTrash } from "react-icons/fa"; // Import the delete icon
+import React, { useState, useEffect } from "react";
 import api from "../../services/api";
+import swal from "sweetalert";
 
 const AddCustomer = ({ show, onClose }) => {
-  const [dateOfService, setDateOfService] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [creditAmount, setCreditAmount] = useState("");
+  const [creditAmount, setCreditAmount] = useState(0);
   const [workDetails, setWorkDetails] = useState([
     { description: "", amount: "", reference: "" },
   ]);
+
+  // Get today's date in YYYY-MM-DD format for India timezone
+  const today = new Date();
+  const options = { timeZone: "Asia/Kolkata" }; // Specify Indian timezone
+  const todayString = today.toLocaleDateString("en-CA", options); // Format to YYYY-MM-DD
+
+  // Set dateOfService to today's date initially
+  const [dateOfService, setDateOfService] = useState(todayString);
+
+  // State for error messages
+  const [errors, setErrors] = useState({});
+
+  // Update creditAmount when workDetails change
+  useEffect(() => {
+    const totalAmount = workDetails.reduce(
+      (sum, detail) => sum + parseFloat(detail.amount || 0),
+      0
+    );
+    setCreditAmount(totalAmount);
+  }, [workDetails]);
 
   const handleAddField = () => {
     setWorkDetails([
@@ -30,8 +49,29 @@ const AddCustomer = ({ show, onClose }) => {
     setWorkDetails(updatedDetails);
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+    if (!dateOfService) newErrors.dateOfService = "Date of Service is required.";
+    if (!customerName) newErrors.customerName = "Customer Name is required.";
+    if (!vehicleNumber) newErrors.vehicleNumber = "Vehicle Number is required.";
+    if (!phoneNumber) newErrors.phoneNumber = "Phone Number is required.";
+
+    workDetails.forEach((work, index) => {
+      if (!work.description) {
+        newErrors[`description_${index}`] = "Work Description is required.";
+      }
+      if (!work.amount) {
+        newErrors[`amount_${index}`] = "Amount is required.";
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Returns true if no errors
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm()) return; // Validate form before submission
 
     // Data to be sent to the backend
     const formData = {
@@ -43,10 +83,37 @@ const AddCustomer = ({ show, onClose }) => {
       workDetails,
     };
 
-    const response = await api.addcustomer(formData);
-    console.log('Response:', response);
-    onClose()
+    try {
+      const response = await api.addcustomer(formData);
+      if (response.error) {
+        console.log('getting here')
+        // Handle error case
+        if (!response.errors) swal("!Error", "internel Server Error", "error")
+        const errors = response.errors
+        const newErrors = {}
+        for (let i = 0; i < errors.length; i++) {
+          console.log(errors[i].field)
+          newErrors[errors[i].field] = errors[i].message
+        }
+        setErrors(newErrors)
+      } else {
+        console.log("Response:", response);
+        swal("!success", "Credit Customer Added Successfully", "success")
+        onClose();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
+
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+
+    // Allow only numbers; prevent letters and any other characters
+    if (/^\d*$/.test(value)) { // Check if the value consists only of digits
+        setPhoneNumber(value);
+    }
+};
 
   if (!show) {
     return null;
@@ -60,16 +127,18 @@ const AddCustomer = ({ show, onClose }) => {
           {/* Form fields */}
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-gray-300 mb-2">
-                Date of Service
-              </label>
+              <label className="block text-gray-300 mb-2">Date of Service</label>
               <input
                 type="date"
                 className="w-full h-10 px-3 rounded bg-gray-700 text-white"
                 value={dateOfService}
+                max={todayString} // Set the maximum date to today
                 onChange={(e) => setDateOfService(e.target.value)}
                 placeholder="Car care date"
               />
+              {errors.dateOfService && (
+                <p className="text-red-500 text-sm">{errors.dateOfService}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-300 mb-2">Customer Name</label>
@@ -80,6 +149,9 @@ const AddCustomer = ({ show, onClose }) => {
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
               />
+              {errors.customerName && (
+                <p className="text-red-500 text-sm">{errors.customerName}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-300 mb-2">Vehicle Number</label>
@@ -87,42 +159,40 @@ const AddCustomer = ({ show, onClose }) => {
                 type="text"
                 placeholder="Vehicle number"
                 className="w-full h-10 px-3 rounded bg-gray-700 text-white"
-                value={vehicleNumber}
+                value={vehicleNumber.toUpperCase()}
                 onChange={(e) => setVehicleNumber(e.target.value)}
               />
+              {errors.vehicleNumber && (
+                <p className="text-red-500 text-sm">{errors.vehicleNumber}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-300 mb-2">Phone Number</label>
               <input
-                type="text"
+                type="tel" // Use 'tel' to allow only numeric input
                 placeholder="Phone number"
                 className="w-full h-10 px-3 rounded bg-gray-700 text-white"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={handlePhoneNumberChange}
+                pattern="[0-9]*" // Optional: This pattern is used for additional validation
+                inputMode="numeric" // Optional: This specifies the type of virtual keyboard to show on mobile devices
               />
-            </div>
-            <div>
-              <label className="block text-gray-300 mb-2">Credit Amount</label>
-              <input
-                type="number"
-                placeholder="Credit amount"
-                className="w-full h-10 px-3 rounded bg-gray-700 text-white"
-                value={creditAmount}
-                onChange={(e) => setCreditAmount(e.target.value)}
-              />
+
+              {errors.phoneNumber && (
+                <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+              )}
             </div>
           </div>
 
           {/* Work description fields with table headings */}
-          
           <table className="w-full mb-4 text-white">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Work Description</th>
                 <th>Amount</th>
-                <th>Reference</th>
-                <th>Action</th>
+                <th>Reference(opt)</th>
+                {workDetails.length > 1 && <th>Action</th>}
               </tr>
             </thead>
             <tbody>
@@ -130,100 +200,84 @@ const AddCustomer = ({ show, onClose }) => {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>
-                    <label className="block">
-                      <input
-                        type="text"
-                        name="description"
-                        value={work.description}
-                        onChange={(e) =>
-                          handleWorkDetailChange(
-                            index,
-                            "description",
-                            e.target.value
-                          )
-                        }
-                        className="p-2 bg-gray-700 rounded w-full"
-                        placeholder="Name of the work"
-                      />
-                    </label>
+                    <input
+                      type="text"
+                      name="description"
+                      value={work.description}
+                      onChange={(e) =>
+                        handleWorkDetailChange(index, "description", e.target.value)
+                      }
+                      className="p-2 bg-gray-700 rounded w-full"
+                      placeholder="Name of the work"
+                    />
+                    {errors[`description_${index}`] && (
+                      <p className="text-red-500 text-sm">{errors[`description_${index}`]}</p>
+                    )}
                   </td>
                   <td>
-                    <label className="block">
-                      <input
-                        type="number"
-                        name="amount"
-                        value={work.amount}
-                        onChange={(e) =>
-                          handleWorkDetailChange(
-                            index,
-                            "amount",
-                            e.target.value
-                          )
-                        }
-                        className="p-2 bg-gray-700 rounded w-full"
-                        placeholder="Amount of work"
-                      />
-                    </label>
+                    <input
+                      type="number"
+                      name="amount"
+                      value={work.amount}
+                      onChange={(e) =>
+                        handleWorkDetailChange(index, "amount", e.target.value)
+                      }
+                      className="p-2 bg-gray-700 rounded w-full"
+                      placeholder="Amount of work"
+                    />
+                    {errors[`amount_${index}`] && (
+                      <p className="text-red-500 text-sm">{errors[`amount_${index}`]}</p>
+                    )}
                   </td>
                   <td>
-                    <label className="block">
-                      <input
-                        type="text"
-                        name="reference"
-                        value={work.reference}
-                        onChange={(e) =>
-                          handleWorkDetailChange(
-                            index,
-                            "reference",
-                            e.target.value
-                          )
-                        }
-                        className="p-2 bg-gray-700 rounded w-full"
-                        placeholder="Additional information"
-                      />
-                    </label>
+                    <input
+                      type="text"
+                      name="reference"
+                      value={work.reference}
+                      onChange={(e) =>
+                        handleWorkDetailChange(index, "reference", e.target.value)
+                      }
+                      className="p-2 bg-gray-700 rounded w-full"
+                      placeholder="Additional information"
+                    />
                   </td>
                   <td>
-                    <button
-                      className="text-red-500"
-                      onClick={() => handleDeleteField(index)}
-                    >
-                      🗑
-                    </button>
+                    {index > 0 && (
+                      <button
+                        type="button"
+                        className="text-red-500"
+                        onClick={() => handleDeleteField(index)}
+                      >
+                        🗑
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
             </tbody>
-            
           </table>
 
           {/* Total amount and submit button */}
           <div className="flex justify-between items-center">
-          <button
+            <button
               type="button"
               className="text-teal-400 text-sm"
               onClick={handleAddField}
             >
               + Add Field
             </button>
-            <p className="text-white">
-              Total Amount: ₹
-              {workDetails.reduce(
-                (sum, detail) => sum + parseFloat(detail.amount || 0),
-                0
-              )}
-            </p>
+            <p className="text-white">Total Amount: ₹{creditAmount}</p>
             <div className="flex space-x-4">
               <button
                 type="button"
+                className="bg-teal-400 text-white rounded px-4 py-2 hover:bg-red-600"
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-600 text-gray-300 rounded"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-teal-400 text-gray-900 rounded"
+                className="bg-teal-400 text-white rounded px-4 py-2 hover:bg-teal-500"
               >
                 Save
               </button>

@@ -45,6 +45,7 @@ async function addcustomer(data) {
     return response.data
   } catch (error) {
     console.log("Error submitting the data:", error);
+    return error.response.data
   }
 }
 
@@ -119,6 +120,19 @@ async function getTodayIncomeAndExpense() {
   }
 }
 
+
+async function addCredit(body) {
+  try {
+    const response = await api.post("/addCredit",body)
+    console.log(response.data )
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
+
 export default {
   login,
   addIncome,
@@ -128,5 +142,6 @@ export default {
   showExpense,
   showCustomers,
   repayment,
-  getTodayIncomeAndExpense
+  getTodayIncomeAndExpense,
+  addCredit
 };

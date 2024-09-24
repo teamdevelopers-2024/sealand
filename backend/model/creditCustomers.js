@@ -46,7 +46,7 @@ const creditCustomerSchema = new mongoose.Schema({
             vehicleNumber:String,
             phoneNumber:String,
             paymentType:String ,
-            paidAmount:Number
+            Amount:Number
         },
     ],
 });

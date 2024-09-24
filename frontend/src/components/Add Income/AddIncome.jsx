@@ -8,12 +8,18 @@ const AddIncome = ({ setAddIncomeModal }) => {
   ]);
 
   // State for other fields
-  const [workDate, setWorkDate] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [totalServiceCost, setTotalServiceCost] = useState("");
+
+  const today = new Date();
+  const options = { timeZone: "Asia/Kolkata" }; // Specify Indian timezone
+  const todayString = today.toLocaleDateString("en-CA", options); // Format to YYYY-MM-DD
+  
+  // Set dateOfService to today's date initially
+  const [workDate, setWorkDate] = useState(todayString);
 
   // Error state for validation messages
   const [errors, setErrors] = useState({});
@@ -67,7 +73,7 @@ const AddIncome = ({ setAddIncomeModal }) => {
     const formData = {
       workDate,
       customerName,
-      vehicleNumber,
+      vehicleNumber:vehicleNumber.toUpperCase(),
       contactNumber,
       paymentMethod,
       totalServiceCost,
@@ -130,7 +136,7 @@ const AddIncome = ({ setAddIncomeModal }) => {
                 type="text"
                 placeholder="Plate ID for this vehicle?"
                 className="p-2 bg-gray-700 rounded w-full"
-                value={vehicleNumber}
+                value={vehicleNumber.toUpperCase()}
                 onChange={(e) => setVehicleNumber(e.target.value)}
               />
               {errors.vehicleNumber && <p className="text-red-500">{errors.vehicleNumber}</p>}
