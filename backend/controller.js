@@ -341,21 +341,27 @@ async function repayment(req, res) {
         // Fetch today's customer count from customerDb
         const todayCustomerCountResult = await IncomeDb.aggregate([
             {
-                $match: {
-                    workDate: { $gte: todayStart, $lt: tomorrowStart }, // Assuming 'createdAt' is the field that stores the customer's creation date
-                },
+              $match: {
+                workDate: { $gte: todayStart, $lt: tomorrowStart }, // Filter documents within the specified date range
+              },
             },
             {
-                $count: "totalCustomers", // Count the total number of customers
+              $group: {
+                _id: "$contactNumber", // Group by contactNumber to find unique numbers
+              },
             },
-        ]);
+            {
+              $count: "totalUniqueCustomers", // Count the total number of unique contactNumbers
+            },
+          ]);
+      
 
         // Extract amounts or set to 0 if no results
         const todayIncome = todayIncomeResult[0]?.totalAmount || 0;
         const todayExpense = todayExpenseResult[0]?.totalAmount || 0;
         const yesterdayIncome = yesterdayIncomeResult[0]?.totalAmount || 0;
         const yesterdayExpense = yesterdayExpenseResult[0]?.totalAmount || 0;
-        const todayCustomerCount = todayCustomerCountResult[0]?.totalCustomers || 0; // Get customer count
+        const todayCustomerCount = todayCustomerCountResult[0]?.totalUniqueCustomers || 0; // Get customer count
 
         // Log results for debugging
         console.log("todayIncome:", todayIncome);
