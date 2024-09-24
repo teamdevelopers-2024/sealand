@@ -47,6 +47,10 @@ const creditCustomerSchema = new mongoose.Schema({
     transactionHistory: [
         {
             date: Date,
+            vehicleNumber:String,
+            phoneNumber:String,
+            paymentType:String ,
+            paidAmount:Number
         },
     ],
 });
