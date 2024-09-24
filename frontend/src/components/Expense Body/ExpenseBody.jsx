@@ -104,8 +104,10 @@ const Expense = ({addExpenseModal}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    
-    const fetchIncomeHistory = async () => {
+
+
+    const fetchExpenseHistory = async () => {
+
       try {
         const response = await api.showExpense();
         setExpenseHistoryData(response.data);
@@ -114,12 +116,17 @@ const Expense = ({addExpenseModal}) => {
         console.error("Error fetching income history data", error);
       }
     };
+
     if(addExpenseModal==false){
-      fetchIncomeHistory();
+      fetchExpenseHistory();
     }
       
     
   }, [addExpenseModal]);
+
+
+ 
+
 
   const handleViewExpense = (entry) => {
     setSelectedExpense(entry);

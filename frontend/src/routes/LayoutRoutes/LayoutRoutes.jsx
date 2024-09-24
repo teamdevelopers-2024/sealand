@@ -25,12 +25,12 @@ function LayoutRoutes() {
       >
         <Routes>
           <Route path="/" element={<Login />} />
-          {/* <Route element={<PrivateRoutes/>}> */}
+          <Route element={<PrivateRoutes/>}>
           <Route path="/home" element={<Home />} />
           <Route path="/credit" element={<CreditCustomers />} />
           <Route path="/income" element={<Income />} />
           <Route path="/expense" element={<Expense />} />
-          {/* </Route> */}
+          </Route>
           <Route path="*" element={<Login/>}></Route>
         </Routes>
       </Suspense>

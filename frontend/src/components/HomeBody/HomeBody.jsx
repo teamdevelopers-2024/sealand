@@ -27,7 +27,7 @@ function HomeBody() {
             <p className="text-2xl font-bold">   {data.todayIncome ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
-            }).format(data.todayIncome): "loading..."}</p>
+            }).format(data.todayIncome): <div className="font-normal text-base">loading...</div>}</p>
             {/* Graph */}
             <div className="flex justify-between items-end mt-4 h-[135px]">
               <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[135px] w-[35px] rounded-3xl"></div>
@@ -46,7 +46,7 @@ function HomeBody() {
             <p className="text-2xl font-bold">{data.todayExpense ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
-            }).format(data.todayExpense):"loading..."}</p>
+            }).format(data.todayExpense):<div className="font-normal text-base">loading...</div>}</p>
             {/* Graph */}
             <div className="flex justify-between items-end mt-4 h-[135px]">
               <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[87px] w-[35px] rounded-3xl"></div>
@@ -63,7 +63,7 @@ function HomeBody() {
             {/* Card 3 */}
             <div className="bg-gray-800 p-6 rounded-lg flex flex-col justify-between">
               <h2 className="text-lg text-[#00BDD6] mb-2">Today's Customers</h2>
-              <p className="text-2xl font-bold">{data.todayCustomerCount?data.todayCustomerCount:'loading...'}</p>
+              <p className="text-2xl font-bold">{data.todayCustomerCount?data.todayCustomerCount:<div className="font-normal text-base">loading...</div>}</p>
               <div className="mt-auto">
                 <i className="text-xl">&#128100;</i>
               </div>
@@ -77,7 +77,7 @@ function HomeBody() {
               <p className="text-2xl font-bold">{data.yesterdayIncome ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
-            }).format(data.yesterdayIncome):"loading..."}</p>
+            }).format(data.yesterdayIncome):<div className="font-normal text-base">loading...</div>}</p>
               <div className="mt-auto">
                 <i className="text-xl">&#128200;</i>
               </div>

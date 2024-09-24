@@ -11,8 +11,10 @@ const CustomerData = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showCreditForm, setShowCreditForm] = useState(false); // control for credit form visibility
-  const [customers , setCustomers] = useState([])
+  const [showCreditForm, setShowCreditForm] = useState(false);
+  const [customers, setCustomers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const customersPerPage = 10; // Number of customers per page
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -25,7 +27,7 @@ const CustomerData = () => {
       }
     };
     fetchCustomers();
-  }, [showAddCustomerModal]);
+  }, [showAddCustomerModal, showPaymentModal, showCreditForm]);
 
   // Function to calculate the due amount
   const calculateDueAmount = (creditAmount, paidAmount) => {
@@ -34,7 +36,7 @@ const CustomerData = () => {
 
   const handleViewClick = (customer) => {
     setSelectedCustomer(customer);
-    setShowHistory(true); // specifically show history modal
+    setShowHistory(true);
   };
 
   const closeHistoryModal = () => {
@@ -44,7 +46,7 @@ const CustomerData = () => {
 
   const handlePayClick = (customer) => {
     setSelectedCustomer(customer);
-    setShowPaymentModal(true); // specifically show payment modal
+    setShowPaymentModal(true);
   };
 
   const closePaymentModal = () => {
@@ -54,7 +56,7 @@ const CustomerData = () => {
 
   const handleCreditClick = (customer) => {
     setSelectedCustomer(customer);
-    setShowCreditForm(true); // specifically show credit form
+    setShowCreditForm(true);
   };
 
   const closeCreditForm = () => {
@@ -62,6 +64,27 @@ const CustomerData = () => {
     setSelectedCustomer(null);
   };
 
+  // Calculate total pages based on customers per page
+  const totalPages = Math.ceil(customers.length / customersPerPage);
+
+  // Filter customers based on the search term (for name or phone number)
+  const filteredCustomers = customers.filter((customer) => {
+    const customerName = customer.customerName.toLowerCase();
+    const phoneNumber = customer.phoneNumber ? String(customer.phoneNumber) : "";
+
+    return (
+      customerName.includes(searchTerm.toLowerCase()) ||
+      phoneNumber.includes(searchTerm)
+    );
+  });
+
+  // Get the filtered customers for the current page
+  const paginatedCustomers = filteredCustomers.slice(
+    (currentPage - 1) * customersPerPage,
+    currentPage * customersPerPage
+  );
+
+  // Render the component
   return (
     <div className="bg-gray-900 min-h-screen p-10">
       <div className="container p-6 mx-auto">
@@ -74,7 +97,7 @@ const CustomerData = () => {
               type="text"
               placeholder="Search customer..."
               className="w-64 h-10 px-3 rounded bg-gray-700 text-white"
-              onChange={(e) => setSearchTerm(e.target.value)} // Update state to filter customer list
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
 
             {/* Add New Customer Button */}
@@ -103,24 +126,23 @@ const CustomerData = () => {
               </tr>
             </thead>
             <tbody className="bg-gray-700">
-              {customers.map((customer, index) => (
+              {paginatedCustomers.map((customer, index) => (
                 <tr key={index} className="border-t border-gray-600">
-                  <td className="px-4 py-2">{customer.dateOfService}</td>
+                  <td className="px-4 py-2">
+                    {new Date(customer.dateOfService).toLocaleDateString("en-GB")}
+                  </td>
                   <td className="px-4 py-2">{customer.customerName}</td>
                   <td className="px-4 py-2">{customer.vehicleNumber}</td>
                   <td className="px-4 py-2">{customer.phoneNumber}</td>
                   <td className="px-4 py-2">₹{customer.creditAmount}</td>
                   <td className="px-4 py-2">₹{customer.paidAmount}</td>
                   <td className="px-4 py-2">
-                    ₹
-                    {calculateDueAmount(
-                      customer.creditAmount,
-                      customer.paidAmount
-                    )}
+                    ₹{calculateDueAmount(customer.creditAmount, customer.paidAmount)}
                   </td>
                   <td className="px-4 py-2">
-                    <button className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-md" 
-                    onClick={() => handleCreditClick(customer)}
+                    <button
+                      className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-md"
+                      onClick={() => handleCreditClick(customer)}
                     >
                       Credit
                     </button>
@@ -141,30 +163,56 @@ const CustomerData = () => {
                   </td>
                 </tr>
               ))}
+              {filteredCustomers.length === 0 && (
+                <tr>
+                  <td colSpan="9" className="text-center pt-6 font-medium">
+                    No Credit Customers...
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
 
-        <div className="flex justify-between items-center mt-4">
-          <p className="text-gray-400">2 of 13 Pages</p>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
-              1
-            </button>
-            <button className="px-3 py-1 rounded bg-teal-400 text-gray-900">
-              2
-            </button>
-            <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
-              3
-            </button>
-            <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
-              ...
-            </button>
-            <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
-              13
-            </button>
+        {/* Pagination Controls */}
+        {filteredCustomers.length > 0 && totalPages > 1 && (
+          <div className="flex justify-between items-center mt-4">
+            <p className="text-gray-400">
+              Page {currentPage} of {totalPages}
+            </p>
+            <div className="flex space-x-2">
+              {currentPage > 1 && (
+                <button
+                  className="px-3 py-1 rounded bg-gray-800 text-gray-300"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  Previous
+                </button>
+              )}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  className={`px-3 py-1 rounded ${
+                    page === currentPage
+                      ? "bg-teal-400 text-gray-900"
+                      : "bg-gray-800 text-gray-300"
+                  }`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              ))}
+              {currentPage < totalPages && (
+                <button
+                  className="px-3 py-1 rounded bg-gray-800 text-gray-300"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  Next
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Payment Modal */}

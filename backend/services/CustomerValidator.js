@@ -7,7 +7,6 @@ export function validateCustomerData(data) {
         customerName,
         vehicleNumber,
         phoneNumber,
-        paymentMethod,
         creditAmount,
         workDetails,
     } = data;
@@ -33,12 +32,6 @@ export function validateCustomerData(data) {
     // Validate contactNumber
     if (!phoneNumber || !validator.isMobilePhone(phoneNumber, 'en-IN')) {
         errors.push('Contact number is required and must be a valid phone number.');
-    }
-
-    // Validate paymentMethod
-    const validPaymentMethods = ['Cash', 'UPI', 'online Transfer'];
-    if (!paymentMethod || !validPaymentMethods.includes(paymentMethod)) {
-        errors.push('Payment method is required and must be one of Cash, UPI, or Online Transfer.');
     }
 
     // Validate totalCost

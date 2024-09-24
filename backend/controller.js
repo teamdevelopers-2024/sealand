@@ -217,7 +217,7 @@ async function repayment(req, res) {
       const updatedCustomer = await creditCustomerDb.findByIdAndUpdate(
         customer._id,
         {
-          $inc: { creditAmount: -details.repaymentAmount },
+          $inc: { paidAmount: details.repaymentAmount},
         },
         { new: true }
       );
@@ -225,21 +225,22 @@ async function repayment(req, res) {
         return res.status(404).json({ message: 'Customer not found' });
       }
 
+      console.log(customer)
       const updateIncomeData = new IncomeDb({
         workDate:details.repaymentDate,
         customerName:customer.customerName,
-        vehicleNumber:"Fron creditRepayment",
+        vehicleNumber:customer.vehicleNumber[0],
         contactNumber:customer.phoneNumber,
         paymentMethod:"Credit Repayment",
         totalServiceCost:details.repaymentAmount,
         workDescriptions:[{
-            description:"From creditRepayment",
+            description:customer.workDetails[0].description,
             amount:details.repaymentAmount,
             reference:customer.phoneNumber
         }]
       })
 
-      if(updatedCustomer.creditAmount == 0){
+      if(updatedCustomer.creditAmount == updatedCustomer.paidAmount){
         await creditCustomerDb.deleteOne({_id:customer._id})
       }
 
@@ -341,21 +342,27 @@ async function repayment(req, res) {
         // Fetch today's customer count from customerDb
         const todayCustomerCountResult = await IncomeDb.aggregate([
             {
-                $match: {
-                    workDate: { $gte: todayStart, $lt: tomorrowStart }, // Assuming 'createdAt' is the field that stores the customer's creation date
-                },
+              $match: {
+                workDate: { $gte: todayStart, $lt: tomorrowStart }, // Filter documents within the specified date range
+              },
             },
             {
-                $count: "totalCustomers", // Count the total number of customers
+              $group: {
+                _id: "$contactNumber", // Group by contactNumber to find unique numbers
+              },
             },
-        ]);
+            {
+              $count: "totalUniqueCustomers", // Count the total number of unique contactNumbers
+            },
+          ]);
+      
 
         // Extract amounts or set to 0 if no results
         const todayIncome = todayIncomeResult[0]?.totalAmount || 0;
         const todayExpense = todayExpenseResult[0]?.totalAmount || 0;
         const yesterdayIncome = yesterdayIncomeResult[0]?.totalAmount || 0;
         const yesterdayExpense = yesterdayExpenseResult[0]?.totalAmount || 0;
-        const todayCustomerCount = todayCustomerCountResult[0]?.totalCustomers || 0; // Get customer count
+        const todayCustomerCount = todayCustomerCountResult[0]?.totalUniqueCustomers || 0; // Get customer count
 
         // Log results for debugging
         console.log("todayIncome:", todayIncome);
