@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddCustomer from "../Add Customer/AddCustomer"; // Adjust the path according to your file structure
 import History from "../History/History";
 import PaymentModal from "../Pay Modal/PaymentModal"; // Import the Payment Modal
 import CreditForm from "../Credit Form/CreditForm";
+import api from "../../services/api";
 
 const CustomerData = () => {
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
@@ -11,27 +12,20 @@ const CustomerData = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showCreditForm, setShowCreditForm] = useState(false); // control for credit form visibility
+  const [customers , setCustomers] = useState([])
 
-  // Customer data with creditAmount and paidAmount
-  const customers = [
-    {
-      date: "10-12-2024",
-      name: "Sinan",
-      vehicleNumber: "KL 13 A 5672",
-      phoneNumber: "8921405362",
-      creditAmount: 4660,
-      paidAmount: 1970,
-    },
-    {
-      date: "10-12-2024",
-      name: "Dilshad",
-      vehicleNumber: "KL 19 A 0505",
-      phoneNumber: "9632587459",
-      creditAmount: 5600,
-      paidAmount: 2300,
-    },
-    // Add other customer rows as necessary
-  ];
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const response = await api.showCustomers();
+        setCustomers(response.data);
+        console.log("Customer history", response.data);
+      } catch (error) {
+        console.error("Error fetching income history data", error);
+      }
+    };
+    fetchCustomers();
+  }, [showAddCustomerModal]);
 
   // Function to calculate the due amount
   const calculateDueAmount = (creditAmount, paidAmount) => {
@@ -111,8 +105,8 @@ const CustomerData = () => {
             <tbody className="bg-gray-700">
               {customers.map((customer, index) => (
                 <tr key={index} className="border-t border-gray-600">
-                  <td className="px-4 py-2">{customer.date}</td>
-                  <td className="px-4 py-2">{customer.name}</td>
+                  <td className="px-4 py-2">{customer.dateOfService}</td>
+                  <td className="px-4 py-2">{customer.customerName}</td>
                   <td className="px-4 py-2">{customer.vehicleNumber}</td>
                   <td className="px-4 py-2">{customer.phoneNumber}</td>
                   <td className="px-4 py-2">₹{customer.creditAmount}</td>

@@ -84,11 +84,49 @@ async function showExpense() {
   }
 }
 
+
+async function showCustomers(){
+  try {
+    const response = await api.get("/getCustomers")
+    return response.data
+  } catch (error) {
+    console.log("error fetching customers :",error)
+    return error.response.data
+  }
+}
+
+
+
+async function repayment(customer,details) {
+  try {
+    const response = await api.put("/repayment",{customer,details})
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
+
+async function getTodayIncomeAndExpense() {
+  try {
+    const response = await api.get('/getTodayIncomeAndExpense')
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
 export default {
   login,
   addIncome,
   addcustomer,
   showIncome,
   addExpense,
-  showExpense
+  showExpense,
+  showCustomers,
+  repayment,
+  getTodayIncomeAndExpense
 };
