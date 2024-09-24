@@ -7,8 +7,6 @@ import ExpenseChart from "../Expense Chart/ExpenseChart";
 
 
 const Expense = ({addExpenseModal}) => {
-  const [timePeriod, setTimePeriod] = useState("Monthly");
-  const [expense, setExpense] = useState(106480); // Default for monthly
   const [currentPage, setCurrentPage] = useState(1);
   const [expenseHistoryData, setExpenseHistoryData] = useState([]);
   const [selectedExpense, setSelectedExpense] = useState(null);

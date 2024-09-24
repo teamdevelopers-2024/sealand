@@ -117,6 +117,11 @@ const IncomeBody = ({ addIncomeModal }) => {
     currentPage * entriesPerPage
   );
 
+  const handleViewClick = (entry) => {
+    setSingleEntry(entry);
+    setViewIncomeModal(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">

@@ -6,18 +6,24 @@ const ExpenseModal = ({ isOpen, expense, onClose }) => {
   if (!isOpen || !expense) return null;
 
   const generatePDF = () => {
-    
     const doc = new jsPDF();
 
 
-    // Add Shop Logo at the top (optional)
-    doc.addImage(imgData, 'PNG', 10, 10, 50, 20); // Adjust the dimensions accordingly
+    doc.setFillColor(0, 0, 0); 
+    doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F');
+
+    doc.addImage(imgData, 'PNG', 10, 10, 50, 20); 
+
+    doc.setTextColor(255, 255, 255); 
 
     // Add Shop Name and Address
     doc.setFontSize(12);
     doc.text('Sea Land Car Care', 80, 20); // Center-aligned shop name
-    doc.text('Kuttalur, State Highway 72, Oorakam, Kerala 676304', 80, 25);
-    doc.text('Phone: +91 12345 67890', 80, 30);
+    doc.text('Oorakam Karimbily, Vengara', 80, 25);
+    doc.text('Phone: +91 92071 50011', 80, 30);
+
+    // Reset text color for the rest of the document
+    doc.setTextColor(0, 0, 0); // Black color for other text
 
     // Add a separator line
     doc.line(10, 35, 200, 35);
@@ -28,7 +34,7 @@ const ExpenseModal = ({ isOpen, expense, onClose }) => {
 
     // Add Customer Information
     doc.setFontSize(12);
-    doc.text(`Customer:${expense.payeeName}`, 10, 50);
+    doc.text(`Customer: ${expense.payeeName}`, 10, 50);
     doc.text(`Phone: ${expense.contactNumber}`, 10, 60);
 
     // Add a separator line
@@ -73,6 +79,7 @@ const ExpenseModal = ({ isOpen, expense, onClose }) => {
     // Save the PDF
     doc.save('receipt.pdf');
 };
+
 
   return (
     <>
