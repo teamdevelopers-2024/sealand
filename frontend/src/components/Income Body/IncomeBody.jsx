@@ -66,6 +66,8 @@ const IncomeBody = ({ addIncomeModal }) => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [viewIncomeModal, setViewIncomeModal] = useState(false);
   const [singleEntry, setSingleEntry] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const entriesPerPage = 5;
 
   useEffect(() => {
     const fetchIncomeHistory = async () => {
@@ -199,6 +201,14 @@ const IncomeBody = ({ addIncomeModal }) => {
     setViewIncomeModal(true);
   };
 
+  // Pagination Logic
+  const totalEntries = incomeHistoryData.length;
+  const totalPages = Math.ceil(totalEntries / entriesPerPage);
+  const currentEntries = incomeHistoryData.slice(
+    (currentPage - 1) * entriesPerPage,
+    currentPage * entriesPerPage
+  );
+
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">
@@ -291,7 +301,7 @@ const IncomeBody = ({ addIncomeModal }) => {
                   responsive: true,
                   plugins: {
                     legend: {
-                      display: false ,
+                      display: false,
                     },
                     tooltip: {
                       backgroundColor: "#333",
