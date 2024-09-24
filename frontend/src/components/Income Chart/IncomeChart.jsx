@@ -27,7 +27,7 @@ const currentDate = new Date();
 const currentMonth = currentDate.getMonth(); // 0-11
 const currentYear = currentDate.getFullYear();
 
-function IncomeChart({ incomeHistoryData }) {
+function IncomeChart({ incomeHistoryData,setIsModalOpen}) {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [totalIncome, setTotalIncome] = useState('')
@@ -190,7 +190,7 @@ function IncomeChart({ incomeHistoryData }) {
             }).format(totalIncomemonth)}
           </h3>
           {/* Download Button Here */}
-          <IncomeDownloadButton/>
+          <IncomeDownloadButton setIsModalOpen = {setIsModalOpen}/>
         </div>
 
         <div className="w-2/4 relative">
