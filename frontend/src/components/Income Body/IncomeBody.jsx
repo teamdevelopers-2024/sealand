@@ -291,7 +291,7 @@ const IncomeBody = ({ addIncomeModal }) => {
                   responsive: true,
                   plugins: {
                     legend: {
-                      display: false,
+                      display: false ,
                     },
                     tooltip: {
                       backgroundColor: "#333",
