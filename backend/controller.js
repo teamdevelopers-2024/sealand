@@ -217,7 +217,7 @@ async function repayment(req, res) {
       const updatedCustomer = await creditCustomerDb.findByIdAndUpdate(
         customer._id,
         {
-          $inc: { creditAmount: -details.repaymentAmount },
+          $inc: { paidAmount: details.repaymentAmount},
         },
         { new: true }
       );
@@ -228,18 +228,18 @@ async function repayment(req, res) {
       const updateIncomeData = new IncomeDb({
         workDate:details.repaymentDate,
         customerName:customer.customerName,
-        vehicleNumber:"Fron creditRepayment",
+        vehicleNumber:customer.vehicleNumber,
         contactNumber:customer.phoneNumber,
         paymentMethod:"Credit Repayment",
         totalServiceCost:details.repaymentAmount,
         workDescriptions:[{
-            description:"From creditRepayment",
+            description:customer.workDescriptions[0].description,
             amount:details.repaymentAmount,
             reference:customer.phoneNumber
         }]
       })
 
-      if(updatedCustomer.creditAmount == 0){
+      if(updatedCustomer.creditAmount == updatedCustomer.paidAmount){
         await creditCustomerDb.deleteOne({_id:customer._id})
       }
 

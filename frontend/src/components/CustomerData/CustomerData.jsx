@@ -25,7 +25,7 @@ const CustomerData = () => {
       }
     };
     fetchCustomers();
-  }, [showAddCustomerModal]);
+  }, [showAddCustomerModal ,showPaymentModal ,showCreditForm]);
 
   // Function to calculate the due amount
   const calculateDueAmount = (creditAmount, paidAmount) => {
@@ -61,6 +61,7 @@ const CustomerData = () => {
     setShowCreditForm(false);
     setSelectedCustomer(null);
   };
+
 
   return (
     <div className="bg-gray-900 min-h-screen p-10">
@@ -141,30 +142,38 @@ const CustomerData = () => {
                   </td>
                 </tr>
               ))}
+       
             </tbody>
+            {customers.length == 0 && (
+                <h3 className="pt-6 font-medium">No Credit Customers...</h3>
+              )}
           </table>
         </div>
+        
 
+        {customers.length > 5 && (
         <div className="flex justify-between items-center mt-4">
-          <p className="text-gray-400">2 of 13 Pages</p>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
-              1
-            </button>
-            <button className="px-3 py-1 rounded bg-teal-400 text-gray-900">
-              2
-            </button>
-            <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
-              3
-            </button>
-            <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
-              ...
-            </button>
-            <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
-              13
-            </button>
-          </div>
+        <p className="text-gray-400">2 of 13 Pages</p>
+        <div className="flex space-x-2">
+          <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
+            1
+          </button>
+          <button className="px-3 py-1 rounded bg-teal-400 text-gray-900">
+            2
+          </button>
+          <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
+            3
+          </button>
+          <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
+            ...
+          </button>
+          <button className="px-3 py-1 rounded bg-gray-800 text-gray-300">
+            13
+          </button>
         </div>
+      </div>
+        )}
+
       </div>
 
       {/* Payment Modal */}
