@@ -113,8 +113,8 @@ const AddCustomer = ({ show, onClose }) => {
                 <option value="" disabled>
                   Payment Method
                 </option>
-                <option value="cash">Cash</option>
-                <option value="upi">UPI</option>
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
                 <option value="online Transfer">Online Transfer</option>
               </select>
             </div>

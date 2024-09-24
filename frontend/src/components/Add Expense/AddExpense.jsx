@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 
 const AddExpense = ({ setAddExpenseModal }) => {
@@ -8,12 +8,20 @@ const AddExpense = ({ setAddExpenseModal }) => {
   const [expenseType, setExpenseType] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [totalExpense, setTotalExpense] = useState("");
+  const [totalExpense, setTotalExpense] = useState(0);
 
   // State to handle the dynamic fields
   const [expenseDetails, setexpenseDetails] = useState([
     { description: "", amount: "", reference: "" },
   ]);
+
+
+  useEffect(() => {
+    const total = expenseDetails.reduce((sum, item) => {
+      return sum + (parseFloat(item.amount) || 0);
+    }, 0);
+    setTotalExpense(total);
+  }, [expenseDetails]);
 
   // State for validation errors
   const [errors, setErrors] = useState({
@@ -32,7 +40,6 @@ const AddExpense = ({ setAddExpenseModal }) => {
     const updatedFields = [...expenseDetails];
     updatedFields[index][name] = value;
     setexpenseDetails(updatedFields);
-
     // Update validation errors if they exist
     const updatedErrors = [...errors.expenseDetails];
     if (value === "") {
@@ -226,20 +233,6 @@ const AddExpense = ({ setAddExpenseModal }) => {
                   <p className="text-red-500 text-sm">{errors.paymentMethod}</p>
                 )}
               </label>
-
-              <label className="block">
-                <span className="text-white">Total Expense</span>
-                <input
-                  type="number"
-                  value={totalExpense}
-                  placeholder="Total Expense"
-                  onChange={handleFieldChange(setTotalExpense, "totalExpense")}
-                  className="p-2 bg-gray-700 rounded w-full"
-                />
-                {errors.totalExpense && (
-                  <p className="text-red-500 text-sm">{errors.totalExpense}</p>
-                )}
-              </label>
             </div>
 
             {/* Work Description Table */}
@@ -250,7 +243,9 @@ const AddExpense = ({ setAddExpenseModal }) => {
                   <th>Expense Detail</th>
                   <th>Amount</th>
                   <th>Reference</th>
-                  <th>Action</th>
+                  {expenseDetails.length > 1 && (
+                    <th>Action</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -309,12 +304,15 @@ const AddExpense = ({ setAddExpenseModal }) => {
                       </label>
                     </td>
                     <td>
-                      <button
-                        className="text-red-500"
-                        onClick={() => removeField(index)}
-                      >
-                        🗑
-                      </button>
+                      {index != 0 && (
+                        <button
+                          className="text-red-500"
+                          onClick={() => removeField(index)}
+                        >
+                          🗑
+                        </button>
+                      )}
+
                     </td>
                   </tr>
                 ))}

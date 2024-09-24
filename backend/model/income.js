@@ -1,43 +1,43 @@
 import mongoose from "mongoose";
 
 const incomeSchema = new mongoose.Schema({
-    workDate:{
-        type:Date,
-        required:true
+    workDate: {
+        type: Date,
+        required: true,
     },
-    customerName:{
-        type:String,
-        required :true
+    customerName: {
+        type: String,
+        required: true,
     },
-    vehicleNumber:{
-        type:String,
-        required:true
+    vehicleNumber: {
+        type: String,
+        required: true,
     },
-    contactNumber:{
-        type:Number,
-        required:true
+    contactNumber: {
+        type: Number,
+        required: true,
     },
-    paymentMethod:{
-        type:String,
-        required:true
+    paymentMethod: {
+        type: String,
+        required: true,
     },
-    totalServiceCost:{
-        type:Number,
-        required:true
+    totalServiceCost: {
+        type: Number,
+        required: true,
     },
-    workDescriptions:[
+    workDescriptions: [
         {
-            description:{
-                type:String,
+            description: {
+                type: String,
             },
-            amount:{
-                type:Number
+            amount: {
+                type: Number,
             },
-            reference:{
-                type:String
-            }
-        }
-    ]
+            reference: {
+                type: String,
+            },
+        },
+    ],
 });
 
 const IncomeDb = mongoose.model("Income", incomeSchema);
