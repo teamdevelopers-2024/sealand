@@ -122,7 +122,7 @@ const IncomeBody = ({ addIncomeModal }) => {
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">
-        <IncomeChart incomeHistoryData={incomeHistoryData} />
+        <IncomeChart incomeHistoryData={incomeHistoryData}  setIsModalOpen = {setIsModalOpen}/>
 
         {/* Income History Table */}
         <div className="bg-gray-800 p-10 rounded-lg">
@@ -135,11 +135,6 @@ const IncomeBody = ({ addIncomeModal }) => {
               placeholder="Search by name or phone"
               className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg"
             />
-            <button 
-              onClick={() => setIsModalOpen(true)} 
-              className="bg-cyan-500 text-white px-4 py-2 rounded-lg">
-              Download PDF
-            </button>
           </div>
 
           <table className="w-full text-left">
