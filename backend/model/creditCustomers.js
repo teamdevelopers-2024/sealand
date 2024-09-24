@@ -19,10 +19,6 @@ const creditCustomerSchema = new mongoose.Schema({
         unique: true,
         required: true,
     },
-    paymentMethod: {
-        type: String,
-        required: true,
-    },
     creditAmount: {
         type: Number,
         required: true,
@@ -47,6 +43,10 @@ const creditCustomerSchema = new mongoose.Schema({
     transactionHistory: [
         {
             date: Date,
+            vehicleNumber:String,
+            phoneNumber:String,
+            paymentType:String ,
+            paidAmount:Number
         },
     ],
 });
