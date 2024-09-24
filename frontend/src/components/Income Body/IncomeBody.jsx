@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import jsPDF from "jspdf"; // Import jsPDF
+import DatePicker from "react-datepicker"; // Import DatePicker
+import "react-datepicker/dist/react-datepicker.css"; // Import styles
 import api from "../../services/api";
 import ViewIncomeModal from "../View Income/ViewIncomeModal";
 import IncomeChart from "../Income Chart/IncomeChart";
@@ -10,6 +13,9 @@ const IncomeBody = ({ addIncomeModal }) => {
   const [singleEntry, setSingleEntry] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTimeFrame, setSelectedTimeFrame] = useState("thisMonth");
+  const [customStartDate, setCustomStartDate] = useState(null);
+  const [customEndDate, setCustomEndDate] = useState(null);
   const entriesPerPage = 5;
 
   useEffect(() => {
@@ -30,36 +36,86 @@ const IncomeBody = ({ addIncomeModal }) => {
     
   }, [addIncomeModal]);
 
-  const filteredEntries = incomeHistoryData
-    .filter(
-      (entry) =>
-        entry.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (entry.contactNumber &&
-          entry.contactNumber.toString().includes(searchQuery))
-    )
-    .sort((a, b) => new Date(b.workDate) - new Date(a.workDate)); // Sort latest first
+  const filteredEntries = () => {
+    const today = new Date();
+    let filteredData = incomeHistoryData;
 
-  // Pagination Logic
-  const totalEntries = filteredEntries.length;
+    switch (selectedTimeFrame) {
+      case "last7Days":
+        const last7Days = new Date(today);
+        last7Days.setDate(today.getDate() - 7);
+        filteredData = incomeHistoryData.filter(entry => 
+          new Date(entry.workDate) >= last7Days
+        );
+        break;
+      case "lastMonth":
+        const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+        filteredData = incomeHistoryData.filter(entry => 
+          new Date(entry.workDate) >= lastMonthStart &&
+          new Date(entry.workDate) <= lastMonthEnd
+        );
+        break;
+      case "thisMonth":
+        const startOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        filteredData = incomeHistoryData.filter(entry => 
+          new Date(entry.workDate) >= startOfThisMonth
+        );
+        break;
+      case "customMonth":
+        if (customStartDate && customEndDate) {
+          filteredData = incomeHistoryData.filter(entry => 
+            new Date(entry.workDate) >= customStartDate &&
+            new Date(entry.workDate) <= customEndDate
+          );
+        }
+        break;
+      default:
+        break;
+    }
+
+    return filteredData;
+  };
+
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+  
+    // Add title
+    doc.text("Income History", 14, 10);
+  
+    // Add table headers
+    const headers = ["Date", "Customer Name", "Vehicle Number", "Payment Type", "Phone Number", "Amount"];
+    headers.forEach((header, index) => {
+      doc.text(header, 14 + (index * 40), 20);
+    });
+
+    // Add entries
+    const currentEntries = filteredEntries();
+    currentEntries.forEach((entry, index) => {
+      const row = [
+        new Date(entry.workDate).toLocaleDateString("en-GB"),
+        entry.customerName,
+        entry.vehicleNumber,
+        entry.paymentMethod,
+        entry.contactNumber ? entry.contactNumber.toString() : "",
+        `₹ ${entry.totalServiceCost.toString()}`
+      ];
+      row.forEach((cell, cellIndex) => {
+        doc.text(cell, 14 + (cellIndex * 40), 30 + (index * 10));
+      });
+    });
+
+    doc.save("income_history.pdf");
+  };
+
+  const currentEntries = filteredEntries();
+  const totalEntries = currentEntries.length;
   const totalPages = Math.ceil(totalEntries / entriesPerPage);
-  const currentEntries = filteredEntries.slice(
+  const paginatedEntries = currentEntries.slice(
     (currentPage - 1) * entriesPerPage,
     currentPage * entriesPerPage
   );
-
-  const handleViewClick = (entry) => {
-    setSingleEntry(entry);
-    setViewIncomeModal(true);
-  };
-  const today = new Date();
-  incomeHistoryData.forEach((entry) => {
-    const entryDate = new Date(entry.date);
-    const dayIndex = Math.floor((today - entryDate) / (1000 * 60 * 60 * 24));
-    if (dayIndex >= 0 && dayIndex < 7) {
-      last7Days[6 - dayIndex] +=
-        parseFloat(entry.amount.replace(/[^\d.-]/g, "")) || 0; // Parse amount correctly
-    }
-  });
 
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
@@ -77,6 +133,47 @@ const IncomeBody = ({ addIncomeModal }) => {
               placeholder="Search by name or phone"
               className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg"
             />
+            <div className="flex items-center">
+              <select
+                value={selectedTimeFrame}
+                onChange={(e) => {
+                  setSelectedTimeFrame(e.target.value);
+                  if (e.target.value !== "customMonth") {
+                    setCustomStartDate(null);
+                    setCustomEndDate(null);
+                  }
+                }}
+                className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg"
+              >
+                <option value="thisMonth">This Month</option>
+                <option value="lastMonth">Last Month</option>
+                <option value="last7Days">Last 7 Days</option>
+                <option value="customMonth">Custom Range</option>
+              </select>
+              {selectedTimeFrame === "customMonth" && (
+                <div className="flex space-x-2 ml-2">
+                  <DatePicker
+                    selected={customStartDate}
+                    onChange={(date) => setCustomStartDate(date)}
+                    className="bg-gray-700 text-gray-100 rounded-lg px-4 py-2"
+                    placeholderText="From Date"
+                    dateFormat="dd/MM/yyyy"
+                  />
+                  <DatePicker
+                    selected={customEndDate}
+                    onChange={(date) => setCustomEndDate(date)}
+                    className="bg-gray-700 text-gray-100 rounded-lg px-4 py-2"
+                    placeholderText="To Date"
+                    dateFormat="dd/MM/yyyy"
+                  />
+                </div>
+              )}
+            </div>
+            <button 
+              onClick={generatePDF} 
+              className="bg-cyan-500 text-white px-4 py-2 rounded-lg">
+              Download PDF
+            </button>
           </div>
           <table className="w-full text-left">
             <thead>
@@ -91,8 +188,8 @@ const IncomeBody = ({ addIncomeModal }) => {
               </tr>
             </thead>
             <tbody>
-              {currentEntries.length > 0 ? (
-                currentEntries.map((entry) => (
+              {paginatedEntries.length > 0 ? (
+                paginatedEntries.map((entry) => (
                   <tr key={entry.id} className="border-b border-gray-700">
                     <td className="py-2">
                       {new Date(entry.workDate).toLocaleDateString("en-GB")}
