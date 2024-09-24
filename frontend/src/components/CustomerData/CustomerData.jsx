@@ -6,6 +6,7 @@ import CreditForm from "../Credit Form/CreditForm";
 import api from "../../services/api";
 import searchIcon from "../../assets/searchIcon.svg";
 import addCustomerIcon from "../../assets/addCustomerIcon.svg";
+import MoreModal from "../moreModal/moreModal";
 
 const CustomerData = () => {
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
@@ -17,6 +18,13 @@ const CustomerData = () => {
   const [customers, setCustomers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // Pagination state
   const customersPerPage = 10; // Number of customers per page
+  const [moreModal, setMoreModal] = useState(false)
+  const [selectedVehicleNumbers, setSelectedVehicleNumbers] = useState([]);
+
+  const handleMoreClick = (vehicleNumbers) => {
+    setSelectedVehicleNumbers(vehicleNumbers);
+    setMoreModal(true);
+  };
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -65,6 +73,12 @@ const CustomerData = () => {
     setShowCreditForm(false);
     setSelectedCustomer(null);
   };
+
+
+  const handleCloseModal = () => {
+    setMoreModal(false);
+  };
+
 
   // Calculate total pages based on customers per page
   const totalPages = Math.ceil(customers.length / customersPerPage);
@@ -140,7 +154,18 @@ const CustomerData = () => {
                     {new Date(customer.dateOfService).toLocaleDateString("en-GB")}
                   </td>
                   <td className="px-4 py-2">{customer.customerName}</td>
-                  <td className="px-4 py-2">{customer.vehicleNumber}</td>
+                  <td className="px-4 py-2">
+                    <div className="flex gap-2">
+                      <p> {customer.vehicleNumber[0]}</p>
+                      <p>{customer.vehicleNumber.length > 1 && (
+                        <p className="text-blue-600 cursor-pointer" onClick={() => handleMoreClick(customer.vehicleNumber)}>more</p>
+                      )}
+                      </p>
+                    </div>
+
+
+
+                  </td>
                   <td className="px-4 py-2">{customer.phoneNumber}</td>
                   <td className="px-4 py-2">₹{customer.creditAmount}</td>
                   <td className="px-4 py-2">₹{customer.paidAmount}</td>
@@ -179,6 +204,12 @@ const CustomerData = () => {
                 </tr>
               )}
             </tbody>
+
+            {moreModal && (
+              <div>
+
+              </div>
+            )}
           </table>
         </div>
 
@@ -201,8 +232,8 @@ const CustomerData = () => {
                 <button
                   key={page}
                   className={`px-3 py-1 rounded ${page === currentPage
-                      ? "bg-teal-400 text-gray-900"
-                      : "bg-gray-800 text-gray-300"
+                    ? "bg-teal-400 text-gray-900"
+                    : "bg-gray-800 text-gray-300"
                     }`}
                   onClick={() => setCurrentPage(page)}
                 >
@@ -256,6 +287,12 @@ const CustomerData = () => {
           onClose={closeCreditForm}
         />
       )}
+
+      <MoreModal
+        isOpen={moreModal}
+        onClose={handleCloseModal}
+        vehicleNumbers={selectedVehicleNumbers}
+      />
     </div>
   );
 };

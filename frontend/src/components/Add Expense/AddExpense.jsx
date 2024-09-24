@@ -4,12 +4,18 @@ import swal from 'sweetalert';
 
 const AddExpense = ({ setAddExpenseModal }) => {
   // State for form fields
-  const [date, setDate] = useState("");
   const [payeeName, setPayeeName] = useState("");
   const [expenseType, setExpenseType] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [totalExpense, setTotalExpense] = useState(0);
+
+  const today = new Date();
+  const options = { timeZone: "Asia/Kolkata" }; // Specify Indian timezone
+  const todayString = today.toLocaleDateString("en-CA", options); // Format to YYYY-MM-DD
+  
+  // Set dateOfService to today's date initially
+  const [date, setDate] = useState(todayString);
 
   // State to handle the dynamic fields
   const [expenseDetails, setexpenseDetails] = useState([
@@ -189,6 +195,7 @@ const AddExpense = ({ setAddExpenseModal }) => {
                 <input
                   type="date"
                   value={date}
+                  max={todayString}
                   onChange={handleFieldChange(setDate, "date")}
                   className="p-2 bg-gray-700 rounded w-full"
                 />

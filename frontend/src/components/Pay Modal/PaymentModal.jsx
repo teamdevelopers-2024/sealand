@@ -129,13 +129,14 @@ const PaymentModal = ({ show, onClose, customer }) => {
               <label className="block mb-2">Repayment amount</label>
               <input
                 type="number"
-                value={repaymentAmount}
+                
                 onChange={handleAmountChange}
                 placeholder={`Maximum repay amount: ₹${maxRepaymentAmount}`}
                 className={`w-full px-3 py-2 bg-gray-700 rounded-md focus:outline-none ${
                   amountError ? "border-red-500" : ""
                 }`}
               />
+              {!amountError && <p className="text-red-500">Due Amount ₹{maxRepaymentAmount}</p>}
               {amountError && <p className="text-red-500 mt-1">{amountError}</p>}
             </div>
             <div className="col-span-2 md:col-span-1">

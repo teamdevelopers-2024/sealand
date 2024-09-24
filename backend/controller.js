@@ -11,9 +11,8 @@ async function login(req, res) {
     try {
         const ogUsername = process.env.ADMIN_USERNAME
         const ogPassword = process.env.ADMIN_PASSWORD
-        console.log(ogUsername, ogPassword)
         const { username, password } = req.body
-        console.log(req.body)
+
         if (!username) {
             return res.status(400).json({
                 error: true,
@@ -49,9 +48,6 @@ async function login(req, res) {
 async function addcustomer(req, res) {
     try {
       const customerData = req.body;
-      console.log(customerData);
-
-
       if (typeof customerData.vehicleNumber === 'string') {
         customerData.vehicleNumber = customerData.vehicleNumber
           .split(',')
@@ -60,10 +56,12 @@ async function addcustomer(req, res) {
       }
   
       // Validate customer data
-      const errors = validateCustomerData(customerData);
+      const errors =await validateCustomerData(customerData);
+      console.log(errors)
       if (errors.length > 0) {
+        console.log('getting here')
         return res.status(400).json({
-          error: true,
+          error: true,   
           message: "Validation error",
           errors: errors,
         });
@@ -121,7 +119,6 @@ async function addIncome(req, res) {
 export async function incomeHistory(req, res) {
     try {
         const incomes = await IncomeDb.find().sort({ _id: -1 });
-        console.log(incomes)
         res.status(200).json({
             error: false,
             message: "Income fetched successfully",
@@ -143,7 +140,6 @@ export async function incomeHistory(req, res) {
 async function addExpense(req,res) {
     try {
        const expenseData = req.body
-       console.log(expenseData);
        const errors = await validateExpenseData(expenseData)
 
        if (errors.length > 0) {
@@ -275,7 +271,6 @@ async function getExpenses(req, res) {
 async function getCustomers(req,res) {
     try {
         const customers = await creditCustomerDb.find().sort({ _id: -1 });
-        console.log(customers)
         res.status(200).json({
             error:false,
             message:"customers fetched successfully",
@@ -310,7 +305,7 @@ async function repayment(req, res) {
       const updateIncomeData = new IncomeDb({
         workDate:details.repaymentDate,
         customerName:customer.customerName,
-        vehicleNumber:customer.vehicleNumber[0],
+        vehicleNumber:customer.vehicleNumber[0].toUpperCase(),
         contactNumber:customer.phoneNumber,
         paymentMethod:"Credit Repayment",
         totalServiceCost:details.repaymentAmount,
@@ -469,7 +464,43 @@ async function repayment(req, res) {
     }
 }
 
+async function addCredit(req,res) {
+    try {
+        const {date,vehicleNumber,workRows,creditAmount , _id , phoneNumber} = req.body
 
+        const customer = await creditCustomerDb.findOne({ phoneNumber:phoneNumber , _id:_id });
+
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found" });
+          }
+
+          const updatedCreditAmount = customer.creditAmount + creditAmount;
+
+          await creditCustomerDb.updateOne(
+            { _id: customer._id },
+            {
+              $set: { creditAmount: updatedCreditAmount },
+              $push: {
+                vehicleNumber: vehicleNumber.toUpperCase(),
+                workDetails: { $each: workRows },
+                transactionHistory: {
+                  date: new Date(date),
+                  vehicleNumber: vehicleNumber,
+                  phoneNumber: phoneNumber, // Replace with the actual phone number or keep as sample
+                  paymentType: "Credit",
+                  Amount: creditAmount,
+                },
+              },
+            }
+          );
+
+          return res.status(200).json({ message: "Credit added successfully" });
+
+    } catch (error) {
+        console.error(error);
+    res.status(500).json({ message: "An error occurred", error });
+    }
+}
   
   
 
@@ -482,5 +513,6 @@ export default {
     getExpenses,
     getCustomers,
     repayment,
-    getIncomeAndExpense
+    getIncomeAndExpense,
+    addCredit
 }
