@@ -26,7 +26,7 @@ ChartJS.register(
   const currentMonth = currentDate.getMonth(); // 0-11
   const currentYear = currentDate.getFullYear();
 
-function ExpenseChart({expenseHistoryData}) {
+function ExpenseChart({expenseHistoryData,setPdfModalOpen}) {
     const [timePeriod, setTimePeriod] = useState("Monthly");
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [totalExpense,setTotalExpense]=useState('')
@@ -188,7 +188,7 @@ function ExpenseChart({expenseHistoryData}) {
               }).format(totalExpensemonth)}
           </h3>
           {/* Download Button Here */}
-          <ExpenseDownloadButton/>
+          <ExpenseDownloadButton setPdfModalOpen = {setPdfModalOpen}/>
         </div>
 
         <div className="w-2/4 relative">

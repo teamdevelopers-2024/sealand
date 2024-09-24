@@ -10,7 +10,7 @@ const ExpenseModal = ({ isOpen, expense, onClose }) => {
 
 
     doc.setFillColor(0, 0, 0); 
-    doc.rect(0, 0, doc.internal.pageSize.getWidth(), 40, 'F');
+    doc.rect(0, 0, doc.internal.pageSize.getWidth(), 35, 'F');
 
     doc.addImage(imgData, 'PNG', 10, 10, 50, 20); 
 
@@ -30,37 +30,39 @@ const ExpenseModal = ({ isOpen, expense, onClose }) => {
 
     // Add Invoice Date and Number
     doc.setFontSize(10);
-    doc.text(`Date: ${new Date(expense.date).toLocaleDateString()}`, 10, 40);
+    doc.text(`Date: ${new Date(expense.date).toLocaleDateString()}`, 10, 50);
 
     // Add Customer Information
     doc.setFontSize(12);
-    doc.text(`Customer: ${expense.payeeName}`, 10, 50);
-    doc.text(`Phone: ${expense.contactNumber}`, 10, 60);
-
-    // Add a separator line
-    doc.line(10, 65, 200, 65);
-
-    // Add table headers for items (compact)
-    doc.setFontSize(12);
-    doc.setFont('bold');
-    doc.text('No.', 10, 72);
-    doc.text('Description', 20, 72);
-    doc.text('Amount', 160, 72); 
+    doc.text(`Payee Name: ${expense.payeeName}`, 10, 60);
+    doc.text(`Phone: ${expense.contactNumber}`, 10, 70);
 
     // Add a separator line
     doc.line(10, 75, 200, 75);
 
+    // Add table headers for items (compact)
+    doc.setFontSize(12);
+    doc.setFont('bold');
+    doc.text('No.', 10, 82);
+    doc.text('Description', 40, 82);
+    doc.text('Description', 100, 82);
+    doc.text('Amount', 160, 82); 
+
+    // Add a separator line
+    doc.line(10, 85, 200, 85);
+
     // Add table rows for items with index numbers
     doc.setFont('normal');
     expense.expenseDetails.forEach((item, index) => {
-        const yOffset = 80 + (index * 10); // Adjust row height for each item
+        const yOffset = 90 + (index * 10); // Adjust row height for each item
         doc.text(`${index + 1}`, 10, yOffset); // Index number
-        doc.text(`${item.description}`, 20, yOffset); // Description
+        doc.text(`${item.description}`, 40, yOffset); // Description
+        doc.text(`${item.reference}`, 100, yOffset); // reference
         doc.text(`${parseFloat(item.amount).toLocaleString()}`, 160, yOffset); // Amount with ₹ symbol
     });
 
     // Add a separator line after the items
-    const itemsEndY = 80 + (expense.expenseDetails.length * 10);
+    const itemsEndY = 90 + (expense.expenseDetails.length * 10);
     doc.line(10, itemsEndY + 5, 200, itemsEndY + 5);
 
     // Add Total
@@ -76,8 +78,11 @@ const ExpenseModal = ({ isOpen, expense, onClose }) => {
     doc.text('Thank you for your visit!', 70, itemsEndY + 30);
     doc.text('Visit us again!', 80, itemsEndY + 35);
 
-    // Save the PDF
-    doc.save('receipt.pdf');
+    // // Save the PDF
+    // doc.save('receipt.pdf');
+
+    // Save the PDF with the payee's name
+    doc.save(`${expense.payeeName.replace(/[^a-zA-Z0-9]/g, '_')}_receipt.pdf`);
 };
 
 
