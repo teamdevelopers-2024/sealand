@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Line } from "react-chartjs-2";
 import {
@@ -57,11 +57,38 @@ ChartJS.register(
     { name: "2023", income: 130000 },
     { name: "2024", income: 140000 },
   ];
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth(); // 0-11
+  const currentYear = currentDate.getFullYear();
 
-function IncomeChart() {
-    const [incomeHistoryData, setIncomeHistoryData] = useState([]);
+function IncomeChart({incomeHistoryData}) {
     const [timePeriod, setTimePeriod] = useState("Monthly");
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [totalIncome,setTotalIncome]=useState('')
+    const [totalIncomemonth,setTotalIncomemonth]=useState('')
+    
+    useEffect(() => {
+
+      const total = incomeHistoryData.reduce((accumulator, entry) => {      
+        const serviceCost = entry.totalServiceCost
+        return accumulator + serviceCost;
+      }, 0);
+      const totalIncomeThisMonth = incomeHistoryData.reduce((total, entry) => {
+        const workDate = new Date(entry.workDate);
+        
+        // Check if the workDate is in the current month and year
+        if (workDate.getMonth() === currentMonth && workDate.getFullYear() === currentYear) {
+          // Parse the totalServiceCost and add it to the total
+          const serviceCost = entry.totalServiceCost
+          return total + serviceCost; // Accumulate the total
+        }
+        return total; // If not, return the total unchanged
+      }, 0);// Sum them up
+
+  setTotalIncomemonth(totalIncomeThisMonth) 
+    setTotalIncome(total)   
+    }, [incomeHistoryData])
+    
 
 
   const handleTimePeriodChange = (event) => {
@@ -183,20 +210,14 @@ function IncomeChart() {
         <div className="text-left space-y-3 w-1/3">
           <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {new Intl.NumberFormat("en-IN", {
-              style: "currency",
-              currency: "INR",
-            }).format(incomeValues.reduce((a, b) => a + b, 0))}
+            {totalIncome}
           </h3>
           <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
           <h2 className="text-3xl font-bold text-cyan-400">
             {timePeriod} income
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {new Intl.NumberFormat("en-IN", {
-              style: "currency",
-              currency: "INR",
-            }).format(incomeValues.reduce((a, b) => a + b, 0))}
+            {totalIncomemonth}
           </h3>
         </div>
 

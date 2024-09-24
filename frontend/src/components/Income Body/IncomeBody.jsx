@@ -24,6 +24,8 @@ const IncomeBody = ({ addIncomeModal }) => {
     if(addIncomeModal==false){
       fetchIncomeHistory();
     }
+    console.log(incomeHistoryData);
+    
 
     
   }, [addIncomeModal]);
@@ -62,7 +64,7 @@ const IncomeBody = ({ addIncomeModal }) => {
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">
-        <IncomeChart />
+        <IncomeChart incomeHistoryData={incomeHistoryData} />
 
         {/* Income History Table */}
         <div className="bg-gray-800 p-10 rounded-lg">
