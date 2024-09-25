@@ -22,44 +22,62 @@ ChartJS.register(
   Legend
 );
 
-const currentDate = new Date();
-const currentMonth = currentDate.getMonth(); // 0-11
-const currentYear = currentDate.getFullYear();
+function IncomeChart({ incomeHistoryData, setIsModalOpen }) {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth(); // 0-11
+  const Year = currentDate.getFullYear();
 
-function IncomeChart({ incomeHistoryData,setIsModalOpen}) {
   const [timePeriod, setTimePeriod] = useState("Monthly");
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [totalIncome, setTotalIncome] = useState('')
-  const [totalIncomemonth, setTotalIncomemonth] = useState('')
+  const [currentYear, setCurrentYear] = useState(Year); // Use the renamed variable
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [periodIncome, setPeriodIncome] = useState(0); // State for selected time period income
 
   useEffect(() => {
-
     const total = incomeHistoryData.reduce((accumulator, entry) => {
-      const serviceCost = entry.totalServiceCost
+      const serviceCost = entry.totalServiceCost;
       return accumulator + serviceCost;
     }, 0);
-    const totalIncomeThisMonth = incomeHistoryData.reduce((total, entry) => {
-      const workDate = new Date(entry.workDate);
 
-      // Check if the workDate is in the current month and year
-      if (workDate.getMonth() === currentMonth && workDate.getFullYear() === currentYear) {
-        // Parse the totalServiceCost and add it to the total
-        const serviceCost = entry.totalServiceCost
-        return total + serviceCost; // Accumulate the total
+    setTotalIncome(total);
+
+    // Calculate period income based on selected time period
+    const calculatePeriodIncome = () => {
+      if (timePeriod === "Monthly") {
+        return incomeHistoryData.reduce((total, entry) => {
+          const workDate = new Date(entry.workDate);
+          return workDate.getMonth() === currentMonth &&
+            workDate.getFullYear() === currentYear
+            ? total + entry.totalServiceCost
+            : total;
+        }, 0);
+      } else if (timePeriod === "Daily") {
+        const today = new Date();
+        return incomeHistoryData.reduce((total, entry) => {
+          const workDate = new Date(entry.workDate);
+          const dayIndex = Math.floor(
+            (today - workDate) / (1000 * 60 * 60 * 24)
+          );
+          return dayIndex >= 0 && dayIndex < 7
+            ? total + entry.totalServiceCost
+            : total;
+        }, 0);
+      } else if (timePeriod === "Yearly") {
+        return incomeHistoryData.reduce((total, entry) => {
+          const workDate = new Date(entry.workDate);
+          return workDate.getFullYear() === currentYear
+            ? total + entry.totalServiceCost
+            : total;
+        }, 0);
       }
-      return total; // If not, return the total unchanged
-    }, 0);// Sum them up
+      return 0; // Default case
+    };
 
-    setTotalIncomemonth(totalIncomeThisMonth)
-    setTotalIncome(total)
-  }, [incomeHistoryData])
-
-
+    setPeriodIncome(calculatePeriodIncome());
+  }, [incomeHistoryData, timePeriod, currentMonth, currentYear]);
 
   const handleTimePeriodChange = (event) => {
-    const period = event.target.value;
-    setTimePeriod(period);
-    if (period !== "Monthly") {
+    setTimePeriod(event.target.value);
+    if (event.target.value !== "Monthly") {
       setCurrentYear(new Date().getFullYear()); // Reset to current year when switching from Monthly
     }
   };
@@ -136,8 +154,8 @@ function IncomeChart({ incomeHistoryData,setIsModalOpen}) {
     timePeriod === "Monthly"
       ? getMonthlyData()
       : timePeriod === "Daily"
-        ? getDailyData()
-        : getYearlyData();
+      ? getDailyData()
+      : getYearlyData();
 
   const labels = graphData.map((data) => data.name);
   const incomeValues = graphData.map((data) => data.income);
@@ -186,10 +204,10 @@ function IncomeChart({ incomeHistoryData,setIsModalOpen}) {
             {new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
-            }).format(totalIncomemonth)}
+            }).format(periodIncome)}
           </h3>
           {/* Download Button Here */}
-          <IncomeDownloadButton setIsModalOpen = {setIsModalOpen}/>
+          <IncomeDownloadButton setIsModalOpen={setIsModalOpen} />
         </div>
 
         <div className="w-2/4 relative">
@@ -241,7 +259,7 @@ function IncomeChart({ incomeHistoryData,setIsModalOpen}) {
                 <div
                   className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
                   style={{
-                    marginRight: '1%',
+                    marginRight: "1%",
                     width: "6%",
                     height: "10%",
                     display: "flex",
