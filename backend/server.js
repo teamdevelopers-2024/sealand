@@ -3,19 +3,18 @@ import cors from "cors"; // Import CORS package
 import 'dotenv/config';
 import router from "./Router.js";
 import connectDB from "./database/connection.js";
+import ServerlessHttp from "serverless-http";
 
 // Initialize the Express application
 const app = express();
 
 // Define a port to listen on
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
 
-// Middleware configuration
 
-// Set up CORS with options (adjust the origin as needed)
 const corsOptions = {
   origin: [
-    'http://localhost:5173', // Add your frontend URL
+    'http://localhost:5173',
     'http://localhost:4200',
     'http://localhost:5000',
     'http://localhost:3000',
@@ -29,7 +28,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 connectDB();
-
 
 // Parse incoming JSON requests (replaces body-parser.json())
 app.use(express.json());
@@ -51,8 +49,10 @@ app.use('/api', router);
 //   });
 // }
 
-app.listen(PORT, (err) => {
-  console.log(`Backend server is running on port ${PORT}`);
-})
+export const handler = ServerlessHttp(app)
+
+// app.listen(PORT, (err) => {
+//   console.log(`Backend server is running on port ${PORT}`);
+// })
 
 
