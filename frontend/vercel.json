@@ -1,19 +1,18 @@
 {
-    "builds": [
-      {
-        "src": "./index.html",
-        "use": "@vercel/static"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "../backend/server.js"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/$1"
-      }
-    ]
-  }
-  
+  "builds": [
+    {
+      "src": "./index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "./src/routes/LayoutRoutes/LayoutRoutes.jsx",
+      "dest": "../backend/server.js"
+    },
+    {
+      "src": "./(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
