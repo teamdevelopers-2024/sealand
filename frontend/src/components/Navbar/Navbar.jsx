@@ -1,5 +1,5 @@
 import React from 'react';
-// import Logo from "../../assets/logoNoBackgroundCropped.png";
+import Logo from "../../assets/logoNoBackgroundCropped.png";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import logoutIcon from '../../assets/logoutIcon.png';
@@ -24,7 +24,7 @@ const Navbar = ({ setAddIncomeModal, setAddExpenseModal }) => {
         {/* Logo */}
         <div className="flex items-center ml-20">
           <img
-            // src={Logo}
+            src={Logo}
             alt="Logo"
             className="h-12 w-28"
           />
