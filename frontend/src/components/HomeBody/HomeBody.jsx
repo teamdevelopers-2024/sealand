@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
 import { useSpring, animated, useTransition } from "@react-spring/web";
 import api from "../../services/api";
-import revenueIcon from '../../assets/revenueIcon.svg';
-import expenseIcon from '../../assets/expenseIcon.svg';
-import customersIcon from '../../assets/customersIcon.svg';
+import revenueIcon from "../../assets/revenueIcon.svg";
+import expenseIcon from "../../assets/expenseIcon.svg";
+import customersIcon from "../../assets/customersIcon.svg";
+import { useNavigate } from "react-router-dom";
 
 function HomeBody() {
-  const [data, setData] = useState({ todayIncome: 0, todayExpense: 0, todayCustomerCount: 0, yesterdayIncome: 0 });
+  const [data, setData] = useState({
+    todayIncome: 0,
+    todayExpense: 0,
+    todayCustomerCount: 0,
+    yesterdayIncome: 0,
+  });
   const [showShade, setShowShade] = useState(false);
+  const [showIncome, setShowIncome] = useState();
+  const [showExpense, setShowExpense] = useState();
+  const navigate = useNavigate();
 
   // Spring animations for numbers with scaling effect
   const todayIncomeSpring = useSpring({
@@ -58,17 +67,61 @@ function HomeBody() {
       } catch (error) {
         console.log(error);
       }
+
+      try {
+        const result = await api.showIncome();
+        console.log("result of income", result.data);
+
+        if (Array.isArray(result.data)) {
+          setShowIncome(result.data);
+        } else {
+          console.error("Income data is not an array:", result.data);
+          setShowIncome([]); // Reset to empty array
+        }
+      } catch (error) {
+        console.log(error);
+        setShowIncome([]); // Reset to empty array on error
+      }
+
+      try {
+        const result = await api.showExpense();
+        console.log("result of expense", result.data);
+
+        if (Array.isArray(result.data)) {
+          setShowExpense(result.data);
+        } else {
+          console.error("Expense data is not an array:", result.data);
+          setShowExpense([]); // Reset to empty array
+        }
+      } catch (error) {
+        console.log(error);
+        setShowExpense([]); // Reset to empty array on error
+      }
     };
     fetchData();
   }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-16">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 items-stretch">
         {/* Card 1 - Today's Revenue */}
         <div className="bg-gray-800 p-6 rounded-xl flex flex-col justify-between relative overflow-hidden">
-          {transitions((styles, item) =>
-            item && <animated.div style={styles} className="absolute inset-0 rounded-xl" />
+          {transitions(
+            (styles, item) =>
+              item && (
+                <animated.div
+                  style={styles}
+                  className="absolute inset-0 rounded-xl"
+                />
+              )
           )}
           <div className="flex flex-row justify-between">
             <h2 className="text-lg text-[#00BDD6] mb-2">Today's Revenue</h2>
@@ -108,8 +161,14 @@ function HomeBody() {
 
         {/* Card 2 - Today's Expenses */}
         <div className="bg-gray-800 p-6 rounded-xl flex flex-col justify-between relative overflow-hidden">
-          {transitions((styles, item) =>
-            item && <animated.div style={styles} className="absolute inset-0 rounded-xl" />
+          {transitions(
+            (styles, item) =>
+              item && (
+                <animated.div
+                  style={styles}
+                  className="absolute inset-0 rounded-xl"
+                />
+              )
           )}
           <div className="flex flex-row justify-between">
             <h2 className="text-lg text-[#00BDD6] mb-2">Today's Expenses</h2>
@@ -150,8 +209,14 @@ function HomeBody() {
         <div className="space-y-4">
           {/* Card 3 - Today's Customers */}
           <div className="bg-gray-800 p-6 rounded-xl flex flex-col justify-between relative overflow-hidden">
-            {transitions((styles, item) =>
-              item && <animated.div style={styles} className="absolute inset-0 rounded-xl" />
+            {transitions(
+              (styles, item) =>
+                item && (
+                  <animated.div
+                    style={styles}
+                    className="absolute inset-0 rounded-xl"
+                  />
+                )
             )}
             <div className="flex flex-row justify-between">
               <h2 className="text-lg text-[#00BDD6] mb-2">Today's Customers</h2>
@@ -162,7 +227,9 @@ function HomeBody() {
             <p className="text-2xl font-bold">
               <animated.span
                 style={{
-                  transform: todayCustomerCountSpring.scale.to((s) => `scale(${s})`),
+                  transform: todayCustomerCountSpring.scale.to(
+                    (s) => `scale(${s})`
+                  ),
                   position: "relative",
                   display: "inline-block",
                   overflow: "hidden",
@@ -177,11 +244,19 @@ function HomeBody() {
 
           {/* Card 4 - Yesterday's Revenue */}
           <div className="bg-gray-800 p-6 rounded-xl flex flex-col justify-between relative overflow-hidden">
-            {transitions((styles, item) =>
-              item && <animated.div style={styles} className="absolute inset-0 rounded-xl" />
+            {transitions(
+              (styles, item) =>
+                item && (
+                  <animated.div
+                    style={styles}
+                    className="absolute inset-0 rounded-xl"
+                  />
+                )
             )}
             <div className="flex flex-row justify-between">
-              <h2 className="text-lg text-[#00BDD6] mb-2">Yesterday's Revenue</h2>
+              <h2 className="text-lg text-[#00BDD6] mb-2">
+                Yesterday's Revenue
+              </h2>
               <div className="px-0.5 py-0.5 border border-[#00BDD6] rounded-md">
                 <img src={revenueIcon} alt="" />
               </div>
@@ -189,7 +264,9 @@ function HomeBody() {
             <p className="text-2xl font-bold">
               <animated.span
                 style={{
-                  transform: yesterdayIncomeSpring.scale.to((s) => `scale(${s})`),
+                  transform: yesterdayIncomeSpring.scale.to(
+                    (s) => `scale(${s})`
+                  ),
                   position: "relative",
                   display: "inline-block",
                   overflow: "hidden",
@@ -209,7 +286,10 @@ function HomeBody() {
         </div>
       </div>
       <div className="mt-8">
-        <h2 className="text-lg text-teal-400 mb-4">Recent Income</h2>
+        <div className="flex justify-between px-3">
+          <h2 className="text-lg text-teal-400 mb-4">Recent Income</h2>
+          <button className="text-cyan-400" onClick={() => navigate('/income')}>View All</button>
+        </div>
         <div className="bg-gray-800 p-6 rounded-xl">
           <table className="w-full text-left">
             <thead>
@@ -222,88 +302,68 @@ function HomeBody() {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Muhammed Danish</td>
-                <td>KL 13 A 5672</td>
-                <td>By UPI</td>
-                <td>₹1970</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Ahmed Shehin</td>
-                <td>KL 56 R 7598</td>
-                <td>By Cash</td>
-                <td>₹1315</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Muhammed Sinan</td>
-                <td>KL 11 H 3260</td>
-                <td>By UPI</td>
-                <td>₹1420</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Dilshad</td>
-                <td>KL 11 A 0001</td>
-                <td>By UPI</td>
-                <td>₹3250</td>
-              </tr>
+              {Array.isArray(showIncome) &&
+                showIncome
+                  .sort((a, b) => new Date(b.workDate) - new Date(a.workDate)) // Sort by date, latest first
+                  .slice(0, 5)
+                  .map((income, index) => (
+                    <tr key={index} className="border-t border-gray-700">
+                      <td>{formatDate(income.workDate)}</td>
+                      <td>{income.customerName}</td>
+                      <td>{income.vehicleNumber}</td>
+                      <td>{income.paymentMethod}</td>
+                      <td>
+                        {new Intl.NumberFormat("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        }).format(income.totalServiceCost)}
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
       </div>
-
 
       <div className="mt-8">
-        <h2 className="text-lg text-teal-400 mb-4">Recent Expense</h2>
+        <div className="flex justify-between px-3">
+          <h2 className="text-lg text-teal-400 mb-4">Recent Expense</h2>
+          <button className="text-cyan-400" onClick={() => navigate('/expense')}>View All</button>
+        </div>
         <div className="bg-gray-800 p-6 rounded-xl">
           <table className="w-full text-left">
             <thead>
               <tr>
                 <th className="text-teal-400">Date</th>
-                <th className="text-teal-400">Customer Name</th>
-                <th className="text-teal-400">Vehicle Number</th>
+                <th className="text-teal-400">Payee Name</th>
+                <th className="text-teal-400">Expense Number</th>
                 <th className="text-teal-400">Payment Type</th>
                 <th className="text-teal-400">Amount</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Muhammed Danish</td>
-                <td>KL 13 A 5672</td>
-                <td>By UPI</td>
-                <td>₹1970</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Ahmed Shehin</td>
-                <td>KL 56 R 7598</td>
-                <td>By Cash</td>
-                <td>₹1315</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Muhammed Sinan</td>
-                <td>KL 11 H 3260</td>
-                <td>By UPI</td>
-                <td>₹1420</td>
-              </tr>
-              <tr className="border-t border-gray-700">
-                <td>20-09-2024</td>
-                <td>Dilshad</td>
-                <td>KL 11 A 0001</td>
-                <td>By UPI</td>
-                <td>₹3250</td>
-              </tr>
+              {Array.isArray(showExpense) &&
+                showExpense
+                  .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, latest first
+                  .slice(0, 5)
+                  .map((expense, index) => (
+                    <tr key={index} className="border-t border-gray-700">
+                      <td>{formatDate(expense.date)}</td>
+                      <td>{expense.payeeName}</td>
+                      <td>{expense.expenseType}</td>
+                      <td>{expense.paymentMethod}</td>
+                      <td>
+                        {new Intl.NumberFormat("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        }).format(expense.totalExpense)}
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
       </div>
-
-
     </div>
   );
 }
