@@ -5,14 +5,14 @@ const IncomeDownloadButton = ({ setIsModalOpen }) => {
   const [iconVisible, setIconVisible] = useState(false);
   return !iconVisible ? (
     <button
-      className="cursor-pointer border border-cyan-600 bg-opacity-20 bg-cyan-600 text-white font-semibold py-2 px-3 rounded-lg shadow-md hover:bg-cyan-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2"
+      className="cursor-pointer border border-cyan-600 bg-opacity-20 bg-cyan-600 text-white font-semibold py-2 px-3 rounded-lg shadow-md hover:bg-cyan-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 flex"
       onMouseEnter={() => setIconVisible(true)}
     >
       Download
     </button>
   ) : (
     <button
-      className="cursor-pointer border border-cyan-600 bg-opacity-20 bg-cyan-600 text-white font-semibold py-2 px-3 rounded-lg shadow-md hover:bg-cyan-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 flex"
+      className="mt-10 cursor-pointer border border-cyan-600 bg-opacity-20 bg-cyan-600 text-white font-semibold py-2 px-3 rounded-lg shadow-md hover:bg-cyan-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 flex"
       onMouseLeave={() => setIconVisible(false)}
       onClick={() => setIsModalOpen(true)}
     >
