@@ -36,7 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Use your defined routes
-app.use('/api', router);
+app.use('/.netlify/functions/', router);
 
 // Start the server
 // function start(callback) {
