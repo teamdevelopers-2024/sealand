@@ -1,11 +1,15 @@
 {
     "builds": [
       {
-        "src": "index.html",
+        "src": "./index.html",
         "use": "@vercel/static"
       }
     ],
     "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "../backend/server.js"
+      },
       {
         "src": "/(.*)",
         "dest": "/$1"
