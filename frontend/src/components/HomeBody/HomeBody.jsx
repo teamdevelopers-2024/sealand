@@ -336,7 +336,7 @@ function HomeBody() {
               <tr>
                 <th className="text-teal-400">Date</th>
                 <th className="text-teal-400">Payee Name</th>
-                <th className="text-teal-400">Expense Number</th>
+                <th className="text-teal-400">Expense Type</th>
                 <th className="text-teal-400">Payment Type</th>
                 <th className="text-teal-400">Amount</th>
               </tr>
