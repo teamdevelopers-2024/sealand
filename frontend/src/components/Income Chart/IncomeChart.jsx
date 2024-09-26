@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Line } from "react-chartjs-2";
+
 import {
   Chart as ChartJS,
   LineElement,

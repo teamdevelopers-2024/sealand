@@ -61,6 +61,9 @@ function HomeBody() {
         const result = await api.getTodayIncomeAndExpense();
         if (!result.error) {
           setData(result);
+          console.log(result)
+          setExpense(result.latestExpenses)
+          setIncomes(result.latestIncomes)
           setShowShade(true); // Trigger shading effect
           setTimeout(() => setShowShade(false), 500); // Reset shading after animation
         }

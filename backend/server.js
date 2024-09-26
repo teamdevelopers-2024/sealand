@@ -33,9 +33,10 @@ app.use(express.json());
 
 // Parse URL-encoded requests (replaces body-parser.urlencoded())
 app.use(express.urlencoded({ extended: true }));
+app.use('/api',router)
 
 // Use your defined routes
-app.use('/api', router);
+// app.use('/.netlify/functions/', router);
 
 // Start the server
 // function start(callback) {
@@ -47,6 +48,8 @@ app.use('/api', router);
 //     callback();
 //   });
 // }
+
+// export const handler = ServerlessHttp(app)
 
 app.listen(PORT, (err) => {
   console.log(`Backend server is running on port ${PORT}`);
