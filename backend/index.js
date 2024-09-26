@@ -16,10 +16,13 @@ const app = express();
 // CORS options
 const corsOptions = {
   origin: 'https://sealand.vercel.app',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Ensure OPTIONS is included
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
+
+app.use(cors(corsOptions));
+
 
 // Middleware
 app.use(cors(corsOptions));
