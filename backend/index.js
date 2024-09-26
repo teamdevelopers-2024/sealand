@@ -8,52 +8,32 @@ import ServerlessHttp from "serverless-http";
 // Initialize the Express application
 const app = express();
 
-// Define a port to listen on
-const PORT = process.env.PORT || 5000;
-
-
+// CORS configuration
 const corsOptions = {
-  origin: '*',
+  origin: '*',  // You can adjust this based on your specific needs
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
 
-
 app.use(cors(corsOptions));
 
+// Connect to the database
 connectDB();
 
-// Parse incoming JSON requests (replaces body-parser.json())
+// Parse incoming JSON requests
 app.use(express.json());
 
-// Parse URL-encoded requests (replaces body-parser.urlencoded())
+// Parse URL-encoded requests
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/",(req,res)=>{
-  res.status(200).json("Hello working")
-})
+// Simple route for health check
+app.get("/", (req, res) => {
+  res.status(200).json("Hello working");
+});
 
-app.use('/api',router)
+// API routes
+app.use('/api', router);
 
-// Use your defined routes
-// app.use('/.netlify/functions/', router);
-
-// Start the server
-// function start(callback) {
-//   app.listen(PORT, (err) => {
-//     if (err) {
-//       return callback(err);
-//     }
-//     console.log(`Backend server is running on port ${3000}`);
-//     callback();
-//   });
-// }
-
-// export const handler = ServerlessHttp(app)
-
-app.listen(PORT, (err) => {
-  console.log(`Backend server is running on port ${PORT}`);
-})
-
-
+// Wrap the app with ServerlessHttp and export it as a handler for Vercel
+export const handler = ServerlessHttp(app);
