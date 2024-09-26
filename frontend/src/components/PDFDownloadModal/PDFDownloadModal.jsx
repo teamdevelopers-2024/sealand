@@ -38,7 +38,7 @@ const PDFDownloadModal = ({ isOpen, onClose, generatePDF }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-gray-800 p-6 rounded-lg">
-        <h3 className="text-xl mb-4 text-cyan-400">Download Income PDF</h3>
+        <h3 className="text-xl mb-4 text-cyan-400">Download PDF</h3>
 
         <div className="mb-4">
           <select 

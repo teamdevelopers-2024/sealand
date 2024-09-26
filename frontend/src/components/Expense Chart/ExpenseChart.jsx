@@ -1,60 +1,77 @@
 import { Line } from "react-chartjs-2";
 import {
-    Chart as ChartJS,
-    LineElement,
-    PointElement,
-    CategoryScale,
-    LinearScale,
-    Tooltip,
-    Legend,
-  } from "chart.js";
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import ExpenseDownloadButton from "./ExpenseDownloadButton";
 
-  // Register Chart.js components
+// Register Chart.js components
 ChartJS.register(
-    LineElement,
-    CategoryScale,
-    PointElement,
-    LinearScale,
-    Tooltip,
-    Legend
-  );
- 
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth(); // 0-11
-  const currentYear = currentDate.getFullYear();
+  LineElement,
+  CategoryScale,
+  PointElement,
+  LinearScale,
+  Tooltip,
+  Legend
+);
 
-function ExpenseChart({expenseHistoryData,setPdfModalOpen}) {
-    const [timePeriod, setTimePeriod] = useState("Monthly");
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-    const [totalExpense,setTotalExpense]=useState('')
-    const [totalExpensemonth,setTotalExpensemonth]=useState('')
-    
-    useEffect(() => {
+const currentDate = new Date();
+const currentMonth = currentDate.getMonth(); // 0-11
+const currentYear = currentDate.getFullYear();
 
-      const total = expenseHistoryData.reduce((accumulator, entry) => {      
-        const expenseCost = entry.totalExpense
-        return accumulator + expenseCost;
-      }, 0);
-      const totalExpenseThisMonth = expenseHistoryData.reduce((total, entry) => {
+function ExpenseChart({ expenseHistoryData, setPdfModalOpen }) {
+  const [timePeriod, setTimePeriod] = useState("Monthly");
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [totalExpense, setTotalExpense] = useState("");
+  const [totalExpensemonth, setTotalExpensemonth] = useState("");
+
+
+  useEffect(() => {
+    const total = expenseHistoryData.reduce((accumulator, entry) => {
+      return accumulator + (entry.totalExpense || 0);
+    }, 0);
+
+    let totalExpenseThisPeriod = 0;
+
+    if (timePeriod === "Monthly") {
+      totalExpenseThisPeriod = expenseHistoryData.reduce((total, entry) => {
         const workDate = new Date(entry.date);
-        
-        // Check if the workDate is in the current month and year
-        if (workDate.getMonth() === currentMonth && workDate.getFullYear() === currentYear) {
-          // Parse the totalExpense and add it to the total
-          const expenseCost = entry.totalExpense
-          return total + expenseCost; // Accumulate the total
+        if (
+          workDate.getMonth() === currentMonth &&
+          workDate.getFullYear() === currentYear
+        ) {
+          return total + (entry.totalExpense || 0);
         }
-        return total; // If not, return the total unchanged
-      }, 0);// Sum them up
+        return total;
+      }, 0);
+    } else if (timePeriod === "Daily") {
+      const today = new Date();
+      totalExpenseThisPeriod = expenseHistoryData.reduce((total, entry) => {
+        const workDate = new Date(entry.date);
+        if (workDate.toDateString() === today.toDateString()) {
+          return total + (entry.totalExpense || 0);
+        }
+        return total;
+      }, 0);
+    } else if (timePeriod === "Yearly") {
+      const currentYearData = expenseHistoryData.filter(
+        (entry) => new Date(entry.date).getFullYear() === currentYear
+      );
+      totalExpenseThisPeriod = currentYearData.reduce((total, entry) => {
+        return total + (entry.totalExpense || 0);
+      }, 0);
+    }
 
-  setTotalExpensemonth(totalExpenseThisMonth) 
-    setTotalExpense(total)   
-    }, [expenseHistoryData])
-    
-
+    setTotalExpensemonth(totalExpenseThisPeriod);
+    setTotalExpense(total);
+  }, [expenseHistoryData, timePeriod, currentYear]);
 
   const handleTimePeriodChange = (event) => {
     const period = event.target.value;
@@ -73,7 +90,7 @@ function ExpenseChart({expenseHistoryData,setPdfModalOpen}) {
     currentYearData.forEach((entry) => {
       const entryDate = new Date(entry.date);
       const month = entryDate.getMonth();
-      monthlyExpense[month] += entry.totalExpense|| 0; // Parse amount correctly
+      monthlyExpense[month] += entry.totalExpense || 0; // Parse amount correctly
     });
 
     return monthlyExpense.map((expense, index) => ({
@@ -166,16 +183,16 @@ function ExpenseChart({expenseHistoryData,setPdfModalOpen}) {
       setCurrentYear((prevYear) => prevYear + 1);
     }
   };
-    return(
-        <>
-        <div className="bg-gray-800 p-8 rounded-xl flex justify-between items-center mb-8">
+  return (
+    <>
+      <div className="bg-gray-800 p-8 rounded-xl flex justify-between items-center mb-8">
         <div className="text-left space-y-3 w-1/3">
           <h2 className="text-5xl font-bold text-cyan-400">Total expense</h2>
           <h3 className="text-3xl text-green-300 font-bold">
             {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(totalExpense)}
+              style: "currency",
+              currency: "INR",
+            }).format(totalExpense)}
           </h3>
           <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
           <h2 className="text-3xl font-bold text-cyan-400">
@@ -183,27 +200,28 @@ function ExpenseChart({expenseHistoryData,setPdfModalOpen}) {
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
             {new Intl.NumberFormat("en-IN", {
-                style: "currency",
-                currency: "INR",
-              }).format(totalExpensemonth)}
+              style: "currency",
+              currency: "INR",
+            }).format(totalExpensemonth)}
           </h3>
           {/* Download Button Here */}
-          <ExpenseDownloadButton setPdfModalOpen = {setPdfModalOpen}/>
+          <ExpenseDownloadButton setPdfModalOpen={setPdfModalOpen} />
         </div>
 
         <div className="w-2/4 relative">
           <div className="absolute z-10 bottom--4 left-0 p-2">
             <div className="bg-gray-700 px-1.5 py-1.5 rounded-full text-cyan-500">
-
-            <select
-              value={timePeriod}
-              onChange={handleTimePeriodChange}
-              className="cursor-pointer bg-gray-700 rounded-full text-cyan-500 outline-none"
-            >
-              <option value="Daily" className="cursor-pointer">Daily</option>
-              <option value="Monthly">Monthly</option>
-              <option value="Yearly">Yearly</option>
-            </select>
+              <select
+                value={timePeriod}
+                onChange={handleTimePeriodChange}
+                className="cursor-pointer bg-gray-700 rounded-full text-cyan-500 outline-none"
+              >
+                <option value="Daily" className="cursor-pointer">
+                  Daily
+                </option>
+                <option value="Monthly">Monthly</option>
+                <option value="Yearly">Yearly</option>
+              </select>
             </div>
           </div>
 
@@ -241,7 +259,7 @@ function ExpenseChart({expenseHistoryData,setPdfModalOpen}) {
                 <div
                   className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-700 rounded-full text-cyan-400 hover:bg-gray-600 transition"
                   style={{
-                    marginRight: '1%',
+                    marginRight: "1%",
                     width: "6%",
                     height: "10%",
                     display: "flex",
@@ -291,8 +309,8 @@ function ExpenseChart({expenseHistoryData,setPdfModalOpen}) {
           </div>
         </div>
       </div>
-        </>
-    )
-  }
+    </>
+  );
+}
 
-  export default ExpenseChart;
+export default ExpenseChart;

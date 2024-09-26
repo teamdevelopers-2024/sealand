@@ -3,6 +3,7 @@ import cors from "cors"; // Import CORS package
 import 'dotenv/config';
 import router from "./Router.js";
 import connectDB from "./database/connection.js";
+import ServerlessHttp from "serverless-http";
 
 // Initialize the Express application
 const app = express();
@@ -10,12 +11,10 @@ const app = express();
 // Define a port to listen on
 const PORT = process.env.PORT || 5000;
 
-// Middleware configuration
 
-// Set up CORS with options (adjust the origin as needed)
 const corsOptions = {
   origin: [
-    'http://localhost:5173', // Add your frontend URL
+    'http://localhost:5173',
     'http://localhost:4200',
     'http://localhost:5000',
     'http://localhost:3000',
@@ -30,15 +29,15 @@ app.use(cors(corsOptions));
 
 connectDB();
 
-
 // Parse incoming JSON requests (replaces body-parser.json())
 app.use(express.json());
 
 // Parse URL-encoded requests (replaces body-parser.urlencoded())
 app.use(express.urlencoded({ extended: true }));
+app.use('/api',router)
 
 // Use your defined routes
-app.use('/api', router);
+// app.use('/.netlify/functions/', router);
 
 // Start the server
 // function start(callback) {
@@ -50,6 +49,8 @@ app.use('/api', router);
 //     callback();
 //   });
 // }
+
+// export const handler = ServerlessHttp(app)
 
 app.listen(PORT, (err) => {
   console.log(`Backend server is running on port ${PORT}`);

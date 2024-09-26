@@ -39,7 +39,6 @@ const Expense = ({ addExpenseModal }) => {
       "Date",
       "Payee Name",
       "Expense Type",
-      "Payment Type",
       "Phone Number",
       "Amount",
     ];
@@ -49,22 +48,35 @@ const Expense = ({ addExpenseModal }) => {
       return entryDate >= startDate && entryDate <= endDate;
     });
 
-    doc.text("Expense History", 14, 10);
-    headers.forEach((header, index) => doc.text(header, 14 + index * 40, 20));
+    doc.text("Expense History", 100, 10);
+    headers.forEach((header, index) => doc.text(header, 14 + index * 40, 25));
+
+    // Add a separator line
+    doc.line(10, 28, 200, 28);
+
+    let totalExpense = 0;
 
     filteredData.forEach((entry, index) => {
       const row = [
         new Date(entry.date).toLocaleDateString("en-GB"),
         entry.payeeName,
         entry.expenseType,
-        entry.paymentMethod,
         entry.contactNumber ? entry.contactNumber.toString() : "",
-        `₹ ${entry.totalExpense}`,
+        `${entry.totalExpense}`,
       ];
+
+      totalExpense += entry.totalExpense;
       row.forEach((cell, cellIndex) => {
-        doc.text(cell.toString(), 14 + cellIndex * 40, 30 + index * 10);
+        doc.text(cell.toString(), 14 + cellIndex * 40, 35 + index * 10);
       });
     });
+    // Add total calculation at the end
+    const totalRowYPosition = 35 + filteredData.length * 10; // Updated position calculation
+    // Add a separator line
+    doc.line(10, totalRowYPosition, 200, totalRowYPosition); // Adjusted position for the line
+
+    // Position for total income
+    doc.text(`Total Expense:  ${totalExpense}`, 150, totalRowYPosition + 10);
 
     doc.save("expense_history.pdf");
   };
@@ -98,8 +110,10 @@ const Expense = ({ addExpenseModal }) => {
       <main className="mt-8 p-2">
         {/* Total Expense Section */}
 
-        <ExpenseChart expenseHistoryData={expenseHistoryData}
-          setPdfModalOpen={setPdfModalOpen}/>
+        <ExpenseChart
+          expenseHistoryData={expenseHistoryData}
+          setPdfModalOpen={setPdfModalOpen}
+        />
 
         <div className="bg-gray-800 p-10 rounded-xl">
           <div className="flex justify-between items-center mb-6">
