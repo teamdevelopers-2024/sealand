@@ -13,18 +13,12 @@ const PORT = process.env.PORT || 5000;
 
 
 const corsOptions = {
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:4200',
-    'http://localhost:5000',
-    'http://localhost:3000',
-    'http://localhost:3001',
-    "https://sealand.vercel.app"
-  ],
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true, // Allows cookies to be sent from the frontend
+  credentials: true,
 };
+
 
 app.use(cors(corsOptions));
 
