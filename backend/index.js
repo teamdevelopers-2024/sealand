@@ -30,11 +30,9 @@ app.use(express.json());
 // Parse URL-encoded requests (replaces body-parser.urlencoded())
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/",(req,res)=>{
-  res.json("Hello working")
-})
 
-app.use('/api',router)
+
+app.use('/',router)
 
 // Use your defined routes
 // app.use('/.netlify/functions/', router);
