@@ -1,20 +1,28 @@
-// db.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-// MongoDB connection string from environment variable
-const uri = process.env.MONGO_URL;
+let isConnected; // Tracks the connection status
 
-// Connect to MongoDB
-const connectDB = async () => {
-  try {
-    await mongoose.connect(uri, {
-      // Options are not needed for version 4.x and above
-    });
-    console.log('Database connected successfully!');
-  } catch (err) {
-    console.error('Database connection error:', err);
-  }
-};
+async function connectDB() {
+    // Check if already connected
+    if (isConnected) {
+        console.log("Using existing database connection");
+        return;
+    }
 
-// Export the connect function
+    // Check if MONGO_URL is defined in environment variables
+    if (!process.env.MONGO_URL) {
+        throw new Error('MONGO_URL is not defined in environment variables');
+    }
+
+    try {
+        mongoose.set("strictQuery", false); // Optional setting for query behavior
+        // Connect to the database
+        const db = await mongoose.connect(process.env.MONGO_URL);
+        isConnected = db.connection.readyState; // Update connection status
+        console.log("Database connected successfully!");
+    } catch (error) {
+        console.error(`Database connection error: ${error.message}`);
+    }
+}
+
 export default connectDB;
