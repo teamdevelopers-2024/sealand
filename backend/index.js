@@ -3,7 +3,6 @@ import cors from "cors";
 import 'dotenv/config';
 import router from "./Router.js";
 import connectDB from "./database/connection.js";
-import ServerlessHttp from "serverless-http";
 
 const app = express();
 
@@ -36,5 +35,8 @@ app.get("/", async (req, res) => {
 // API routes
 app.use('/api', router);
 
-// Export the handler for Vercel
-export default ServerlessHttp(app);
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
