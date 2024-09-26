@@ -16,11 +16,33 @@ const corsOptions = {
   credentials: true, // This allows cookies or credentials to be sent with the request
 };
 
+
+
 app.use(cors(corsOptions));
+
+
+
 
 
 // Connect to the database
 connectDB();
+
+app.use((req, res, next) => {
+  console.log(`Received request: ${req.method} ${req.url}`);
+  next();
+});
+
+// In your route handler
+router.post('/login', async (req, res) => {
+  try {
+      console.log('Login attempt:', req.body);
+      // Your login logic
+  } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 // Parse incoming JSON requests
 app.use(express.json());
