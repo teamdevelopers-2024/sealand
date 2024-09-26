@@ -19,6 +19,7 @@ const corsOptions = {
     'http://localhost:5000',
     'http://localhost:3000',
     'http://localhost:3001',
+    "https//deploy-mern-1whq.vercel.app"
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
