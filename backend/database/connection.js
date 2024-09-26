@@ -12,9 +12,9 @@ const connectDB = async () => {
     });
     console.log('Database connected successfully!');
   } catch (err) {
-    console.error('Database connection error:', err);
+    console.error('Database connection error is:', err);
   }
 };
 
-// Export the connect function
+// Export the connect functions
 export default connectDB;
