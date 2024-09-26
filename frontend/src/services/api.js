@@ -1,13 +1,14 @@
 import axios from "axios";
 
-// Create an Axios instance with the base URL
+
 const api = axios.create({
-  baseURL: "https://sea-land-api.vercel.app/api", // Ensure no trailing slash here
+  baseURL: "https://sea-land-api.vercel.app/api", 
   headers: {
     "Content-Type": "application/json",
   },
   withCredentials: true,
-});
+})
+
 
 // Log the constructed URL for debugging
 const logRequestURL = (endpoint) => {
