@@ -22,10 +22,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Allow preflight requests for all routes
 
-
-// Middleware
-app.use(cors(corsOptions));
 
 // Serve favicon
 // app.use(favicon(path.join(__dirname, 'favicon.ico')));
