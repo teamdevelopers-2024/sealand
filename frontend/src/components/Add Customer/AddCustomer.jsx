@@ -108,7 +108,6 @@ const AddCustomer = ({ show, onClose }) => {
 
   const handlePhoneNumberChange = (e) => {
     const value = e.target.value;
-
     // Allow only numbers; prevent letters and any other characters
     if (/^\d*$/.test(value)) { // Check if the value consists only of digits
         setPhoneNumber(value);

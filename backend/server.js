@@ -9,7 +9,7 @@ import ServerlessHttp from "serverless-http";
 const app = express();
 
 // Define a port to listen on
-// const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 
 const corsOptions = {
@@ -34,9 +34,10 @@ app.use(express.json());
 
 // Parse URL-encoded requests (replaces body-parser.urlencoded())
 app.use(express.urlencoded({ extended: true }));
+app.use('/api',router)
 
 // Use your defined routes
-app.use('/.netlify/functions/', router);
+// app.use('/.netlify/functions/', router);
 
 // Start the server
 // function start(callback) {
@@ -49,10 +50,10 @@ app.use('/.netlify/functions/', router);
 //   });
 // }
 
-export const handler = ServerlessHttp(app)
+// export const handler = ServerlessHttp(app)
 
-// app.listen(PORT, (err) => {
-//   console.log(`Backend server is running on port ${PORT}`);
-// })
+app.listen(PORT, (err) => {
+  console.log(`Backend server is running on port ${PORT}`);
+})
 
 
