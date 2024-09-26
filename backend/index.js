@@ -1,11 +1,19 @@
 import express from "express";
 import cors from "cors";
+import path from "path";
 import 'dotenv/config';
 import router from "./Router.js";
 import connectDB from "./database/connection.js";
+// import favicon from 'serve-favicon';
+// import { fileURLToPath } from 'url';
+
+// Get the directory name
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// CORS options
 const corsOptions = {
   origin: 'https://sealand.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -13,7 +21,17 @@ const corsOptions = {
   credentials: true,
 };
 
+// Middleware
 app.use(cors(corsOptions));
+
+// Serve favicon
+// app.use(favicon(path.join(__dirname, 'favicon.ico')));
+
+// Middleware to parse JSON requests
+app.use(express.json());
+
+// Middleware to parse URL-encoded data
+app.use(express.urlencoded({ extended: true }));
 
 // Connect to the database
 async function initialize() {
@@ -36,7 +54,7 @@ app.get("/", async (req, res) => {
 app.use('/api', router);
 
 // Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
