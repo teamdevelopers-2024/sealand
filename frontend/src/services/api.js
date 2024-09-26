@@ -13,7 +13,7 @@ const api = axios.create({
 // Log the constructed URL for debugging
 const logRequestURL = (endpoint) => {
   const url = `${api.defaults.baseURL}${endpoint}`;
-  console.log("Request URL:", url); // Log the full request URL
+  console.log("Request URL is:", url); // Log the full request URL
   return url;
 };
 
