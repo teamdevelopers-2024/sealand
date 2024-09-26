@@ -15,7 +15,7 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-  origin: 'https://sealand.vercel.app/',
+  origin: ['https://sealand.vercel.app/',"http://localhost:5173"],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Ensure OPTIONS is included
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -35,15 +35,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Connect to the database
-async function initialize() {
-  await connectDB();
-}
+ connectDB();
+
 
 // Health check route
 app.get("/", async (req, res) => {
   try {
-    await initialize(); // Ensure DB is connected
-    console.log("Received request at / route");
     res.status(200).json("Hello, working fine");
   } catch (error) {
     console.error("Error initializing app:", error);
