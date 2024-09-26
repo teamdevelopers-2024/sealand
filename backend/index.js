@@ -3,36 +3,40 @@ import cors from "cors";
 import 'dotenv/config';
 import router from "./Router.js";
 import connectDB from "./database/connection.js";
-import ServerlessHttp from "serverless-http";
 
-// Initialize the Express application
 const app = express();
 
-// CORS configuration
 const corsOptions = {
-    origin: 'https://sealand.vercel.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
+  origin: 'https://sealand.vercel.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
-connectDB();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: 'Something went wrong, please try again later.' });
-});
+// Connect to the database
+async function initialize() {
+  await connectDB();
+}
 
-// Simple route for health check
-app.get("/", (req, res) => {
-    res.status(200).json("Hello working");
+// Health check route
+app.get("/", async (req, res) => {
+  try {
+    await initialize(); // Ensure DB is connected
+    console.log("Received request at / route");
+    res.status(200).json("Hello, working fine");
+  } catch (error) {
+    console.error("Error initializing app:", error);
+    res.status(500).json({ error: "Initialization error" });
+  }
 });
 
 // API routes
 app.use('/api', router);
 
-// Wrap the app with ServerlessHttp and export it as default
-export default ServerlessHttp(app); // Change here to default export
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
