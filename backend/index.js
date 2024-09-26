@@ -42,5 +42,5 @@ app.get("/", (req, res) => {
 // API routes
 app.use('/api', router);
 
-// Wrap the app with ServerlessHttp and export it as a handler for Vercel
+
 export const handler = ServerlessHttp(app);
