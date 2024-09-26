@@ -12,7 +12,7 @@ const api = axios.create({
 
 async function login(body) {
   try {
-    const response = await api.post("/login", body);
+    const response = await api.post("login", body);
     console.log("Login successful:", response.data);
     return response.data;
   } catch (error) {
@@ -29,7 +29,7 @@ async function login(body) {
 
 async function addIncome(body) {
   try {
-    const response = await api.post('/addIncome',body)
+    const response = await api.post('addIncome',body)
     console.log("income result : ", response.data )
     return response.data
   } catch (error) {
@@ -42,7 +42,7 @@ async function addIncome(body) {
 async function addcustomer(data) {
   try {
     console.log(data);
-    const response = await api.post("/addcustomer", data);
+    const response = await api.post("addcustomer", data);
     console.log("Data submitted successfully:", response.data);
     return response.data
   } catch (error) {
@@ -68,7 +68,7 @@ async function showIncome() {
 
 async function addExpense(body) {
   try {
-    const response = await api.post("/addExpense",body)
+    const response = await api.post("addExpense",body)
     console.log(response.data)
     return response.data
   } catch (error) {
@@ -79,7 +79,7 @@ async function addExpense(body) {
 
 async function showExpense() {
   try {
-    const response = await api.get("/getExpenses")
+    const response = await api.get("getExpenses")
     return response.data
   } catch (error) {
     console.log(error)
@@ -90,7 +90,7 @@ async function showExpense() {
 
 async function showCustomers(){
   try {
-    const response = await api.get("/getCustomers")
+    const response = await api.get("getCustomers")
     return response.data
   } catch (error) {
     console.log("error fetching customers :",error)
@@ -102,7 +102,7 @@ async function showCustomers(){
 
 async function repayment(customer,details) {
   try {
-    const response = await api.put("/repayment",{customer,details})
+    const response = await api.put("repayment",{customer,details})
     console.log(response.data)
     return response.data
   } catch (error) {
@@ -114,7 +114,7 @@ async function repayment(customer,details) {
 
 async function getTodayIncomeAndExpense() {
   try {
-    const response = await api.get('/getTodayIncomeAndExpense')
+    const response = await api.get('getTodayIncomeAndExpense')
     return response.data
   } catch (error) {
     console.log(error)
@@ -125,7 +125,7 @@ async function getTodayIncomeAndExpense() {
 
 async function addCredit(body) {
   try {
-    const response = await api.post("/addCredit",body)
+    const response = await api.post("addCredit",body)
     console.log(response.data )
     return response.data
   } catch (error) {
