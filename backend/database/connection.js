@@ -21,7 +21,7 @@ async function connectDB() {
         isConnected = db.connection.readyState; // Update connection status
         console.log("Database connected successfully!");
     } catch (error) {
-        console.error(`Database connection error: ${error.message}`);
+        console.error(`Database connection error is: ${error.message}`);
     }
 }
 
