@@ -3,7 +3,7 @@ import Logo from "../../assets/logoNoBackgroundCropped.png";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
 import logoutIcon from '../../assets/logoutIcon.png';
-import incomeIcon from '../../assets/IncomeIcon';
+import incomeIcon from '../../assets/IncomeIcon.svg';
 const Navbar = ({ setAddIncomeModal, setAddExpenseModal }) => {
   const navigate = useNavigate();
   const location = useLocation();
