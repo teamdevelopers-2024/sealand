@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const api = axios.create({
-  baseURL: "https://sea-land-new.vercel.app//api",
+  baseURL: "https://sea-land-new.vercel.app/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,17 +12,19 @@ const api = axios.create({
 
 async function login(body) {
   try {
-
     const response = await api.post("/login", body);
     console.log("Login successful:", response.data);
     return response.data;
-
   } catch (error) {
-    console.log(error)
-    return error.response.data
-
+    console.error("Request failed:", {
+      message: error.message,
+      config: error.config,
+      response: error.response ? error.response.data : null,
+    });
+    return error.response ? error.response.data : "Network error";
   }
 }
+
 
 
 async function addIncome(body) {
