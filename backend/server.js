@@ -3,13 +3,12 @@ import cors from "cors"; // Import CORS package
 import 'dotenv/config';
 import router from "./Router.js";
 import connectDB from "./database/connection.js";
-import ServerlessHttp from "serverless-http";
 
 // Initialize the Express application
 const app = express();
 
 // Define a port to listen on
-// const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 
 const corsOptions = {
@@ -49,10 +48,8 @@ app.use('/api', router);
 //   });
 // }
 
-export const handler = ServerlessHttp(app)
-
-// app.listen(PORT, (err) => {
-//   console.log(`Backend server is running on port ${PORT}`);
-// })
+app.listen(PORT, (err) => {
+  console.log(`Backend server is running on port ${PORT}`);
+})
 
 
