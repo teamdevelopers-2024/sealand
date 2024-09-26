@@ -10,22 +10,29 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: '*',  // You can adjust this based on your specific needs
+  origin: 'https://sealand.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+  credentials: true, // This allows cookies or credentials to be sent with the request
 };
 
 app.use(cors(corsOptions));
+
 
 // Connect to the database
 connectDB();
 
 // Parse incoming JSON requests
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log the error for debugging
+  res.status(500).json({ error: 'Something went wrong, please try again later.' });
+});
+
 
 // Parse URL-encoded requests
-app.use(express.urlencoded({ extended: true }));
 
 // Simple route for health check
 app.get("/", (req, res) => {
