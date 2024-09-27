@@ -7,52 +7,48 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 
 const Login = () => {
-  const {login , checkAuth } = useAuth()
-  const isAuth = checkAuth()
-  // State management for form inputs and error messages
+  const { login, checkAuth } = useAuth();
+  const isAuth = checkAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-
-  useEffect(()=>{
-    if(isAuth){
-      navigate('/home')
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/home');
     }
-  },[])
-  // Handler for form submission
-  const handleLogin = async(e) => {
+  }, [isAuth, navigate]);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simple validation check
     if (!username || !password) {
       setError("Please enter both username and password");
       return;
     }
 
-    const result = await api.login({username,password})
-    if(result.error){
-      setError('Invalid credentials')
-    }else{
-      setError('')
-      login()
-      navigate('/home')
+    const result = await api.login({ username, password });
+    if (result.error) {
+      setError('Invalid credentials');
+    } else {
+      setError('');
+      login();
+      navigate('/home');
     }
-
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-900">
+    <div className="flex flex-col md:flex-row h-screen items-center justify-center bg-gray-900 overflow-hidden">
       {/* Left section with the logo */}
-      <div className="w-1/2 flex items-center justify-center">
-        <img src={Logo} alt="Sea Land Car Care" className="w-3/4" />
+      <div className="flex items-center justify-center w-full md:w-1/2 p-4">
+        <img src={Logo} alt="Sea Land Car Care" className="w-3/4 max-w-xs" />
       </div>
 
       {/* Divider line */}
-      <div className="w-px h-4/5 bg-gray-500"></div>
+      <div className="hidden md:block w-px h-4/5 bg-gray-500"></div>
 
       {/* Right section with the login form */}
-      <div className="w-1/2 p-8 flex flex-col items-center justify-center">
+      <div className="w-full md:w-1/2 p-8 flex flex-col items-center justify-center">
         <h2 className="text-white text-3xl font-bold mb-4">WELCOME</h2>
         <p className="text-gray-400 mb-8">PLEASE LOGIN TO ADMIN DASHBOARD</p>
 
@@ -65,10 +61,7 @@ const Login = () => {
 
         {/* Username Input */}
         <div className="mb-6 w-full max-w-md">
-          <label
-            className="block text-gray-300 text-sm font-bold mb-2"
-            htmlFor="username"
-          >
+          <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="username">
             <div className="flex items-center">
               <img src={User} alt="user svg" className="mr-2" />
               Username
@@ -86,10 +79,7 @@ const Login = () => {
 
         {/* Password Input */}
         <div className="mb-6 w-full max-w-md">
-          <label
-            className="block text-gray-300 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
+          <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="password">
             <div className="flex items-center">
               <img src={Lock} alt="lock svg" className="mr-2" />
               Password
