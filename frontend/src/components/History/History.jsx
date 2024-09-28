@@ -17,7 +17,7 @@ const History = ({ onClose, customer }) => {
                 <th className="px-4 py-2">Date</th>
                 <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Phone number</th>
-                <th className="px-4 py-2">Payment type</th>
+                <th className="px-4 py-2">Paid/Credit</th>
                 <th className="px-4 py-2">Amount</th>
               </tr>
             </thead>
@@ -29,7 +29,8 @@ const History = ({ onClose, customer }) => {
                   </td>
                   <td className="px-4 py-2">{transaction.customerName}</td>
                   <td className="px-4 py-2">{transaction.phoneNumber}</td>
-                  <td className="px-4 py-2">{transaction.paymentType}</td>
+                  
+                  <td className="px-4 py-2">{["UPI", "Cash", "Card"].includes(transaction.paymentType) ? "Paid" : "New Credit"}</td>
                   <td className="px-4 py-2">{transaction.Amount}</td>
                 </tr>
               ))}
