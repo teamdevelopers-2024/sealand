@@ -31,20 +31,24 @@ const CustomerData = () => {
   };
 
   useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        setIsLoading(true); // Set loading to true before fetching data
-        const response = await api.showCustomers();
-        setCustomers(response.data);
-        console.log("Customer history", response.data);
-      } catch (error) {
-        console.error("Error fetching income history data", error);
-      } finally {
-        setIsLoading(false); // Set loading to false after fetching data
-      }
-    };
-    fetchCustomers();
-  }, [showAddCustomerModal, showPaymentModal, showCreditForm]);
+    // Check if all the modal states are false before fetching customers
+    if (!showAddCustomerModal && !showPaymentModal && !showCreditForm) {
+      const fetchCustomers = async () => {
+        try {
+          setIsLoading(true); // Set loading to true before fetching data
+          const response = await api.showCustomers();
+          setCustomers(response.data);
+          console.log("Customer history", response.data);
+        } catch (error) {
+          console.error("Error fetching income history data", error);
+        } finally {
+          setIsLoading(false); // Set loading to false after fetching data
+        }
+      };
+      fetchCustomers();
+    }
+  }, [showAddCustomerModal, showPaymentModal, showCreditForm]); // Dependencies
+  
 
   const calculateDueAmount = (creditAmount, paidAmount) => {
     return creditAmount - paidAmount;
