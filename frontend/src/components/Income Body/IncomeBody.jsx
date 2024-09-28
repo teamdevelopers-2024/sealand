@@ -67,10 +67,55 @@ const IncomeBody = ({ addIncomeModal }) => {
     setViewIncomeModal(true);
   };
 
-  const downloadTablePDF = () => {
+  const generatePDF = (startDate, endDate) => {
     const doc = new jsPDF();
-    doc.text("Income History", 20, 20);
-    // Add more PDF generation logic here...
+    doc.setFontSize(12);
+
+    const headers = [
+      "Date",
+      "Customer Name",
+      "Vehicle Number",
+      "Phone Number",
+      "Amount",
+    ];
+
+    const filteredData = incomeHistoryData.filter((entry) => {
+      const entryDate = new Date(entry.workDate);
+      return entryDate >= startDate && entryDate <= endDate;
+    });
+
+    doc.text("Income History", 100, 10);
+    headers.forEach((header, index) => doc.text(header, 14 + index * 40, 25));
+
+    // Add a separator line
+    doc.line(10, 28, 200, 28); // Adjusted line position for clarity
+
+    let totalServiceCost = 0;
+
+    filteredData.forEach((entry, index) => {
+      const row = [
+        new Date(entry.workDate).toLocaleDateString("en-GB"),
+        entry.customerName,
+        entry.vehicleNumber,
+        entry.contactNumber ? entry.contactNumber.toString() : "",
+        ` ${entry.totalServiceCost}`,
+      ];
+
+      totalServiceCost += entry.totalServiceCost; // Accumulate total
+
+      row.forEach((cell, cellIndex) => {
+        doc.text(cell.toString(), 14 + cellIndex * 40, 35 + index * 10);
+      });
+    });
+
+    // Add total calculation at the end
+    const totalRowYPosition = 35 + filteredData.length * 10; // Updated position calculation
+    // Add a separator line
+    doc.line(10, totalRowYPosition, 200, totalRowYPosition); // Adjusted position for the line
+
+    // Position for total income
+    doc.text(`Total Income:  ${totalServiceCost}`, 150, totalRowYPosition + 10);
+
     doc.save("income_history.pdf");
   };
 
@@ -182,7 +227,7 @@ const IncomeBody = ({ addIncomeModal }) => {
           entry={singleEntry}
         />
       )}
-      {isModalOpen && <PDFDownloadModal />}
+      {isModalOpen && <PDFDownloadModal generatePDF={generatePDF} setIsModalOpen={setIsModalOpen}/>}
     </div>
   );
 };
