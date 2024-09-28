@@ -8,14 +8,13 @@ const months = Array.from({ length: 12 }, (v, i) => ({
   value: i + 1,
 }));
 
-const PDFDownloadModal = ({ isOpen, onClose, generatePDF }) => {
+const PDFDownloadModal = ({ setIsModalOpen, generatePDF }) => {
   const [selectedOption, setSelectedOption] = useState('monthly');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
 
-  if (!isOpen) return null;
 
   const handleDownload = () => {
     let startDate, endDate;
@@ -32,11 +31,11 @@ const PDFDownloadModal = ({ isOpen, onClose, generatePDF }) => {
     }
 
     generatePDF(startDate, endDate);
-    onClose();
+    setIsModalOpen(false)
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex z-40 items-center justify-center bg-black bg-opacity-50">
       <div className="bg-gray-800 p-6 rounded-lg">
         <h3 className="text-xl mb-4 text-cyan-400">Download PDF</h3>
 
@@ -117,7 +116,7 @@ const PDFDownloadModal = ({ isOpen, onClose, generatePDF }) => {
         )}
 
         <div className="flex justify-end mt-4">
-          <button onClick={onClose} className="bg-gray-600 text-gray-100 px-4 py-2 rounded-lg mr-2">
+          <button onClick={()=> setIsModalOpen(false)} className="bg-gray-600 text-gray-100 px-4 py-2 rounded-lg mr-2">
             Cancel
           </button>
           <button 

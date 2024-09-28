@@ -232,7 +232,7 @@ const Expense = ({ addExpenseModal }) => {
         onClose={() => setPdfModalOpen(false)}
         customStartDate={customStartDate}
         customEndDate={customEndDate}
-        onGeneratePDF={generatePDF}
+        generatePDF={generatePDF}
       />
     </div>
   );
