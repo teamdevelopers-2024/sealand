@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import api from "../../services/api";
 import swal from 'sweetalert';
+import LoadingSpinner from "../spinner/Spinner";
 
 const AddIncome = ({ setAddIncomeModal }) => {
   // State to handle the dynamic fields
@@ -13,17 +14,15 @@ const AddIncome = ({ setAddIncomeModal }) => {
   const [vehicleNumber, setVehicleNumber] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [totalServiceCost, setTotalServiceCost] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const today = new Date();
-  const options = { timeZone: "Asia/Kolkata" }; // Specify Indian timezone
+  const options = { timeZone: "Asia/Kolkata" };
   const todayString = today.toLocaleDateString("en-CA", options); // Format to YYYY-MM-DD
-
-  // Set dateOfService to today's date initially
   const [workDate, setWorkDate] = useState(todayString);
 
   // Error state for validation messages
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({ workDescriptionsErrors: [] });
 
   // Function to handle input change for dynamic fields
   const handleInputChange = (index, event) => {
@@ -36,39 +35,80 @@ const AddIncome = ({ setAddIncomeModal }) => {
   // Function to add a new work description field
   const addField = () => {
     setWorkDescriptions([...workDescriptions, { description: "", amount: "", reference: "" }]);
+    setErrors({ ...errors, workDescriptionsErrors: [...errors.workDescriptionsErrors, {}] });
   };
 
   // Function to remove a field
   const removeField = (index) => {
     const updatedFields = workDescriptions.filter((_, i) => i !== index);
+    const updatedErrors = errors.workDescriptionsErrors.filter((_, i) => i !== index);
     setWorkDescriptions(updatedFields);
+    setErrors({ ...errors, workDescriptionsErrors: updatedErrors });
   };
 
   // Function to calculate the total amount
   const calculateTotal = () => {
-    const total = workDescriptions.reduce((total, work) => {
+    return workDescriptions.reduce((total, work) => {
       const amount = parseFloat(work.amount) || 0;
       return total + amount;
     }, 0);
-    return total; // Return total instead of setting it in state
   };
 
   // Function to handle form validation
   const validate = () => {
-    let tempErrors = {};
-    if (!workDate) tempErrors.workDate = "Work date is required.";
-    if (!customerName) tempErrors.customerName = "Customer name is required.";
-    if (!vehicleNumber) tempErrors.vehicleNumber = "Vehicle number is required.";
-    if (!contactNumber) tempErrors.contactNumber = "Contact number is required.";
-    if (!paymentMethod) tempErrors.paymentMethod = "Select a payment method.";
-    if (calculateTotal() <= 0) tempErrors.totalServiceCost = "Total cost must be greater than zero.";
+    let tempErrors = {
+      workDate: "",
+      customerName: "",
+      vehicleNumber: "",
+      contactNumber: "",
+      paymentMethod: "",
+      workDescriptionsErrors: [...workDescriptions.map(() => ({ description: "", amount: "" }))]
+    };
+
+    let isValid = true;
+
+    // Validate general fields
+    if (!workDate) {
+      tempErrors.workDate = "Work date is required.";
+      isValid = false;
+    }
+    if (!customerName) {
+      tempErrors.customerName = "Customer name is required.";
+      isValid = false;
+    }
+    if (!vehicleNumber) {
+      tempErrors.vehicleNumber = "Vehicle number is required.";
+      isValid = false;
+    }
+    if (!contactNumber) {
+      tempErrors.contactNumber = "Contact number is required.";
+      isValid = false;
+    }
+    if (!paymentMethod) {
+      tempErrors.paymentMethod = "Select a payment method.";
+      isValid = false;
+    }
+
+    // Validate workDescriptions for each entry
+    workDescriptions.forEach((work, index) => {
+      if (!work.description) {
+        tempErrors.workDescriptionsErrors[index].description = "Description is required.";
+        isValid = false;
+      }
+      if (!work.amount) {
+        tempErrors.workDescriptionsErrors[index].amount = "Amount is required.";
+        isValid = false;
+      }
+    });
+
     setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
+    return isValid;
   };
 
   // Function to handle form submission
   const handleSubmit = async () => {
     if (!validate()) return;
+    setLoading(true);
     const formData = {
       workDate,
       customerName,
@@ -84,17 +124,19 @@ const AddIncome = ({ setAddIncomeModal }) => {
         swal("Error!", result.errors[0], "error");
         return;
       }
-      // Show success message
       swal("Success!", "Income added successfully!", "success");
       setAddIncomeModal(false); // Close the modal after saving
     } catch (err) {
       console.error(err);
       swal("Error!", "Failed to add income.", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {loading && <LoadingSpinner />}
       {/* Backdrop */}
       <div className="fixed inset-0 bg-black bg-opacity-50 z-20"></div>
 
@@ -176,9 +218,7 @@ const AddIncome = ({ setAddIncomeModal }) => {
                 <th>Work Description</th>
                 <th>Amount</th>
                 <th>Reference</th>
-                {workDescriptions.length > 1 && 
-                <th>Action</th>
-                }
+                {workDescriptions.length > 1 && <th>Action</th>}
               </tr>
             </thead>
             <tbody>
@@ -194,6 +234,9 @@ const AddIncome = ({ setAddIncomeModal }) => {
                       className="p-2 bg-gray-700 rounded w-full"
                       placeholder="Name of the work"
                     />
+                    {errors.workDescriptionsErrors[index]?.description && (
+                      <p className="text-red-500">{errors.workDescriptionsErrors[index].description}</p>
+                    )}
                   </td>
                   <td>
                     <input
@@ -204,6 +247,9 @@ const AddIncome = ({ setAddIncomeModal }) => {
                       className="p-2 bg-gray-700 rounded w-full"
                       placeholder="Amount of work"
                     />
+                    {errors.workDescriptionsErrors[index]?.amount && (
+                      <p className="text-red-500">{errors.workDescriptionsErrors[index].amount}</p>
+                    )}
                   </td>
                   <td>
                     <input
@@ -212,51 +258,40 @@ const AddIncome = ({ setAddIncomeModal }) => {
                       value={work.reference}
                       onChange={(event) => handleInputChange(index, event)}
                       className="p-2 bg-gray-700 rounded w-full"
-                      placeholder="Additional information"
+                      placeholder="Extra ref (optional)"
                     />
                   </td>
-                  <td>
-                    {index > 0 && 
-                    <button
-                    className="text-red-500"
-                    onClick={() => removeField(index)}
-                    >
-                      🗑
-                    </button>
-                    }
-                  </td>
+                  {workDescriptions.length > 1 && (
+                    <td>
+                      <button
+                        onClick={() => removeField(index)}
+                        className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
 
-          {/* Button to add more fields */}
-          <button
-            onClick={addField}
-            className="bg-teal-500 text-white px-4 py-2 rounded mb-4"
-          >
-            + Add Field
-          </button>
+          {/* Total calculation */}
+          <p className="mb-4">Total Amount: ₹{calculateTotal()}</p>
 
-          {/* Total Amount and Action Buttons */}
-          <div className="flex justify-between items-center">
-            {/* Total Amount Display */}
-            <div className="text-lg font-semibold">
-              Total Amount: ₹ {calculateTotal().toLocaleString()}
-            </div>
-
-            {/* Cancel and Save Buttons */}
-            <div className="flex space-x-4">
+          {/* Action buttons */}
+          <div className="flex justify-between">
+            <button onClick={addField} className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+              Add Work
+            </button>
+            <div>
               <button
                 onClick={() => setAddIncomeModal(false)}
-                className="bg-gray-600 text-white px-4 py-2 rounded"
+                className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded mr-2"
               >
                 Cancel
               </button>
-              <button
-                onClick={handleSubmit}
-                className="bg-teal-500 text-white px-4 py-2 rounded"
-              >
+              <button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
                 Save
               </button>
             </div>
