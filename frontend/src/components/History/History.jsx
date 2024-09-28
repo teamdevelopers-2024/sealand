@@ -15,7 +15,6 @@ const History = ({ onClose, customer }) => {
             <thead>
               <tr className="bg-gray-700">
                 <th className="px-4 py-2">Date</th>
-                <th className="px-4 py-2">Vehicle number</th>
                 <th className="px-4 py-2">Phone number</th>
                 <th className="px-4 py-2">Payment type</th>
                 <th className="px-4 py-2">Paid amount</th>
@@ -28,7 +27,6 @@ const History = ({ onClose, customer }) => {
                   <td className="px-4 py-2">
                     {new Date(transaction.date).toLocaleDateString("en-GB")}
                   </td>
-                  <td className="px-4 py-2">{transaction.vehicleNumber}</td>
                   <td className="px-4 py-2">{transaction.phoneNumber}</td>
                   <td className="px-4 py-2">{transaction.paymentType}</td>
                   <td className="px-4 py-2">{transaction.Amount}</td>
