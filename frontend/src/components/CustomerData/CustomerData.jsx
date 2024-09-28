@@ -25,7 +25,7 @@ const CustomerData = () => {
   const customersPerPage = 10; // Number of customers per page
 
   const handleMoreClick = (vehicleNumbers) => {
-    console.log('clicked')
+    console.log("clicked");
     setSelectedVehicleNumbers(vehicleNumbers);
     setMoreModal(true);
   };
@@ -48,7 +48,6 @@ const CustomerData = () => {
       fetchCustomers();
     }
   }, [showAddCustomerModal, showPaymentModal, showCreditForm]); // Dependencies
-  
 
   const calculateDueAmount = (creditAmount, paidAmount) => {
     return creditAmount - paidAmount;
@@ -92,7 +91,9 @@ const CustomerData = () => {
 
   const filteredCustomers = customers.filter((customer) => {
     const customerName = customer.customerName.toLowerCase();
-    const phoneNumber = customer.phoneNumber ? String(customer.phoneNumber) : "";
+    const phoneNumber = customer.phoneNumber
+      ? String(customer.phoneNumber)
+      : "";
 
     return (
       customerName.includes(searchTerm.toLowerCase()) ||
@@ -161,7 +162,9 @@ const CustomerData = () => {
                   paginatedCustomers.map((customer, index) => (
                     <tr key={index} className="border-t border-gray-600">
                       <td className="px-4 py-2">
-                        {new Date(customer.dateOfService).toLocaleDateString("en-GB")}
+                        {new Date(customer.dateOfService).toLocaleDateString(
+                          "en-GB"
+                        )}
                       </td>
                       <td className="px-4 py-2">{customer.customerName}</td>
                       <td className="px-4 py-2">
@@ -171,7 +174,9 @@ const CustomerData = () => {
                             {customer.vehicleNumber.length > 1 && (
                               <p
                                 className="text-blue-600 cursor-pointer"
-                                onClick={() => handleMoreClick(customer.vehicleNumber)}
+                                onClick={() =>
+                                  handleMoreClick(customer.vehicleNumber)
+                                }
                               >
                                 more
                               </p>
@@ -183,7 +188,11 @@ const CustomerData = () => {
                       <td className="px-4 py-2">₹{customer.creditAmount}</td>
                       <td className="px-4 py-2">₹{customer.paidAmount}</td>
                       <td className="px-4 py-2">
-                        ₹{calculateDueAmount(customer.creditAmount, customer.paidAmount)}
+                        ₹
+                        {calculateDueAmount(
+                          customer.creditAmount,
+                          customer.paidAmount
+                        )}
                       </td>
                       <td className="px-4 py-2">
                         <button
@@ -222,23 +231,27 @@ const CustomerData = () => {
           </div>
 
           <div className="flex justify-between items-center my-4">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-              className="bg-[#00A1B7] text-white font-semibold px-4 py-2 rounded-md disabled:bg-gray-500 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
-            <span className="text-white">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-              className="bg-[#00A1B7] text-white font-semibold px-4 py-2 rounded-md disabled:bg-gray-500 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
+            {filteredCustomers.length > 0 && !isLoading && (
+              <>
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  className="bg-[#00A1B7] text-white font-semibold px-4 py-2 rounded-md disabled:bg-gray-500 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                <span className="text-white">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  className="bg-[#00A1B7] text-white font-semibold px-4 py-2 rounded-md disabled:bg-gray-500 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -250,13 +263,19 @@ const CustomerData = () => {
           <History customer={selectedCustomer} onClose={closeHistoryModal} />
         )}
         {showPaymentModal && (
-          <PaymentModal customer={selectedCustomer} onClose={closePaymentModal} />
+          <PaymentModal
+            customer={selectedCustomer}
+            onClose={closePaymentModal}
+          />
         )}
         {showCreditForm && (
           <CreditForm customer={selectedCustomer} onClose={closeCreditForm} />
         )}
         {moreModal && (
-          <MoreModal onClose={handleCloseModal} vehicleNumbers={selectedVehicleNumbers} />
+          <MoreModal
+            onClose={handleCloseModal}
+            vehicleNumbers={selectedVehicleNumbers}
+          />
         )}
       </div>
     </>
