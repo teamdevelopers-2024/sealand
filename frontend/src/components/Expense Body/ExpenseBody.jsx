@@ -227,13 +227,14 @@ const Expense = ({ addExpenseModal }) => {
           onClose={() => setIsModalOpen(false)}
         />
       </main>
+      {pdfModalOpen && 
       <PDFDownloadModal
-        isOpen={pdfModalOpen}
-        onClose={() => setPdfModalOpen(false)}
-        customStartDate={customStartDate}
-        customEndDate={customEndDate}
-        generatePDF={generatePDF}
+      setIsModalOpen={setPdfModalOpen}
+      customStartDate={customStartDate}
+      customEndDate={customEndDate}
+      generatePDF={generatePDF}
       />
+    }
     </div>
   );
 };
