@@ -93,13 +93,6 @@ const IncomeBody = ({ addIncomeModal }) => {
               placeholder="Search by name or phone"
               className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg"
             />
-            <button
-              onClick={downloadTablePDF}
-              className="flex items-center bg-cyan-400 text-gray-900 px-4 py-2 rounded-lg"
-            >
-              <FaFilePdf className="mr-2" />
-              Download PDF
-            </button>
           </div>
 
           <table className="w-full text-left">
