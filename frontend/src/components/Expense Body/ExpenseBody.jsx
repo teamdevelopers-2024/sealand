@@ -149,7 +149,7 @@ const Expense = ({ addExpenseModal }) => {
               {loading ? ( // Show loading indicator while fetching data
                 <tr>
                   <td colSpan="7" className="py-4 text-center text-gray-500">
-                    <SpinnerOnly/>
+                    <SpinnerOnly />
                   </td>
                 </tr>
               ) : filteredEntries.length === 0 ? (
