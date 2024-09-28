@@ -31,7 +31,7 @@ const History = ({ onClose, customer }) => {
                   <td className="px-4 py-2">{transaction.phoneNumber}</td>
                   
                   <td className="px-4 py-2">{["UPI", "Cash", "Card"].includes(transaction.paymentType)
-          ? `Paid (${transaction.paymentType})`
+          ? `Paid - ${transaction.paymentType}`
           : "New Credit"}</td>
                   <td className="px-4 py-2">{transaction.Amount}</td>
                 </tr>
