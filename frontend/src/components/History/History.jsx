@@ -1,7 +1,6 @@
 import React from "react";
 
-const History = ({ show, onClose, customer }) => {
-  if (!show) return null;
+const History = ({ onClose, customer }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">

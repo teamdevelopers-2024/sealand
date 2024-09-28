@@ -25,6 +25,7 @@ const CustomerData = () => {
   const customersPerPage = 10; // Number of customers per page
 
   const handleMoreClick = (vehicleNumbers) => {
+    console.log('clicked')
     setSelectedVehicleNumbers(vehicleNumbers);
     setMoreModal(true);
   };

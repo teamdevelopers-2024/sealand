@@ -1,9 +1,7 @@
 // MoreModal.js
 import React from 'react';
 
-const MoreModal = ({ isOpen, onClose, vehicleNumbers }) => {
-  if (!isOpen) return null;
-
+const MoreModal = ({ onClose, vehicleNumbers }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-md w-96 max-w-full">
