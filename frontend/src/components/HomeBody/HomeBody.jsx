@@ -5,13 +5,14 @@ import revenueIcon from "../../assets/revenueIcon.svg";
 import expenseIcon from "../../assets/expenseIcon.svg";
 import customersIcon from "../../assets/customersIcon.svg";
 import { useNavigate } from "react-router-dom";
+import SpinnerOnly from "../spinnerOnly/SpinnerOnly";
 
 function HomeBody() {
   const [data, setData] = useState({
-    todayIncome: 0,
-    todayExpense: 0,
-    todayCustomerCount: 0,
-    yesterdayIncome: 0,
+    todayIncome: undefined,
+    todayExpense: undefined,
+    todayCustomerCount: undefined,
+    yesterdayIncome: undefined,
   });
   const [showShade, setShowShade] = useState(false);
   const [showIncome, setShowIncome] = useState();
@@ -60,7 +61,7 @@ function HomeBody() {
       try {
         const result = await api.getTodayIncomeAndExpense();
         if (!result.error) {
-          setData(result);
+          setData(result)
           console.log(result)
           setShowShade(true); // Trigger shading effect
           setTimeout(() => setShowShade(false), 500); // Reset shading after animation
@@ -130,7 +131,7 @@ function HomeBody() {
               <img src={revenueIcon} alt="" />
             </div>
           </div>
-          <p className="text-2xl font-bold">
+          {data.todayIncome || data.todayIncome == 0 ? <p className="text-2xl font-bold">
             <animated.span
               style={{
                 transform: todayIncomeSpring.scale.to((s) => `scale(${s})`),
@@ -147,7 +148,8 @@ function HomeBody() {
                 }).format(n.toFixed(0))
               )}
             </animated.span>
-          </p>
+          </p> : <SpinnerOnly />}
+
           {/* Graph */}
           <div className="flex justify-between items-end mt-4 h-[135px]">
             <div className="bg-gradient-to-b from-teal-500 via-teal-200 to-sky-200 h-[135px] w-[35px] rounded-3xl"></div>
@@ -177,7 +179,7 @@ function HomeBody() {
               <img src={expenseIcon} alt="" />
             </div>
           </div>
-          <p className="text-2xl font-bold">
+          {data.todayExpense || data.todayExpense == 0 ? <p className="text-2xl font-bold">
             <animated.span
               style={{
                 transform: todayExpenseSpring.scale.to((s) => `scale(${s})`),
@@ -194,7 +196,8 @@ function HomeBody() {
                 }).format(n.toFixed(0))
               )}
             </animated.span>
-          </p>
+          </p> : <SpinnerOnly />}
+
           {/* Graph */}
           <div className="flex justify-between items-end mt-4 h-[135px]">
             <div className="bg-gradient-to-b from-amber-400 via-amber-300 to-amber-100 h-[87px] w-[35px] rounded-3xl"></div>
@@ -225,7 +228,7 @@ function HomeBody() {
                 <img src={customersIcon} alt="" />
               </div>
             </div>
-            <p className="text-2xl font-bold">
+            {data.todayCustomerCount || data.todayCustomerCount == 0 ? <p className="text-2xl font-bold">
               <animated.span
                 style={{
                   transform: todayCustomerCountSpring.scale.to(
@@ -239,7 +242,8 @@ function HomeBody() {
               >
                 {todayCustomerCountSpring.number.to((n) => n.toFixed(0))}
               </animated.span>
-            </p>
+            </p> : <SpinnerOnly />}
+
             <p className="invisible">hello</p>
           </div>
 
@@ -262,7 +266,7 @@ function HomeBody() {
                 <img src={revenueIcon} alt="" />
               </div>
             </div>
-            <p className="text-2xl font-bold">
+            {data.yesterdayIncome || data.yesterdayIncome == 0 ? <p className="text-2xl font-bold">
               <animated.span
                 style={{
                   transform: yesterdayIncomeSpring.scale.to(
@@ -281,7 +285,8 @@ function HomeBody() {
                   }).format(n.toFixed(0))
                 )}
               </animated.span>
-            </p>
+            </p> : <SpinnerOnly />}
+
             <p className="invisible">hello</p>
           </div>
         </div>
@@ -303,7 +308,12 @@ function HomeBody() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(showIncome) &&
+              {!showIncome ? (
+                <td colSpan="7" className="py-4 text-center text-gray-500">
+                  <SpinnerOnly />
+                </td>
+              ) : (
+                Array.isArray(showIncome) &&
                 showIncome
                   .sort((a, b) => new Date(b.workDate) - new Date(a.workDate)) // Sort by date, latest first
                   .slice(0, 5)
@@ -320,8 +330,10 @@ function HomeBody() {
                         }).format(income.totalServiceCost)}
                       </td>
                     </tr>
-                  ))}
+                  ))
+              )}
             </tbody>
+
           </table>
         </div>
       </div>
@@ -343,7 +355,14 @@ function HomeBody() {
               </tr>
             </thead>
             <tbody>
-              {Array.isArray(showExpense) &&
+              {!showExpense ? (
+                <tr>
+                  <td colSpan="5" className="py-4 text-center text-gray-500">
+                    <SpinnerOnly />
+                  </td>
+                </tr>
+              ) : (
+                Array.isArray(showExpense) &&
                 showExpense
                   .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, latest first
                   .slice(0, 5)
@@ -360,8 +379,10 @@ function HomeBody() {
                         }).format(expense.totalExpense)}
                       </td>
                     </tr>
-                  ))}
+                  ))
+              )}
             </tbody>
+
           </table>
         </div>
       </div>

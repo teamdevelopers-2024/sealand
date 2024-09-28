@@ -12,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import IncomeDownloadButton from "./IncomeDownloadButton";
+import SpinnerOnly from "../spinnerOnly/SpinnerOnly";
 
 // Register Chart.js components
 ChartJS.register(
@@ -30,8 +31,8 @@ function IncomeChart({ incomeHistoryData, setIsModalOpen }) {
 
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [currentYear, setCurrentYear] = useState(Year); // Use the renamed variable
-  const [totalIncome, setTotalIncome] = useState(0);
-  const [periodIncome, setPeriodIncome] = useState(0); // State for selected time period income
+  const [totalIncome, setTotalIncome] = useState();
+  const [periodIncome, setPeriodIncome] = useState(); // State for selected time period income
 
   useEffect(() => {
     const total = incomeHistoryData.reduce((accumulator, entry) => {
@@ -155,8 +156,8 @@ function IncomeChart({ incomeHistoryData, setIsModalOpen }) {
     timePeriod === "Monthly"
       ? getMonthlyData()
       : timePeriod === "Daily"
-      ? getDailyData()
-      : getYearlyData();
+        ? getDailyData()
+        : getYearlyData();
 
   const labels = graphData.map((data) => data.name);
   const incomeValues = graphData.map((data) => data.income);
@@ -192,20 +193,20 @@ function IncomeChart({ incomeHistoryData, setIsModalOpen }) {
         <div className="text-left space-y-3 w-1/3">
           <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {new Intl.NumberFormat("en-IN", {
+            {totalIncome ? new Intl.NumberFormat("en-IN", {
               style: "currency",
-              currency: "INR",
-            }).format(totalIncome)}
+            currency: "INR",
+            }).format(totalIncome) :<SpinnerOnly/>}
           </h3>
           <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
           <h2 className="text-3xl font-bold text-cyan-400">
             {timePeriod} income
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {new Intl.NumberFormat("en-IN", {
+          {periodIncome ? new Intl.NumberFormat("en-IN", {
               style: "currency",
-              currency: "INR",
-            }).format(periodIncome)}
+            currency: "INR",
+            }).format(periodIncome) :<SpinnerOnly/>}
           </h3>
           {/* Download Button Here */}
           <IncomeDownloadButton setIsModalOpen={setIsModalOpen} />

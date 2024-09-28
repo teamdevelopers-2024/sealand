@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import ExpenseDownloadButton from "./ExpenseDownloadButton";
+import SpinnerOnly from "../spinnerOnly/SpinnerOnly";
 
 // Register Chart.js components
 ChartJS.register(
@@ -189,20 +190,20 @@ function ExpenseChart({ expenseHistoryData, setPdfModalOpen }) {
         <div className="text-left space-y-3 w-1/3">
           <h2 className="text-5xl font-bold text-cyan-400">Total expense</h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {new Intl.NumberFormat("en-IN", {
+            {totalExpense ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
-            }).format(totalExpense)}
+            }).format(totalExpense) : <SpinnerOnly/>}
           </h3>
           <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
           <h2 className="text-3xl font-bold text-cyan-400">
             {timePeriod} expense
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {new Intl.NumberFormat("en-IN", {
+            {totalExpensemonth ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
-            }).format(totalExpensemonth)}
+            }).format(totalExpensemonth) : <SpinnerOnly/>}
           </h3>
           {/* Download Button Here */}
           <ExpenseDownloadButton setPdfModalOpen={setPdfModalOpen} />
