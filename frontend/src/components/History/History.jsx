@@ -15,10 +15,10 @@ const History = ({ onClose, customer }) => {
             <thead>
               <tr className="bg-gray-700">
                 <th className="px-4 py-2">Date</th>
+                <th className="px-4 py-2">Name</th>
                 <th className="px-4 py-2">Phone number</th>
                 <th className="px-4 py-2">Payment type</th>
-                <th className="px-4 py-2">Paid amount</th>
-                {/* <th className="px-4 py-2">Reciept</th> */}
+                <th className="px-4 py-2">Amount</th>
               </tr>
             </thead>
             <tbody className="bg-gray-700">
@@ -27,17 +27,10 @@ const History = ({ onClose, customer }) => {
                   <td className="px-4 py-2">
                     {new Date(transaction.date).toLocaleDateString("en-GB")}
                   </td>
+                  <td className="px-4 py-2">{transaction.customerName}</td>
                   <td className="px-4 py-2">{transaction.phoneNumber}</td>
                   <td className="px-4 py-2">{transaction.paymentType}</td>
                   <td className="px-4 py-2">{transaction.Amount}</td>
-                  {/* <td className="px-4 py-2">
-                    <button
-                      onClick={() => generatePDF()}
-                      className="bg-teal-400 text-gray-900 px-4 py-1 rounded-md ml-2"
-                    >
-                      Download
-                    </button>
-                  </td> */}
                 </tr>
               ))}
             </tbody>
