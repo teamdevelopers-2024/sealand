@@ -24,7 +24,7 @@ ChartJS.register(
   Legend
 );
 
-function IncomeChart({ incomeHistoryData, setIsModalOpen }) {
+function IncomeChart({ incomeHistoryData, setIsModalOpen , isLoading}) {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth(); // 0-11
   const Year = currentDate.getFullYear();
@@ -39,8 +39,8 @@ function IncomeChart({ incomeHistoryData, setIsModalOpen }) {
       const serviceCost = entry.totalServiceCost;
       return accumulator + serviceCost;
     }, 0);
+      setTotalIncome(total);
 
-    setTotalIncome(total);
 
     // Calculate period income based on selected time period
     const calculatePeriodIncome = () => {
@@ -193,7 +193,7 @@ function IncomeChart({ incomeHistoryData, setIsModalOpen }) {
         <div className="text-left space-y-3 w-1/3">
           <h2 className="text-5xl font-bold text-cyan-400">Total income</h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {totalIncome ? new Intl.NumberFormat("en-IN", {
+            {!isLoading ? new Intl.NumberFormat("en-IN", {
               style: "currency",
             currency: "INR",
             }).format(totalIncome) :<SpinnerOnly/>}
@@ -203,7 +203,7 @@ function IncomeChart({ incomeHistoryData, setIsModalOpen }) {
             {timePeriod} income
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
-          {periodIncome ? new Intl.NumberFormat("en-IN", {
+          {!isLoading ? new Intl.NumberFormat("en-IN", {
               style: "currency",
             currency: "INR",
             }).format(periodIncome) :<SpinnerOnly/>}

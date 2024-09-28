@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import swal from 'sweetalert';
+import LoadingSpinner from "../spinner/Spinner";
 
 const AddExpense = ({ setAddExpenseModal }) => {
   // State for form fields
@@ -9,7 +10,7 @@ const AddExpense = ({ setAddExpenseModal }) => {
   const [contactNumber, setContactNumber] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [totalExpense, setTotalExpense] = useState(0);
-
+  const [loading , setLoading ] = useState(false)
   const today = new Date();
   const options = { timeZone: "Asia/Kolkata" }; // Specify Indian timezone
   const todayString = today.toLocaleDateString("en-CA", options); // Format to YYYY-MM-DD
@@ -116,10 +117,6 @@ const AddExpense = ({ setAddExpenseModal }) => {
         workErrors.amount = "Amount is required.";
         isValid = false;
       }
-      if (!work.reference) {
-        workErrors.reference = "Reference is required.";
-        isValid = false;
-      }
       newErrors.expenseDetails[index] = workErrors;
     });
 
@@ -141,6 +138,7 @@ const AddExpense = ({ setAddExpenseModal }) => {
     console.log(formData)
     if (validateForm()) {
     try {
+      setLoading(true)
       const data=await api.addExpense(formData);
       if(data.error){
         swal("Error!", data.errors[0], "error");
@@ -153,6 +151,8 @@ const AddExpense = ({ setAddExpenseModal }) => {
       // Handle error (optional: show error message)
       console.error(err);
       swal("Error!", "Failed to add expense.", "error");
+    } finally {
+      setLoading(false)
     }
   } else {
     console.log("Form has errors.");
@@ -181,6 +181,7 @@ const AddExpense = ({ setAddExpenseModal }) => {
 
   return (
     <>
+    {loading && <LoadingSpinner/>}
       {/* Popup Modal */}
       <>
         <div className="fixed inset-0 bg-black bg-opacity-50 z-20"></div>

@@ -27,16 +27,15 @@ const currentDate = new Date();
 const currentMonth = currentDate.getMonth(); // 0-11
 const currentYear = currentDate.getFullYear();
 
-function ExpenseChart({ expenseHistoryData, setPdfModalOpen }) {
+function ExpenseChart({ expenseHistoryData, setPdfModalOpen , isLoading}) {
   const [timePeriod, setTimePeriod] = useState("Monthly");
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [totalExpense, setTotalExpense] = useState("");
   const [totalExpensemonth, setTotalExpensemonth] = useState("");
 
-
   useEffect(() => {
     const total = expenseHistoryData.reduce((accumulator, entry) => {
-      return accumulator + (entry.totalExpense || 0);
+      return accumulator + (entry.totalExpense);
     }, 0);
 
     let totalExpenseThisPeriod = 0;
@@ -184,13 +183,14 @@ function ExpenseChart({ expenseHistoryData, setPdfModalOpen }) {
       setCurrentYear((prevYear) => prevYear + 1);
     }
   };
+  console.log(totalExpense,'totalexp')
   return (
     <>
       <div className="bg-gray-800 p-8 rounded-xl flex justify-between items-center mb-8">
         <div className="text-left space-y-3 w-1/3">
           <h2 className="text-5xl font-bold text-cyan-400">Total expense</h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {totalExpense ? new Intl.NumberFormat("en-IN", {
+            {!isLoading ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
             }).format(totalExpense) : <SpinnerOnly/>}
@@ -200,7 +200,7 @@ function ExpenseChart({ expenseHistoryData, setPdfModalOpen }) {
             {timePeriod} expense
           </h2>
           <h3 className="text-3xl text-green-300 font-bold">
-            {totalExpensemonth ? new Intl.NumberFormat("en-IN", {
+            {!isLoading ? new Intl.NumberFormat("en-IN", {
               style: "currency",
               currency: "INR",
             }).format(totalExpensemonth) : <SpinnerOnly/>}

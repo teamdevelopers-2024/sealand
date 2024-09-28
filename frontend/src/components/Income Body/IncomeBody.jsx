@@ -79,6 +79,7 @@ const IncomeBody = ({ addIncomeModal }) => {
       <main className="mt-8 p-2">
         <IncomeChart
           incomeHistoryData={incomeHistoryData}
+          isLoading={isLoading}
           setIsModalOpen={setIsModalOpen}
         />
 
