@@ -15,13 +15,13 @@ const Expense = ({ addExpenseModal }) => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(false); // Add loading state
   const entriesPerPage = 5;
 
   useEffect(() => {
     const fetchExpenseHistory = async () => {
-      setLoading(true); // Start loading
       try {
+        setLoading(true); // Start loading
         const response = await api.showExpense();
         setExpenseHistoryData(response.data);
       } catch (error) {
@@ -117,6 +117,7 @@ const Expense = ({ addExpenseModal }) => {
 
         <ExpenseChart
           expenseHistoryData={expenseHistoryData}
+          isLoading={loading}
           setPdfModalOpen={setPdfModalOpen}
         />
 
