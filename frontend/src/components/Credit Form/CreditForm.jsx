@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import api from "../../services/api";
 import swal from "sweetalert";
+import LoadingSpinner from "../spinner/Spinner";
 
 const CreditForm = ({ customer, onClose }) => {
   // Initialize states
@@ -13,6 +14,7 @@ const CreditForm = ({ customer, onClose }) => {
   const today = new Date();
   const options = { timeZone: "Asia/Kolkata" }; // Specify Indian timezone
   const todayString = today.toLocaleDateString("en-CA", options); // Format to YYYY-MM-DD
+  const [isLoading , setIsLoading ] = useState(false)
   
   // Set dateOfService to today's date initially
   const [date, setDate] = useState(todayString);
@@ -71,33 +73,32 @@ const CreditForm = ({ customer, onClose }) => {
       if (!row.amount || isNaN(row.amount) || parseFloat(row.amount) <= 0) {
         formErrors[`amount-${index}`] = "Amount must be a positive number.";
       }
-      if (!row.reference.trim()) {
-        formErrors[`reference-${index}`] = "Reference is required.";
-      }
     });
 
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0; // Return true if no errors
   };
 
-  // Handle form submission
-  const handleSubmit = async() => {
-    if (validateForm()) {
-
+// Handle form submission
+const handleSubmit = async () => {
+  if (validateForm()) {
+    setIsLoading(true); // Show loading spinner
+    try {
       const formData = {
         date,
-        vehicleNumber:vehicleNumber.toUpperCase(),
+        vehicleNumber: vehicleNumber.toUpperCase(),
         workRows,
         creditAmount,
-        phoneNumber:customer.phoneNumber,
-        _id:customer._id
-      }
-      const result = await api.addCredit(formData)
-      if(!result.error){
-        swal("Success!", "Credite added successfully!", "success");
-        onclose()
-      }else{
-        swal("error!",result.message,'error')
+        phoneNumber: customer.phoneNumber,
+        _id: customer._id,
+      };
+
+      const result = await api.addCredit(formData);
+      if (!result.error) {
+        swal("Success!", "Credit added successfully!", "success");
+        onClose(); // Close the modal or form
+      } else {
+        swal("Error!", result.message, "error");
       }
 
       console.log("Form submitted:", {
@@ -106,11 +107,20 @@ const CreditForm = ({ customer, onClose }) => {
         workRows,
         creditAmount,
       });
-
+    } catch (error) {
+      // Handle error gracefully
+      swal("Error!", "Something went wrong. Please try again later.", "error");
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsLoading(false); // Hide loading spinner regardless of success or failure
     }
-  };
+  }
+};
+
 
   return (
+    <>
+    {isLoading && <LoadingSpinner/>}
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
       <div className="bg-gray-800 text-white p-4 rounded-lg shadow-lg w-11/12 max-w-3xl">
         <h2 className="text-xl mb-2">Add Credit for {customer.customerName}</h2>
@@ -152,7 +162,7 @@ const CreditForm = ({ customer, onClose }) => {
             <label className="block text-sm mb-1">Vehicle Number</label>
             <input
               type="text"
-              value={vehicleNumber.toUpperCase}
+              value={vehicleNumber.toUpperCase()}
               onChange={(e) => setVehicleNumber(e.target.value)}
               className="w-full px-2 py-1 rounded bg-gray-700 text-white"
               placeholder="Enter Vehicle Number"
@@ -271,6 +281,7 @@ const CreditForm = ({ customer, onClose }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

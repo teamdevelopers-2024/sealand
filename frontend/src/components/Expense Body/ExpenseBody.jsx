@@ -4,6 +4,7 @@ import ExpenseModal from "../View Expense/ExpenseModal";
 import ExpenseChart from "../Expense Chart/ExpenseChart";
 import PDFDownloadModal from "../PDFDownloadModal/PDFDownloadModal";
 import jsPDF from "jspdf";
+import SpinnerOnly from "../spinnerOnly/SpinnerOnly";
 
 const Expense = ({ addExpenseModal }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,15 +15,19 @@ const Expense = ({ addExpenseModal }) => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
   const entriesPerPage = 5;
 
   useEffect(() => {
     const fetchExpenseHistory = async () => {
+      setLoading(true); // Start loading
       try {
         const response = await api.showExpense();
         setExpenseHistoryData(response.data);
       } catch (error) {
         console.error("Error fetching expense history data", error);
+      } finally {
+        setLoading(false); // End loading
       }
     };
 
@@ -141,7 +146,13 @@ const Expense = ({ addExpenseModal }) => {
               </tr>
             </thead>
             <tbody>
-              {filteredEntries.length === 0 ? (
+              {loading ? ( // Show loading indicator while fetching data
+                <tr>
+                  <td colSpan="7" className="py-4 text-center text-gray-500">
+                    <SpinnerOnly/>
+                  </td>
+                </tr>
+              ) : filteredEntries.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="py-4 text-center text-gray-500">
                     No data available
@@ -219,10 +230,8 @@ const Expense = ({ addExpenseModal }) => {
         isOpen={pdfModalOpen}
         onClose={() => setPdfModalOpen(false)}
         customStartDate={customStartDate}
-        setCustomStartDate={setCustomStartDate}
         customEndDate={customEndDate}
-        setCustomEndDate={setCustomEndDate}
-        generatePDF={generatePDF}
+        onGeneratePDF={generatePDF}
       />
     </div>
   );

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaFilePdf } from "react-icons/fa";
 import jsPDF from "jspdf";
 import api from "../../services/api";
 import ViewIncomeModal from "../View Income/ViewIncomeModal";
 import IncomeChart from "../Income Chart/IncomeChart";
 import PDFDownloadModal from "../PDFDownloadModal/PDFDownloadModal";
+import SpinnerOnly from "../spinnerOnly/SpinnerOnly";
 
 const IncomeBody = ({ addIncomeModal }) => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
@@ -12,13 +13,13 @@ const IncomeBody = ({ addIncomeModal }) => {
   const [singleEntry, setSingleEntry] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [customStartDate, setCustomStartDate] = useState(null);
-  const [customEndDate, setCustomEndDate] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
   const entriesPerPage = 5;
 
   useEffect(() => {
     const fetchIncomeHistory = async () => {
+      setIsLoading(true); // Set loading to true
       try {
         const response = await api.showIncome();
         const sortedData = response.data.sort(
@@ -28,6 +29,8 @@ const IncomeBody = ({ addIncomeModal }) => {
         console.log(sortedData); // Log sorted data
       } catch (error) {
         console.error("Error fetching income history data", error);
+      } finally {
+        setIsLoading(false); // Set loading to false
       }
     };
     if (!addIncomeModal) {
@@ -51,58 +54,6 @@ const IncomeBody = ({ addIncomeModal }) => {
     return filteredData;
   };
 
-  const generatePDF = (startDate, endDate) => {
-    const doc = new jsPDF();
-    doc.setFontSize(12);
-
-    const headers = [
-      "Date",
-      "Customer Name",
-      "Vehicle Number",
-      "Phone Number",
-      "Amount",
-    ];
-
-    const filteredData = incomeHistoryData.filter((entry) => {
-      const entryDate = new Date(entry.workDate);
-      return entryDate >= startDate && entryDate <= endDate;
-    });
-
-    doc.text("Income History", 100, 10);
-    headers.forEach((header, index) => doc.text(header, 14 + index * 40, 25));
-
-    // Add a separator line
-    doc.line(10, 28, 200, 28); // Adjusted line position for clarity
-
-    let totalServiceCost = 0;
-
-    filteredData.forEach((entry, index) => {
-      const row = [
-        new Date(entry.workDate).toLocaleDateString("en-GB"),
-        entry.customerName,
-        entry.vehicleNumber,
-        entry.contactNumber ? entry.contactNumber.toString() : "",
-        ` ${entry.totalServiceCost}`,
-      ];
-
-      totalServiceCost += entry.totalServiceCost; // Accumulate total
-
-      row.forEach((cell, cellIndex) => {
-        doc.text(cell.toString(), 14 + cellIndex * 40, 35 + index * 10);
-      });
-    });
-
-    // Add total calculation at the end
-    const totalRowYPosition = 35 + filteredData.length * 10; // Updated position calculation
-    // Add a separator line
-    doc.line(10, totalRowYPosition, 200, totalRowYPosition); // Adjusted position for the line
-
-    // Position for total income
-    doc.text(`Total Income:  ${totalServiceCost}`, 150, totalRowYPosition + 10);
-
-    doc.save("income_history.pdf");
-  };
-
   const currentEntries = filteredEntries();
   const totalEntries = currentEntries.length;
   const totalPages = Math.ceil(totalEntries / entriesPerPage);
@@ -114,6 +65,13 @@ const IncomeBody = ({ addIncomeModal }) => {
   const handleViewClick = (entry) => {
     setSingleEntry(entry);
     setViewIncomeModal(true);
+  };
+
+  const downloadTablePDF = () => {
+    const doc = new jsPDF();
+    doc.text("Income History", 20, 20);
+    // Add more PDF generation logic here...
+    doc.save("income_history.pdf");
   };
 
   return (
@@ -135,22 +93,35 @@ const IncomeBody = ({ addIncomeModal }) => {
               placeholder="Search by name or phone"
               className="bg-gray-700 text-gray-100 px-4 py-2 rounded-lg"
             />
+            <button
+              onClick={downloadTablePDF}
+              className="flex items-center bg-cyan-400 text-gray-900 px-4 py-2 rounded-lg"
+            >
+              <FaFilePdf className="mr-2" />
+              Download PDF
+            </button>
           </div>
 
           <table className="w-full text-left">
             <thead>
               <tr className="text-gray-500">
                 <th className="pb-2">Date</th>
-                <th className="pb-2">Customer name</th>
-                <th className="pb-2">Vehicle number</th>
-                <th className="pb-2">Payment type</th>
-                <th className="pb-2">Phone number</th>
+                <th className="pb-2">Customer Name</th>
+                <th className="pb-2">Vehicle Number</th>
+                <th className="pb-2">Payment Type</th>
+                <th className="pb-2">Phone Number</th>
                 <th className="pb-2">Amount</th>
                 <th className="pb-2">Receipt</th>
               </tr>
             </thead>
             <tbody>
-              {paginatedEntries.length > 0 ? (
+              {isLoading ? ( // Show loading indicator
+                <tr>
+                  <td colSpan="7" className="py-4 text-center text-gray-500">
+                    <SpinnerOnly/>
+                  </td>
+                </tr>
+              ) : paginatedEntries.length > 0 ? (
                 paginatedEntries.map((entry) => (
                   <tr key={entry.id} className="border-b border-gray-700">
                     <td className="py-2">
@@ -181,55 +152,38 @@ const IncomeBody = ({ addIncomeModal }) => {
             </tbody>
           </table>
 
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="flex justify-between mt-4">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className={`text-cyan-400 ${
-                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                <FaChevronLeft />
-              </button>
-              <span className="text-gray-300">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className={`text-cyan-400 ${
-                  currentPage === totalPages
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
-              >
-                <FaChevronRight />
-              </button>
-            </div>
-          )}
-
-          {viewIncomeModal && (
-            <ViewIncomeModal
-              entry={singleEntry}
-              onClose={() => setViewIncomeModal(false)}
-            />
-          )}
+          {/* Pagination */}
+          <div className="flex justify-between items-center mt-4">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="bg-cyan-400 text-gray-900 px-4 py-2 rounded-lg"
+            >
+              <FaChevronLeft />
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="bg-cyan-400 text-gray-900 px-4 py-2 rounded-lg"
+            >
+              <FaChevronRight />
+            </button>
+          </div>
         </div>
       </main>
 
-      <PDFDownloadModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        customStartDate={customStartDate}
-        setCustomStartDate={setCustomStartDate}
-        customEndDate={customEndDate}
-        setCustomEndDate={setCustomEndDate}
-        generatePDF={generatePDF}
-      />
+      {/* Modals */}
+      {viewIncomeModal && (
+        <ViewIncomeModal
+          isOpen={viewIncomeModal}
+          onClose={() => setViewIncomeModal(false)}
+          entry={singleEntry}
+        />
+      )}
+      {isModalOpen && <PDFDownloadModal />}
     </div>
   );
 };

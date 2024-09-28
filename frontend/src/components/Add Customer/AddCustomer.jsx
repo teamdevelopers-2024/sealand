@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../../services/api";
 import swal from "sweetalert";
+import LoadingSpinner from "../spinner/Spinner";
 
 const AddCustomer = ({ show, onClose }) => {
   const [customerName, setCustomerName] = useState("");
@@ -10,6 +11,7 @@ const AddCustomer = ({ show, onClose }) => {
   const [workDetails, setWorkDetails] = useState([
     { description: "", amount: "", reference: "" },
   ]);
+  const [isLoading , setIsLoading] = useState(false)
 
   // Get today's date in YYYY-MM-DD format for India timezone
   const today = new Date();
@@ -72,7 +74,7 @@ const AddCustomer = ({ show, onClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateForm()) return; // Validate form before submission
-
+    setIsLoading(true)
     // Data to be sent to the backend
     const formData = {
       dateOfService,
@@ -84,7 +86,7 @@ const AddCustomer = ({ show, onClose }) => {
     };
 
     try {
-      const response = await api.addcustomer(formData);
+      const response = await api.addCustomer(formData);
       if (response.error) {
         console.log('getting here')
         // Handle error case
@@ -103,6 +105,8 @@ const AddCustomer = ({ show, onClose }) => {
       }
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -112,13 +116,15 @@ const AddCustomer = ({ show, onClose }) => {
     if (/^\d*$/.test(value)) { // Check if the value consists only of digits
         setPhoneNumber(value);
     }
-};
+}
 
   if (!show) {
     return null;
   }
 
   return (
+    <>
+    {isLoading && <LoadingSpinner/>}
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
       <div className="relative top-20 mx-auto p-5 border w-[700px] shadow-lg rounded-md bg-gray-800">
         <h3 className="text-lg text-teal-400 font-bold mb-4">Add Customer</h3>
@@ -285,6 +291,7 @@ const AddCustomer = ({ show, onClose }) => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 
