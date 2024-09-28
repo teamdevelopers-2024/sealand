@@ -97,7 +97,6 @@ const PaymentModal = ({ show, onClose, customer }) => {
     }
   };
 
-  if (!show) return null;
 
   return (
     <>

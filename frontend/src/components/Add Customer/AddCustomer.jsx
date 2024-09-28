@@ -26,6 +26,7 @@ const AddCustomer = ({ show, onClose }) => {
 
   // Update creditAmount when workDetails change
   useEffect(() => {
+    console.log("here coming inside of addcustomer")
     const totalAmount = workDetails.reduce(
       (sum, detail) => sum + parseFloat(detail.amount || 0),
       0
@@ -118,9 +119,7 @@ const AddCustomer = ({ show, onClose }) => {
     }
 }
 
-  if (!show) {
-    return null;
-  }
+
 
   return (
     <>
