@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import "dotenv/config"
-let isConnected; 
+import "dotenv/config";
+
+let isConnected;
 
 async function connectDB() {
     if (isConnected) {
@@ -12,19 +13,21 @@ async function connectDB() {
         throw new Error('MONGO_URL is not defined in environment variables');
     }
 
-    console.log("MongoDB URI:", process.env.MONGO_URL); 
+    console.log("MongoDB URI:", process.env.MONGO_URL);
 
     try {
-        mongoose.set("strictQuery", false); 
-        mongoose.set('debug', true); 
+        mongoose.set("strictQuery", false);
+        mongoose.set('debug', true);
         const db = await mongoose.connect(process.env.MONGO_URL, {
-            serverSelectionTimeoutMS: 15000, 
+            serverSelectionTimeoutMS: 15000,
         });
         isConnected = mongoose.connection.readyState;
         console.log("Database connected successfully!");
+
     } catch (error) {
         console.error(`Database connection error: ${error.message}`);
     }
 }
+
 
 export default connectDB;

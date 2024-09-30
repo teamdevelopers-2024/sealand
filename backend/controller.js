@@ -5,6 +5,7 @@ import creditCustomerDb from './model/creditCustomers.js'
 import { validateCustomerData } from './services/CustomerValidator.js'
 import { validateExpenseData } from './services/expenseValidator.js'
 import ExpenseDb from './model/expense.js'
+import monitorDatabaseSize from './database/checkStorage.js'
 
 
 async function login(req, res) {
@@ -48,6 +49,8 @@ async function login(req, res) {
 async function addcustomer(req, res) {
   try {
     const customerData = req.body;
+    console.log("got a call inside the addcustomer")
+    await monitorDatabaseSize()
     if (typeof customerData.vehicleNumber === 'string') {
       customerData.vehicleNumber = customerData.vehicleNumber
         .split(',')
@@ -89,6 +92,7 @@ async function addcustomer(req, res) {
 
 async function addIncome(req, res) {
   try {
+    await monitorDatabaseSize()
     const incomeData = req.body;
 
     const errors = validateIncomeData(incomeData);
@@ -139,6 +143,7 @@ export async function incomeHistory(req, res) {
 
 async function addExpense(req, res) {
   try {
+    await monitorDatabaseSize()
     const expenseData = req.body
     const errors = await validateExpenseData(expenseData)
 
@@ -476,6 +481,7 @@ async function getIncomeAndExpense(req, res) {
 
 async function addCredit(req, res) {
   try {
+    await monitorDatabaseSize()
     const { date, vehicleNumber, workRows, creditAmount, _id, phoneNumber } = req.body
 
     const customer = await creditCustomerDb.findOne({ phoneNumber: phoneNumber, _id: _id });

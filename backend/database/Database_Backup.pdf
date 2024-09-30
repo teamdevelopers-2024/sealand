@@ -1,0 +1,1528 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 20009
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F1 18 Tf
+20.6999999999999993 TL
+0 g
+28.3464566929133888 813.5435433070865656 Td
+(Database Collections Backup) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+28.3464566929133888 756.8506299212598378 Td
+(Incomes Collection Data:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+28.3464566929133888 728.5041732283464171 Td
+([) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0ae",) Tj
+T* (    "workDate": "2023-01-12T00:00:00.000Z",) Tj
+T* (    "customerName": "Alice Johnson",) Tj
+T* (    "vehicleNumber": "ABC123",) Tj
+T* (    "contactNumber": 1234567890,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 150,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Oil Change",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "ref001") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Tire Rotation",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "ref002") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0af",) Tj
+T* (    "workDate": "2023-02-15T00:00:00.000Z",) Tj
+T* (    "customerName": "Bob Smith",) Tj
+T* (    "vehicleNumber": "XYZ456",) Tj
+T* (    "contactNumber": 2345678901,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 200,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Brake Inspection",) Tj
+T* (        "amount": 75,) Tj
+T* (        "reference": "ref003") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Battery Replacement",) Tj
+T* (        "amount": 125,) Tj
+T* (        "reference": "ref004") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b0",) Tj
+T* (    "workDate": "2023-03-22T00:00:00.000Z",) Tj
+T* (    "customerName": "Charlie Brown",) Tj
+T* (    "vehicleNumber": "LMN789",) Tj
+T* (    "contactNumber": 3456789012,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 300,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Full Service",) Tj
+T* (        "amount": 300,) Tj
+T* (        "reference": "ref005") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b1",) Tj
+T* (    "workDate": "2023-04-10T00:00:00.000Z",) Tj
+T* (    "customerName": "David Wilson",) Tj
+T* (    "vehicleNumber": "OPQ123",) Tj
+T* (    "contactNumber": 4567890123,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalServiceCost": 90,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Alignment Check",) Tj
+T* (        "amount": 90,) Tj
+T* (        "reference": "ref006") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b2",) Tj
+T* (    "workDate": "2023-05-17T00:00:00.000Z",) Tj
+T* (    "customerName": "Eva Green",) Tj
+T* (    "vehicleNumber": "RST456",) Tj
+T* (    "contactNumber": 5678901234,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 450,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Transmission Fluid Change",) Tj
+T* (        "amount": 150,) Tj
+T* (        "reference": "ref007") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Engine Tune-Up",) Tj
+T* (        "amount": 300,) Tj
+T* (        "reference": "ref008") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b3",) Tj
+T* (    "workDate": "2023-06-05T00:00:00.000Z",) Tj
+T* (    "customerName": "Fiona Black",) Tj
+T* (    "vehicleNumber": "UVW789",) Tj
+T* (    "contactNumber": 6789012345,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 120,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Wiper Blade Replacement",) Tj
+T* (        "amount": 30,) Tj
+T* (        "reference": "ref009") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Coolant Flush",) Tj
+T* (        "amount": 90,) Tj
+T* (        "reference": "ref010") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b4",) Tj
+T* (    "workDate": "2023-07-12T00:00:00.000Z",) Tj
+T* (    "customerName": "George Harris",) Tj
+T* (    "vehicleNumber": "XYZ234",) Tj
+T* (    "contactNumber": 7890123456,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 200,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Exhaust Repair",) Tj
+T* (        "amount": 200,) Tj
+T* (        "reference": "ref011") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b5",) Tj
+T* (    "workDate": "2023-08-20T00:00:00.000Z",) Tj
+T* (    "customerName": "Hannah White",) Tj
+T* (    "vehicleNumber": "ABC456",) Tj
+T* (    "contactNumber": 8901234567,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalServiceCost": 75,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Light Bulb Replacement",) Tj
+T* (        "amount": 25,) Tj
+T* (        "reference": "ref012") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Tire Repair",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "ref013") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b6",) Tj
+T* (    "workDate": "2023-09-10T00:00:00.000Z",) Tj
+T* (    "customerName": "Ian Grey",) Tj
+T* (    "vehicleNumber": "DEF789",) Tj
+T* (    "contactNumber": 9012345678,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 350,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Body Repair",) Tj
+T* (        "amount": 350,) Tj
+T* (        "reference": "ref014") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b7",) Tj
+T* (    "workDate": "2023-10-15T00:00:00.000Z",) Tj
+T* (    "customerName": "Jane Blue",) Tj
+T* (    "vehicleNumber": "GHI123",) Tj
+T* (    "contactNumber": 1234567890,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 100,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Tire Balancing",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "ref015") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b8",) Tj
+T* (    "workDate": "2023-11-20T00:00:00.000Z",) Tj
+T* (    "customerName": "Kevin Red",) Tj
+T* (    "vehicleNumber": "JKL456",) Tj
+T* (    "contactNumber": 2345678901,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalServiceCost": 250,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Brake Pad Replacement",) Tj
+T* (        "amount": 250,) Tj
+T* (        "reference": "ref016") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0b9",) Tj
+T* (    "workDate": "2023-12-12T00:00:00.000Z",) Tj
+T* (    "customerName": "Laura Green",) Tj
+T* (    "vehicleNumber": "MNO789",) Tj
+T* (    "contactNumber": 3456789012,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 180,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Fuel System Cleaning",) Tj
+T* (        "amount": 180,) Tj
+T* (        "reference": "ref017") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0ba",) Tj
+T* (    "workDate": "2023-01-25T00:00:00.000Z",) Tj
+T* (    "customerName": "Michael Brown",) Tj
+T* (    "vehicleNumber": "PQR123",) Tj
+T* (    "contactNumber": 4567890123,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 300,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "AC Repair",) Tj
+T* (        "amount": 300,) Tj
+T* (        "reference": "ref018") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0bb",) Tj
+T* (    "workDate": "2023-02-10T00:00:00.000Z",) Tj
+T* (    "customerName": "Nina Grey",) Tj
+T* (    "vehicleNumber": "STU456",) Tj
+T* (    "contactNumber": 5678901234,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalServiceCost": 400,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Timing Belt Replacement",) Tj
+T* (        "amount": 400,) Tj
+T* (        "reference": "ref019") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0bc",) Tj
+T* (    "workDate": "2023-03-15T00:00:00.000Z",) Tj
+T* (    "customerName": "Oscar White",) Tj
+T* (    "vehicleNumber": "VWX789",) Tj
+T* (    "contactNumber": 6789012345,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 150,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Fuel Filter Change",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "ref020") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Spark Plug Replacement",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "ref021") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0bd",) Tj
+T* (    "workDate": "2023-04-10T00:00:00.000Z",) Tj
+T* (    "customerName": "Patricia Black",) Tj
+T* (    "vehicleNumber": "YZA012",) Tj
+T* (    "contactNumber": 7890123456,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 500,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Engine Overhaul",) Tj
+T* (        "amount": 500,) Tj
+T* (        "reference": "ref022") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e24ce214718f58ce0be",) Tj
+T* (    "workDate": "2023-05-25T00:00:00.000Z",) Tj
+T* (    "customerName": "Quentin Green",) Tj
+T* (    "vehicleNumber": "BCD345",) Tj
+T* (    "contactNumber": 8901234567,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 80,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Tire Alignment",) Tj
+T* (        "amount": 80,) Tj
+T* (        "reference": "ref023") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c0",) Tj
+T* (    "workDate": "2023-01-12T00:00:00.000Z",) Tj
+T* (    "customerName": "Alice Johnson",) Tj
+T* (    "vehicleNumber": "ABC123",) Tj
+T* (    "contactNumber": 1234567890,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 150,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Oil Change",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "ref001") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Tire Rotation",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "ref002") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c1",) Tj
+T* (    "workDate": "2023-02-15T00:00:00.000Z",) Tj
+T* (    "customerName": "Bob Smith",) Tj
+T* (    "vehicleNumber": "XYZ456",) Tj
+T* (    "contactNumber": 2345678901,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 200,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Brake Inspection",) Tj
+T* (        "amount": 75,) Tj
+T* (        "reference": "ref003") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Battery Replacement",) Tj
+T* (        "amount": 125,) Tj
+T* (        "reference": "ref004") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c2",) Tj
+T* (    "workDate": "2023-03-22T00:00:00.000Z",) Tj
+T* (    "customerName": "Charlie Brown",) Tj
+T* (    "vehicleNumber": "LMN789",) Tj
+T* (    "contactNumber": 3456789012,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 300,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Full Service",) Tj
+T* (        "amount": 300,) Tj
+T* (        "reference": "ref005") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c3",) Tj
+T* (    "workDate": "2023-04-10T00:00:00.000Z",) Tj
+T* (    "customerName": "David Wilson",) Tj
+T* (    "vehicleNumber": "OPQ123",) Tj
+T* (    "contactNumber": 4567890123,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalServiceCost": 90,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Alignment Check",) Tj
+T* (        "amount": 90,) Tj
+T* (        "reference": "ref006") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c4",) Tj
+T* (    "workDate": "2023-05-17T00:00:00.000Z",) Tj
+T* (    "customerName": "Eva Green",) Tj
+T* (    "vehicleNumber": "RST456",) Tj
+T* (    "contactNumber": 5678901234,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 450,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Transmission Fluid Change",) Tj
+T* (        "amount": 150,) Tj
+T* (        "reference": "ref007") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Engine Tune-Up",) Tj
+T* (        "amount": 300,) Tj
+T* (        "reference": "ref008") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c5",) Tj
+T* (    "workDate": "2023-06-05T00:00:00.000Z",) Tj
+T* (    "customerName": "Fiona Black",) Tj
+T* (    "vehicleNumber": "UVW789",) Tj
+T* (    "contactNumber": 6789012345,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 120,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Wiper Blade Replacement",) Tj
+T* (        "amount": 30,) Tj
+T* (        "reference": "ref009") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Coolant Flush",) Tj
+T* (        "amount": 90,) Tj
+T* (        "reference": "ref010") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c6",) Tj
+T* (    "workDate": "2023-07-12T00:00:00.000Z",) Tj
+T* (    "customerName": "George Harris",) Tj
+T* (    "vehicleNumber": "XYZ234",) Tj
+T* (    "contactNumber": 7890123456,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 200,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Exhaust Repair",) Tj
+T* (        "amount": 200,) Tj
+T* (        "reference": "ref011") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c7",) Tj
+T* (    "workDate": "2023-08-20T00:00:00.000Z",) Tj
+T* (    "customerName": "Hannah White",) Tj
+T* (    "vehicleNumber": "ABC456",) Tj
+T* (    "contactNumber": 8901234567,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalServiceCost": 75,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Light Bulb Replacement",) Tj
+T* (        "amount": 25,) Tj
+T* (        "reference": "ref012") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Tire Repair",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "ref013") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c8",) Tj
+T* (    "workDate": "2023-09-10T00:00:00.000Z",) Tj
+T* (    "customerName": "Ian Grey",) Tj
+T* (    "vehicleNumber": "DEF789",) Tj
+T* (    "contactNumber": 9012345678,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 350,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Body Repair",) Tj
+T* (        "amount": 350,) Tj
+T* (        "reference": "ref014") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0c9",) Tj
+T* (    "workDate": "2023-10-15T00:00:00.000Z",) Tj
+T* (    "customerName": "Jane Blue",) Tj
+T* (    "vehicleNumber": "GHI123",) Tj
+T* (    "contactNumber": 1234567890,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 100,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Tire Balancing",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "ref015") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0ca",) Tj
+T* (    "workDate": "2023-11-20T00:00:00.000Z",) Tj
+T* (    "customerName": "Kevin Red",) Tj
+T* (    "vehicleNumber": "JKL456",) Tj
+T* (    "contactNumber": 2345678901,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalServiceCost": 250,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Brake Pad Replacement",) Tj
+T* (        "amount": 250,) Tj
+T* (        "reference": "ref016") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0cb",) Tj
+T* (    "workDate": "2023-12-12T00:00:00.000Z",) Tj
+T* (    "customerName": "Laura Green",) Tj
+T* (    "vehicleNumber": "MNO789",) Tj
+T* (    "contactNumber": 3456789012,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 180,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Fuel System Cleaning",) Tj
+T* (        "amount": 180,) Tj
+T* (        "reference": "ref017") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0cc",) Tj
+T* (    "workDate": "2023-01-25T00:00:00.000Z",) Tj
+T* (    "customerName": "Michael Brown",) Tj
+T* (    "vehicleNumber": "PQR123",) Tj
+T* (    "contactNumber": 4567890123,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 300,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "AC Repair",) Tj
+T* (        "amount": 300,) Tj
+T* (        "reference": "ref018") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0cd",) Tj
+T* (    "workDate": "2023-02-10T00:00:00.000Z",) Tj
+T* (    "customerName": "Nina Grey",) Tj
+T* (    "vehicleNumber": "STU456",) Tj
+T* (    "contactNumber": 5678901234,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalServiceCost": 400,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Timing Belt Replacement",) Tj
+T* (        "amount": 400,) Tj
+T* (        "reference": "ref019") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0ce",) Tj
+T* (    "workDate": "2023-03-15T00:00:00.000Z",) Tj
+T* (    "customerName": "Oscar White",) Tj
+T* (    "vehicleNumber": "VWX789",) Tj
+T* (    "contactNumber": 6789012345,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 150,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Fuel Filter Change",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "ref020") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Spark Plug Replacement",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "ref021") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0cf",) Tj
+T* (    "workDate": "2023-04-10T00:00:00.000Z",) Tj
+T* (    "customerName": "Patricia Black",) Tj
+T* (    "vehicleNumber": "YZA012",) Tj
+T* (    "contactNumber": 7890123456,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalServiceCost": 500,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Engine Overhaul",) Tj
+T* (        "amount": 500,) Tj
+T* (        "reference": "ref022") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9e3cce214718f58ce0d0",) Tj
+T* (    "workDate": "2023-05-25T00:00:00.000Z",) Tj
+T* (    "customerName": "Quentin Green",) Tj
+T* (    "vehicleNumber": "BCD345",) Tj
+T* (    "contactNumber": 8901234567,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalServiceCost": 80,) Tj
+T* (    "workDescriptions": [) Tj
+T* (      {) Tj
+T* (        "description": "Tire Alignment",) Tj
+T* (        "amount": 80,) Tj
+T* (        "reference": "ref023") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  }) Tj
+T* (]) Tj
+ET
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 20293
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+28.3464566929133888 813.5435433070865656 Td
+(Expenses Collection Data:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+28.3464566929133888 785.1970866141732586 Td
+([) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9aad28d0e165cb705f6b",) Tj
+T* (    "date": "2024-09-30T00:00:00.000Z",) Tj
+T* (    "payeeName": "sinan",) Tj
+T* (    "expenseType": "hello",) Tj
+T* (    "contactNumber": 9599935435,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 10000,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "this is samsung phone",) Tj
+T* (        "amount": 10000,) Tj
+T* (        "reference": "kdjkald",) Tj
+T* (        "_id": "66fa9aad28d0e165cb705f6c") Tj
+T* (      }) Tj
+T* (    ],) Tj
+T* (    "__v": 0) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce099",) Tj
+T* (    "date": "2023-01-15T00:00:00.000Z",) Tj
+T* (    "payeeName": "John Doe",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 1234567890,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalExpense": 25.75,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Lunch at Café",) Tj
+T* (        "amount": 15.75,) Tj
+T* (        "reference": "abc123") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce09a",) Tj
+T* (    "date": "2023-02-10T00:00:00.000Z",) Tj
+T* (    "payeeName": "Jane Smith",) Tj
+T* (    "expenseType": "Transport",) Tj
+T* (    "contactNumber": 2345678901,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 40,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Taxi to airport",) Tj
+T* (        "amount": 40,) Tj
+T* (        "reference": "def456") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce09b",) Tj
+T* (    "date": "2023-03-05T00:00:00.000Z",) Tj
+T* (    "payeeName": "Alice Johnson",) Tj
+T* (    "expenseType": "Utilities",) Tj
+T* (    "contactNumber": 3456789012,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalExpense": 120.5,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Electricity bill",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "ghi789") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Water bill",) Tj
+T* (        "amount": 20.5,) Tj
+T* (        "reference": "jkl012") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce09c",) Tj
+T* (    "date": "2023-04-12T00:00:00.000Z",) Tj
+T* (    "payeeName": "Bob Brown",) Tj
+T* (    "expenseType": "Entertainment",) Tj
+T* (    "contactNumber": 4567890123,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalExpense": 50,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Movie tickets",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "mno345") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce09d",) Tj
+T* (    "date": "2023-05-20T00:00:00.000Z",) Tj
+T* (    "payeeName": "Charlie Davis",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 5678901234,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 15,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Dinner at restaurant",) Tj
+T* (        "amount": 15,) Tj
+T* (        "reference": "pqr678") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce09e",) Tj
+T* (    "date": "2023-06-25T00:00:00.000Z",) Tj
+T* (    "payeeName": "Emily Evans",) Tj
+T* (    "expenseType": "Travel",) Tj
+T* (    "contactNumber": 6789012345,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalExpense": 300,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Flight to New York",) Tj
+T* (        "amount": 250,) Tj
+T* (        "reference": "stu901") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Hotel stay",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "vwx234") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce09f",) Tj
+T* (    "date": "2023-07-30T00:00:00.000Z",) Tj
+T* (    "payeeName": "David Wilson",) Tj
+T* (    "expenseType": "Transport",) Tj
+T* (    "contactNumber": 7890123456,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalExpense": 20,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Train ticket",) Tj
+T* (        "amount": 20,) Tj
+T* (        "reference": "yza567") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a0",) Tj
+T* (    "date": "2023-08-14T00:00:00.000Z",) Tj
+T* (    "payeeName": "Fiona Green",) Tj
+T* (    "expenseType": "Shopping",) Tj
+T* (    "contactNumber": 8901234567,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 150,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Clothing purchase",) Tj
+T* (        "amount": 150,) Tj
+T* (        "reference": "bcd890") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a1",) Tj
+T* (    "date": "2023-09-05T00:00:00.000Z",) Tj
+T* (    "payeeName": "George Harris",) Tj
+T* (    "expenseType": "Utilities",) Tj
+T* (    "contactNumber": 9012345678,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalExpense": 75,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Internet bill",) Tj
+T* (        "amount": 75,) Tj
+T* (        "reference": "efg123") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a2",) Tj
+T* (    "date": "2023-10-10T00:00:00.000Z",) Tj
+T* (    "payeeName": "Hannah White",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 1012345678,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalExpense": 35,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Groceries",) Tj
+T* (        "amount": 35,) Tj
+T* (        "reference": "hij456") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a3",) Tj
+T* (    "date": "2023-11-15T00:00:00.000Z",) Tj
+T* (    "payeeName": "Ian Black",) Tj
+T* (    "expenseType": "Entertainment",) Tj
+T* (    "contactNumber": 1112345678,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 60,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Concert tickets",) Tj
+T* (        "amount": 60,) Tj
+T* (        "reference": "klm789") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a4",) Tj
+T* (    "date": "2023-12-01T00:00:00.000Z",) Tj
+T* (    "payeeName": "Jill Blue",) Tj
+T* (    "expenseType": "Transport",) Tj
+T* (    "contactNumber": 1212345678,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalExpense": 30,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Bus pass",) Tj
+T* (        "amount": 30,) Tj
+T* (        "reference": "nop012") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a5",) Tj
+T* (    "date": "2023-01-10T00:00:00.000Z",) Tj
+T* (    "payeeName": "Kevin Red",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 1312345678,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalExpense": 22.5,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Brunch with friends",) Tj
+T* (        "amount": 22.5,) Tj
+T* (        "reference": "qrs345") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a6",) Tj
+T* (    "date": "2023-02-14T00:00:00.000Z",) Tj
+T* (    "payeeName": "Laura Gray",) Tj
+T* (    "expenseType": "Shopping",) Tj
+T* (    "contactNumber": 1412345678,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 100,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Birthday gift",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "tuv678") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a7",) Tj
+T* (    "date": "2023-03-18T00:00:00.000Z",) Tj
+T* (    "payeeName": "Michael Orange",) Tj
+T* (    "expenseType": "Travel",) Tj
+T* (    "contactNumber": 1512345678,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalExpense": 250,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Weekend trip",) Tj
+T* (        "amount": 250,) Tj
+T* (        "reference": "wxy901") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a8",) Tj
+T* (    "date": "2023-04-22T00:00:00.000Z",) Tj
+T* (    "payeeName": "Nina Purple",) Tj
+T* (    "expenseType": "Utilities",) Tj
+T* (    "contactNumber": 1612345678,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalExpense": 95,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Gas bill",) Tj
+T* (        "amount": 95,) Tj
+T* (        "reference": "zab234") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0a9",) Tj
+T* (    "date": "2023-05-29T00:00:00.000Z",) Tj
+T* (    "payeeName": "Oscar Pink",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 1712345678,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 45,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Dinner at home",) Tj
+T* (        "amount": 45,) Tj
+T* (        "reference": "cde567") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0aa",) Tj
+T* (    "date": "2023-06-30T00:00:00.000Z",) Tj
+T* (    "payeeName": "Patricia Cyan",) Tj
+T* (    "expenseType": "Entertainment",) Tj
+T* (    "contactNumber": 1812345678,) Tj
+T* (    "paymentMethod": "Debit Card",) Tj
+T* (    "totalExpense": 80,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Game night",) Tj
+T* (        "amount": 80,) Tj
+T* (        "reference": "fgh890") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66fa9daece214718f58ce0ab",) Tj
+T* (    "date": "2023-07-07T00:00:00.000Z",) Tj
+T* (    "payeeName": "Quentin Gold",) Tj
+T* (    "expenseType": "Transport",) Tj
+T* (    "contactNumber": 1912345678,) Tj
+T* (    "paymentMethod": "Credit Card",) Tj
+T* (    "totalExpense": 12,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Gas fill-up",) Tj
+T* (        "amount": 12,) Tj
+T* (        "reference": "ijk123") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0d3",) Tj
+T* (    "date": "2023-01-18T00:00:00.000Z",) Tj
+T* (    "payeeName": "Lucas Skywalker",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 9876543210,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 55,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Breakfast at diner",) Tj
+T* (        "amount": 15,) Tj
+T* (        "reference": "ref024") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Groceries",) Tj
+T* (        "amount": 40,) Tj
+T* (        "reference": "ref025") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0d4",) Tj
+T* (    "date": "2023-02-22T00:00:00.000Z",) Tj
+T* (    "payeeName": "Mia Wallace",) Tj
+T* (    "expenseType": "Transport",) Tj
+T* (    "contactNumber": 8765432109,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 30,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Gas for the car",) Tj
+T* (        "amount": 30,) Tj
+T* (        "reference": "ref026") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0d5",) Tj
+T* (    "date": "2023-03-15T00:00:00.000Z",) Tj
+T* (    "payeeName": "John Wick",) Tj
+T* (    "expenseType": "Entertainment",) Tj
+T* (    "contactNumber": 7654321098,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 90,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Dinner and movie",) Tj
+T* (        "amount": 90,) Tj
+T* (        "reference": "ref027") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0d6",) Tj
+T* (    "date": "2023-04-05T00:00:00.000Z",) Tj
+T* (    "payeeName": "Tony Stark",) Tj
+T* (    "expenseType": "Utilities",) Tj
+T* (    "contactNumber": 6543210987,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 150,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Electricity bill",) Tj
+T* (        "amount": 150,) Tj
+T* (        "reference": "ref028") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0d7",) Tj
+T* (    "date": "2023-05-30T00:00:00.000Z",) Tj
+T* (    "payeeName": "Bruce Wayne",) Tj
+T* (    "expenseType": "Shopping",) Tj
+T* (    "contactNumber": 5432109876,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 500,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "New suit",) Tj
+T* (        "amount": 500,) Tj
+T* (        "reference": "ref029") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0d8",) Tj
+T* (    "date": "2023-06-15T00:00:00.000Z",) Tj
+T* (    "payeeName": "Natasha Romanoff",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 4321098765,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 40,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Takeout dinner",) Tj
+T* (        "amount": 40,) Tj
+T* (        "reference": "ref030") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0d9",) Tj
+T* (    "date": "2023-07-19T00:00:00.000Z",) Tj
+T* (    "payeeName": "Peter Parker",) Tj
+T* (    "expenseType": "Transport",) Tj
+T* (    "contactNumber": 3210987654,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 15,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Subway fare",) Tj
+T* (        "amount": 15,) Tj
+T* (        "reference": "ref031") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0da",) Tj
+T* (    "date": "2023-08-25T00:00:00.000Z",) Tj
+T* (    "payeeName": "Clark Kent",) Tj
+T* (    "expenseType": "Utilities",) Tj
+T* (    "contactNumber": 2109876543,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 200,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Water bill",) Tj
+T* (        "amount": 50,) Tj
+T* (        "reference": "ref032") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Internet bill",) Tj
+T* (        "amount": 150,) Tj
+T* (        "reference": "ref033") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0db",) Tj
+T* (    "date": "2023-09-14T00:00:00.000Z",) Tj
+T* (    "payeeName": "Diana Prince",) Tj
+T* (    "expenseType": "Entertainment",) Tj
+T* (    "contactNumber": 1098765432,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 120,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Concert tickets",) Tj
+T* (        "amount": 120,) Tj
+T* (        "reference": "ref034") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0dc",) Tj
+T* (    "date": "2023-10-20T00:00:00.000Z",) Tj
+T* (    "payeeName": "Wade Wilson",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 9876543210,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 60,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Fast food lunch",) Tj
+T* (        "amount": 20,) Tj
+T* (        "reference": "ref035") Tj
+T* (      },) Tj
+T* (      {) Tj
+T* (        "description": "Snacks",) Tj
+T* (        "amount": 40,) Tj
+T* (        "reference": "ref036") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0dd",) Tj
+T* (    "date": "2023-11-11T00:00:00.000Z",) Tj
+T* (    "payeeName": "Barbara Gordon",) Tj
+T* (    "expenseType": "Shopping",) Tj
+T* (    "contactNumber": 8765432109,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 80,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Books and supplies",) Tj
+T* (        "amount": 80,) Tj
+T* (        "reference": "ref037") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0de",) Tj
+T* (    "date": "2023-12-30T00:00:00.000Z",) Tj
+T* (    "payeeName": "Steve Rogers",) Tj
+T* (    "expenseType": "Transport",) Tj
+T* (    "contactNumber": 7654321098,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 100,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Car rental",) Tj
+T* (        "amount": 100,) Tj
+T* (        "reference": "ref038") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0df",) Tj
+T* (    "date": "2024-01-05T00:00:00.000Z",) Tj
+T* (    "payeeName": "Thor Odinson",) Tj
+T* (    "expenseType": "Utilities",) Tj
+T* (    "contactNumber": 6543210987,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 250,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Gas bill",) Tj
+T* (        "amount": 250,) Tj
+T* (        "reference": "ref039") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0e0",) Tj
+T* (    "date": "2024-02-10T00:00:00.000Z",) Tj
+T* (    "payeeName": "Groot",) Tj
+T* (    "expenseType": "Entertainment",) Tj
+T* (    "contactNumber": 5432109876,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 45,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Movie night snacks",) Tj
+T* (        "amount": 45,) Tj
+T* (        "reference": "ref040") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0e1",) Tj
+T* (    "date": "2024-03-14T00:00:00.000Z",) Tj
+T* (    "payeeName": "Rocket Raccoon",) Tj
+T* (    "expenseType": "Food",) Tj
+T* (    "contactNumber": 4321098765,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 55,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Takeout dinner",) Tj
+T* (        "amount": 55,) Tj
+T* (        "reference": "ref041") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0e2",) Tj
+T* (    "date": "2024-04-18T00:00:00.000Z",) Tj
+T* (    "payeeName": "Vision",) Tj
+T* (    "expenseType": "Shopping",) Tj
+T* (    "contactNumber": 3210987654,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 120,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "New gadgets",) Tj
+T* (        "amount": 120,) Tj
+T* (        "reference": "ref042") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0e3",) Tj
+T* (    "date": "2024-05-22T00:00:00.000Z",) Tj
+T* (    "payeeName": "Black Widow",) Tj
+T* (    "expenseType": "Transport",) Tj
+T* (    "contactNumber": 2109876543,) Tj
+T* (    "paymentMethod": "Cash",) Tj
+T* (    "totalExpense": 90,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Uber rides",) Tj
+T* (        "amount": 90,) Tj
+T* (        "reference": "ref043") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  },) Tj
+T* (  {) Tj
+T* (    "_id": "66faa011ce214718f58ce0e4",) Tj
+T* (    "date": "2024-06-30T00:00:00.000Z",) Tj
+T* (    "payeeName": "Doctor Strange",) Tj
+T* (    "expenseType": "Utilities",) Tj
+T* (    "contactNumber": 1098765432,) Tj
+T* (    "paymentMethod": "UPI",) Tj
+T* (    "totalExpense": 300,) Tj
+T* (    "expenseDetails": [) Tj
+T* (      {) Tj
+T* (        "description": "Internet bill",) Tj
+T* (        "amount": 300,) Tj
+T* (        "reference": "ref044") Tj
+T* (      }) Tj
+T* (    ]) Tj
+T* (  }) Tj
+T* (]) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R 5 0 R ]
+/Count 2
+>>
+endobj
+7 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+8 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+9 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+10 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+11 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+12 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+13 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+14 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+15 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+17 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+18 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+19 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+20 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 7 0 R
+/F2 8 0 R
+/F3 9 0 R
+/F4 10 0 R
+/F5 11 0 R
+/F6 12 0 R
+/F7 13 0 R
+/F8 14 0 R
+/F9 15 0 R
+/F10 16 0 R
+/F11 17 0 R
+/F12 18 0 R
+/F13 19 0 R
+/F14 20 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+21 0 obj
+<<
+/Producer (jsPDF 2.5.2)
+/CreationDate (D:20240930191115+05'30')
+>>
+endobj
+22 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 23
+0000000000 65535 f 
+0000040697 00000 n 
+0000042522 00000 n 
+0000000015 00000 n 
+0000000152 00000 n 
+0000020214 00000 n 
+0000020351 00000 n 
+0000040760 00000 n 
+0000040885 00000 n 
+0000041015 00000 n 
+0000041148 00000 n 
+0000041286 00000 n 
+0000041410 00000 n 
+0000041539 00000 n 
+0000041671 00000 n 
+0000041807 00000 n 
+0000041935 00000 n 
+0000042062 00000 n 
+0000042191 00000 n 
+0000042324 00000 n 
+0000042426 00000 n 
+0000042772 00000 n 
+0000042858 00000 n 
+trailer
+<<
+/Size 23
+/Root 22 0 R
+/Info 21 0 R
+/ID [ <FFD6EB99ED32A290D6F8324470F946C0> <FFD6EB99ED32A290D6F8324470F946C0> ]
+>>
+startxref
+42962
+%%EOF
