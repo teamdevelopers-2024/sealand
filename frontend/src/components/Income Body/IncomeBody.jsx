@@ -67,57 +67,126 @@ const IncomeBody = ({ addIncomeModal }) => {
     setViewIncomeModal(true);
   };
 
-  const generatePDF = (startDate, endDate) => {
+  const generatePDF = (
+    startDate,
+    endDate,
+    selectedOption,
+    selectedMonth,
+    selectedYear
+) => {
     const doc = new jsPDF();
     doc.setFontSize(12);
 
+    // Adjust endDate to include the entire day
+    endDate.setHours(23, 59, 59, 999); // Set to the end of the day
+
+    // Dynamic title based on selected options
+    let title;
+    if (selectedOption === "monthly") {
+        title = `Income History for ${new Date(
+            selectedYear,
+            selectedMonth - 1
+        ).toLocaleString("default", { month: "long" })} ${selectedYear}`;
+    } else if (selectedOption === "yearly") {
+        title = `Income History for ${selectedYear}`;
+    } else {
+        title = `Income History from ${startDate.toLocaleDateString("en-IN")} to ${endDate.toLocaleDateString("en-IN")}`;
+    }
+
     const headers = [
-      "Date",
-      "Customer Name",
-      "Vehicle Number",
-      "Phone Number",
-      "Amount",
+        "Date",
+        "Name",
+        "Vehicle Number",
+        "Phone Number",
+        "UPI",
+        "Cash",
     ];
 
     const filteredData = incomeHistoryData.filter((entry) => {
-      const entryDate = new Date(entry.workDate);
-      return entryDate >= startDate && entryDate <= endDate;
+        const entryDate = new Date(entry.workDate);
+        return entryDate >= startDate && entryDate <= endDate;
     });
 
-    doc.text("Income History", 100, 10);
-    headers.forEach((header, index) => doc.text(header, 14 + index * 40, 25));
+    // Set column widths
+    const columnWidths = [30, 35, 40, 40, 30, 30]; // Adjust these widths as needed
+
+    // Add title
+    if (typeof title === "string") {
+        doc.text(title, 75, 10);
+    }
+
+    headers.forEach((header, index) => {
+        const xPosition = 10 + columnWidths.slice(0, index).reduce((a, b) => a + b, 0);
+        if (typeof header === "string") {
+            doc.text(header, xPosition, 25);
+        }
+    });
 
     // Add a separator line
-    doc.line(10, 28, 200, 28); // Adjusted line position for clarity
+    doc.line(10, 30, 200, 30);
 
-    let totalServiceCost = 0;
+    let totalUPI = 0;
+    let totalCash = 0;
 
     filteredData.forEach((entry, index) => {
-      const row = [
-        new Date(entry.workDate).toLocaleDateString("en-GB"),
-        entry.customerName,
-        entry.vehicleNumber,
-        entry.contactNumber ? entry.contactNumber.toString() : "",
-        ` ${entry.totalServiceCost}`,
-      ];
+        const entryDate = new Date(entry.workDate).toLocaleDateString("en-GB");
+        const upiAmount = (entry.paymentMethod === "UPI" || entry.paymentMethod === 'Repaid-UPI') ? entry.totalServiceCost.toFixed(2) : "";
+        const cashAmount = (entry.paymentMethod === "Cash" || entry.paymentMethod === 'Repaid-Cash') ? entry.totalServiceCost.toFixed(2) : "";
 
-      totalServiceCost += entry.totalServiceCost; // Accumulate total
+        const row = [
+            entryDate,
+            entry.customerName,
+            entry.vehicleNumber,
+            entry.contactNumber ? entry.contactNumber.toString() : "",
+            upiAmount,
+            cashAmount,
+        ];
 
-      row.forEach((cell, cellIndex) => {
-        doc.text(cell.toString(), 14 + cellIndex * 40, 35 + index * 10);
-      });
+        // Accumulate totals based on payment method
+        if (entry.paymentMethod === "UPI") {
+            totalUPI += entry.totalServiceCost || 0; // Accumulate total UPI
+        } else if (entry.paymentMethod === "Cash") {
+            totalCash += entry.totalServiceCost || 0; // Accumulate total Cash
+        }
+
+        row.forEach((cell, cellIndex) => {
+            const xPosition = 10 + columnWidths.slice(0, cellIndex).reduce((a, b) => a + b, 0);
+            if (typeof cell === "string") {
+                doc.text(cell, xPosition, 35 + index * 10);
+            }
+        });
     });
 
-    // Add total calculation at the end
-    const totalRowYPosition = 35 + filteredData.length * 10; // Updated position calculation
+    // Add total calculations at the end
+    const totalRowYPosition = 35 + filteredData.length * 10;
+
     // Add a separator line
-    doc.line(10, totalRowYPosition, 200, totalRowYPosition); // Adjusted position for the line
+    doc.line(10, totalRowYPosition, 200, totalRowYPosition);
+    const totalIncome = totalUPI + totalCash;
 
     // Position for total income
-    doc.text(`Total Income:  ${totalServiceCost}`, 150, totalRowYPosition + 10);
+    doc.text(`Total Income (UPI): ${totalUPI.toFixed(2)}`, 130, totalRowYPosition + 10);
+    doc.text(`Total Income (Cash): ${totalCash.toFixed(2)}`, 130, totalRowYPosition + 20);
+    doc.text(`Total Income (Overall): ${totalIncome.toFixed(2)}`, 130, totalRowYPosition + 30);
 
-    doc.save("income_history.pdf");
-  };
+    const fileName = (() => {
+        if (selectedOption === "custom") {
+            return `income_history_${startDate.toLocaleDateString("en-GB")}_to_${endDate.toLocaleDateString("en-GB")}.pdf`;
+        } else if (selectedOption === "yearly") {
+            return `income_history_${selectedYear}.pdf`;
+        } else {
+            // monthly
+            return `income_history_${new Date(
+                selectedYear,
+                selectedMonth - 1
+            ).toLocaleString("default", { month: "long" })}_${selectedYear}.pdf`;
+        }
+    })();
+
+    doc.save(fileName);
+};
+
+
 
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
@@ -227,7 +296,12 @@ const IncomeBody = ({ addIncomeModal }) => {
           entry={singleEntry}
         />
       )}
-      {isModalOpen && <PDFDownloadModal generatePDF={generatePDF} setIsModalOpen={setIsModalOpen}/>}
+      {isModalOpen && (
+        <PDFDownloadModal
+          generatePDF={generatePDF}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </div>
   );
 };

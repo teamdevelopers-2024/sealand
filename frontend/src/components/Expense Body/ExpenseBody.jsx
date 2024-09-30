@@ -39,7 +39,7 @@ const Expense = ({ addExpenseModal }) => {
   const generatePDF = (startDate, endDate) => {
     const doc = new jsPDF();
     doc.setFontSize(12);
-
+    endDate.setHours(23, 59, 59, 999);
     const headers = [
       "Date",
       "Payee Name",

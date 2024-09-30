@@ -154,7 +154,6 @@ const PaymentModal = ({ show, onClose, customer }) => {
                   <option value="">How did you pay?</option>
                   <option value="UPI">UPI</option>
                   <option value="Cash">Cash</option>
-                  <option value="Card">Card</option>
                 </select>
                 {methodError && <p className="text-red-500 mt-1">{methodError}</p>}
               </div>

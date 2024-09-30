@@ -249,7 +249,6 @@ const AddExpense = ({ setAddExpenseModal }) => {
                   <option value="">How did you pay?</option>
                   <option value="Cash">Cash</option>
                   <option value="UPI">UPI</option>
-                  <option value="Online Transfer">Online Transfer</option>
                 </select>
                 {errors.paymentMethod && (
                   <p className="text-red-500 text-sm">{errors.paymentMethod}</p>

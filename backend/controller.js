@@ -48,6 +48,8 @@ async function login(req, res) {
 async function addcustomer(req, res) {
   try {
     const customerData = req.body;
+    console.log("customer data",customerData);
+    
     if (typeof customerData.vehicleNumber === 'string') {
       customerData.vehicleNumber = customerData.vehicleNumber
         .split(',')
@@ -67,10 +69,21 @@ async function addcustomer(req, res) {
       });
     }
 
-    // Check if vehicleNumber is a string and convert it to an array
+    // Prepare transaction history entry
+    const transactionEntry = {
+      date: new Date(),
+      vehicleNumber: customerData.vehicleNumber.join(', '), // Join for display purposes
+      phoneNumber: customerData.phoneNumber, // Ensure phoneNumber is part of customerData
+      paymentType: "Credit", // Ensure paymentType is included in the request
+      Amount: customerData.creditAmount, // Ensure amount is included in the request
+    };
 
+    // Add transaction history to customer data
+    if (!customerData.transactionHistory) {
+      customerData.transactionHistory = [];
+    }
+    customerData.transactionHistory.push(transactionEntry);
 
-    // Save the customer data with the transformed vehicleNumber
     await creditCustomerDb.create(customerData);
 
     res.status(200).json({
@@ -286,6 +299,7 @@ async function getCustomers(req, res) {
 }
 
 
+
 async function repayment(req, res) {
   try {
     const { customer, details } = req.body;
@@ -317,7 +331,7 @@ async function repayment(req, res) {
       customerName: customer.customerName,
       vehicleNumber: customer.vehicleNumber[0].toUpperCase(),
       contactNumber: customer.phoneNumber,
-      paymentMethod: "Credit Repayment",
+      paymentMethod: `Repaid-${details.paymentMethod}`,
       totalServiceCost: details.repaymentAmount,
       workDescriptions: [{
         description: customer.workDetails[0].description,
