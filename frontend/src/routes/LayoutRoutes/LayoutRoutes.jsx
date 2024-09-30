@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { isMobile } from "react-device-detect"; // Import the device detection
 import PrivateRoutes from "./PrivateRoutes";
+import LoadingSpinner from "../../components/spinner/Spinner";
 
 // Lazy import components
 const Login = React.lazy(() => import("../../pages/Login/Login"));
@@ -31,7 +32,7 @@ function LayoutRoutes() {
             className="flex items-center justify-center h-screen bg-gray-900 text-white"
             style={{ backgroundColor: "#1a202c", height: "100vh" }} // Tailwind + inline style fallback
           >
-            Loading...
+            <LoadingSpinner/>
           </div>
         }
       >

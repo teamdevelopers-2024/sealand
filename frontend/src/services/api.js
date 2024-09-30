@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const api = axios.create({
-  baseURL: "https://sealand-api.vercel.app/api", 
+  baseURL: "https://sealand.vercel.app/api", 
   headers: {
     "Content-Type": "application/json",
   },
