@@ -89,7 +89,7 @@ const History = ({ onClose, customer }) => {
         <div className="mt-6 text-right">
           <button
           onClick={generatePDF}
-            className="bg-teal-400 text-gray-900 px-4 py-2 rounded-md"
+            className="bg-teal-400 text-gray-900 px-4 mr-3 py-2 rounded-md"
           >
             Download
           </button>

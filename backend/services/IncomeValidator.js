@@ -26,8 +26,8 @@ export function validateIncomeData(data) {
     }
 
     // Validate vehicleNumber
-    if (!vehicleNumber || !validator.isAlphanumeric(vehicleNumber)) {
-        errors.push('Vehicle number is required and must be alphanumeric.');
+    if (!vehicleNumber) {
+        errors.push('Vehicle number is required.');
     }
 
     // Validate contactNumber
