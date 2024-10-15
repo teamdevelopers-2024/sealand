@@ -38,7 +38,7 @@ const ViewIncomeModal = ({ entry, onClose }) => {
     doc.setFontSize(12);
     doc.text(`Customer: ${entry.customerName}`, 10, 60);
     doc.text(`Phone: ${entry.contactNumber}`, 10, 70);
-    doc.text(`Vehicle Number: ${entry.vehicleNumber}`, 140, 70);
+    doc.text(`Vehicle Number: ${entry.vehicleNumber}`, 110, 70);
     // Add a separator line
     doc.line(10, 75, 200, 75);
     // Add table headers for items (compact)
@@ -74,8 +74,8 @@ const ViewIncomeModal = ({ entry, onClose }) => {
     doc.line(10, itemsEndY + 20, 200, itemsEndY + 20);
     // Add Footer (Thank You Note, etc.)
     doc.setFont("normal");
-    doc.text("Thank you for your visit!", 70, itemsEndY + 30);
-    doc.text("Visit us again!", 80, itemsEndY + 35);
+    doc.text("Thank you for your visit!", 80, itemsEndY + 30);
+    doc.text("Visit us again!", 90, itemsEndY + 35);
     // Save the PDF with the customer's name
     doc.save(`${entry.customerName.replace(/[^a-zA-Z0-9]/g, "_")}_receipt.pdf`);
   };
