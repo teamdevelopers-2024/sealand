@@ -6,6 +6,9 @@ import ViewIncomeModal from "../View Income/ViewIncomeModal";
 import IncomeChart from "../Income Chart/IncomeChart";
 import PDFDownloadModal from "../PDFDownloadModal/PDFDownloadModal";
 import SpinnerOnly from "../spinnerOnly/SpinnerOnly";
+import { FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
+import swal from "sweetalert";
 
 const IncomeBody = ({ addIncomeModal }) => {
   const [incomeHistoryData, setIncomeHistoryData] = useState([]);
@@ -15,6 +18,7 @@ const IncomeBody = ({ addIncomeModal }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [isUpdating , setIsUpdating] = useState(false)
   const entriesPerPage = 5;
 
   useEffect(() => {
@@ -36,7 +40,7 @@ const IncomeBody = ({ addIncomeModal }) => {
     if (!addIncomeModal) {
       fetchIncomeHistory();
     }
-  }, [addIncomeModal]);
+  }, [addIncomeModal , isUpdating]);
 
   const filteredEntries = () => {
     const today = new Date();
@@ -316,6 +320,39 @@ const IncomeBody = ({ addIncomeModal }) => {
 
 
 
+  const hanldeDelete = async (id)=>{
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+      });
+      if(!result.isConfirmed){
+        return
+      }
+
+      setIsLoading(true)
+      const response = await api.deleteIncome(id)
+      if(!response.error){
+        swal("Success", `income deleted successfully`, "success");
+      }else{
+        swal("Error","error deleting income",'error')
+      }
+      setIsUpdating(!isUpdating)
+    } catch (error) {
+      console.log(error)
+      swal("Error","error deleting income",'error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+
 
 
   return (
@@ -349,6 +386,7 @@ const IncomeBody = ({ addIncomeModal }) => {
                 <th className="pb-2">Payment Type</th>
                 <th className="pb-2">Phone Number</th>
                 <th className="pb-2">Amount</th>
+                <th className="pb-2">Delete</th>
                 <th className="pb-2">Receipt</th>
               </tr>
             </thead>
@@ -370,6 +408,11 @@ const IncomeBody = ({ addIncomeModal }) => {
                     <td className="py-2">{entry.paymentMethod}</td>
                     <td className="py-2">{entry.contactNumber}</td>
                     <td className="py-2">₹ {entry.totalServiceCost}</td>
+                    <td className="py-2">
+                        <button onClick={() => hanldeDelete(entry._id)} className="text-red-500 hover:text-red-700">
+                          <FaTrash size={18} />
+                        </button>
+                      </td>
                     <td className="py-2">
                       <button
                         onClick={() => handleViewClick(entry)}

@@ -2,14 +2,13 @@ import creditCustomerDb from '../model/creditCustomers.js';
 import validator from 'validator';
 
 // Function to validate customer entry data
-export async function validateCustomerData(data) {
+export async function validateCustomerData(data,workDetails) {
     const {
         dateOfService,
         customerName,
         vehicleNumber,
         phoneNumber,
         creditAmount,
-        workDetails,
     } = data;
 
     // Array to collect validation errors

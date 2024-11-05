@@ -15,4 +15,10 @@ router.get("/getCustomers",controller.getCustomers)
 router.get("/getTodayIncomeAndExpense",controller.getIncomeAndExpense)
 
 router.put('/repayment',controller.repayment)
+
+
+router.delete("/deleteCustomerData",controller.deleteCustomerData)
+router.delete("/deleteIncome",controller.deleteIncome)
+router.delete("/deleteExpense",controller.deleteExpense)
+
 export default router

@@ -47,18 +47,18 @@ async function login(req, res) {
 
 async function addcustomer(req, res) {
   try {
-    const customerData = req.body;
-    console.log("customer data",customerData);
+    const {formData,  workDetails}= req.body;
+    console.log("customer data",formData);
     
-    if (typeof customerData.vehicleNumber === 'string') {
-      customerData.vehicleNumber = customerData.vehicleNumber
+    if (typeof formData.vehicleNumber === 'string') {
+      formData.vehicleNumber = formData.vehicleNumber
         .split(',')
         .map((v) => v.trim())
         .filter((v) => v);
     }
 
     // Validate customer data
-    const errors = await validateCustomerData(customerData);
+    const errors = await validateCustomerData(formData,workDetails);
     console.log(errors)
     if (errors.length > 0) {
       console.log('getting here')
@@ -72,19 +72,20 @@ async function addcustomer(req, res) {
     // Prepare transaction history entry
     const transactionEntry = {
       date: new Date(),
-      vehicleNumber: customerData.vehicleNumber.join(', '), // Join for display purposes
-      phoneNumber: customerData.phoneNumber, // Ensure phoneNumber is part of customerData
+      vehicleNumber: formData.vehicleNumber.join(', '), // Join for display purposes
+      phoneNumber: formData.phoneNumber, // Ensure phoneNumber is part of customerData
       paymentType: "Credit", // Ensure paymentType is included in the request
-      Amount: customerData.creditAmount, // Ensure amount is included in the request
+      Amount: formData.creditAmount, // Ensure amount is included in the request
+      workDetails: workDetails
     };
 
     // Add transaction history to customer data
-    if (!customerData.transactionHistory) {
-      customerData.transactionHistory = [];
+    if (!formData.transactionHistory) {
+      formData.transactionHistory = [];
     }
-    customerData.transactionHistory.push(transactionEntry);
+    formData.transactionHistory.push(transactionEntry);
 
-    await creditCustomerDb.create(customerData);
+    await creditCustomerDb.create(formData);
 
     res.status(200).json({
       error: false,
@@ -303,48 +304,110 @@ async function getCustomers(req, res) {
 async function repayment(req, res) {
   try {
     const { customer, details } = req.body;
+    console.log(details)
 
-    const updatedCustomer = await creditCustomerDb.findByIdAndUpdate(
-      customer._id,
-      {
-        $inc: { paidAmount: details.repaymentAmount },
-        $push: {
-          transactionHistory: {
-            date: new Date(), // Current date
-            vehicleNumber: customer.vehicleNumber[0], // Assuming you want to use the customer's vehicle number
-            phoneNumber: customer.phoneNumber, // Assuming you want to use the customer's phone number
-            paymentType: details.paymentMethod, // Assuming this is part of your details
-            Amount: details.repaymentAmount, // The amount being repaid
-          },
-        },
-      },
-      { new: true }
-    );
-
-    if (!updatedCustomer) {
-      return res.status(404).json({ message: 'Customer not found' });
-    }
 
     console.log(customer)
-    const updateIncomeData = new IncomeDb({
-      workDate: details.repaymentDate,
-      customerName: customer.customerName,
-      vehicleNumber: customer.vehicleNumber[0].toUpperCase(),
-      contactNumber: customer.phoneNumber,
-      paymentMethod: `Repaid-${details.paymentMethod}`,
-      totalServiceCost: details.repaymentAmount,
-      workDescriptions: [{
-        description: customer.workDetails[0].description,
-        amount: details.repaymentAmount,
-        reference: customer.phoneNumber
-      }]
-    })
-
-    if (updatedCustomer.creditAmount == updatedCustomer.paidAmount) {
+    const history = customer.transactionHistory
+    if(details.vehicleNumber == 'Full Repayment'){
       await creditCustomerDb.deleteOne({ _id: customer._id })
-    }
+      history.map(async(item)=>{
+        if(item.paymentType=='Credit'){
+          console.log("this is item : ", item)
+          if (item.paymentType === 'Credit') {
+            const updateIncomeData = new IncomeDb({
+              workDate: details.repaymentDate,
+              customerName: customer.customerName,
+              vehicleNumber: item.vehicleNumber,
+              contactNumber: customer.phoneNumber,
+              paymentMethod: `Repaid-${details.paymentMethod}`,
+              totalServiceCost: item.Amount,
+              workDescriptions: item.workDetails
+            });            
+      
+            await updateIncomeData.save()      
+            }
+        }
+      })
 
-    await updateIncomeData.save()
+    } else {
+
+      const result = await creditCustomerDb.findOne(
+        {
+          _id: customer._id,
+          "transactionHistory._id": details.vehicleNumber,
+        },
+        {
+          "transactionHistory.$": 1, // Projection to get only the matching sub-document
+        }
+      );
+
+      console.log(result.transactionHistory, " and ", details.repaymentAmount)
+
+        let weWantHistory
+        result.transactionHistory.map((history)=>{
+        if(history._id==details.vehicleNumber){
+          weWantHistory = history
+        }
+      })
+      if(weWantHistory.Amount == details.repaymentAmount){
+
+          const updateTransaction = await creditCustomerDb.findOneAndUpdate(
+        {
+          _id: customer._id,
+          "transactionHistory._id": details.vehicleNumber, 
+        },
+        {
+          $set: {
+            'transactionHistory.$.isCredit':false
+          }
+        }
+      );
+      } else {
+        const updateTransaction = await creditCustomerDb.findOneAndUpdate(
+          {
+            _id: customer._id,
+            "transactionHistory._id": details.vehicleNumber, 
+          },
+          {
+            $inc: {
+              'transactionHistory.$.paidAmount':details.repaymentAmount,
+            }
+          }
+        );
+      }
+      const updatedCustomer = await creditCustomerDb.findByIdAndUpdate(
+        customer._id,
+        {
+          $inc: { paidAmount: details.repaymentAmount },
+          $push: {
+            transactionHistory: {
+              date: new Date(), // Current date
+              vehicleNumber: weWantHistory.vehicleNumber ,// Assuming you want to use the customer's vehicle number
+              phoneNumber: customer.phoneNumber, // Assuming you want to use the customer's phone number
+              paymentType: details.paymentMethod, // Assuming this is part of your details
+              Amount: details.repaymentAmount, // The amount being repaid
+            },
+          },
+        },
+    
+        { new: true }
+      );
+  
+      if (!updatedCustomer) {
+        return res.status(404).json({ message: 'Customer not found' });
+      }
+      const updateIncomeData = new IncomeDb({
+        workDate: details.repaymentDate,
+        customerName: customer.customerName,
+        vehicleNumber: weWantHistory.vehicleNumber,
+        contactNumber: customer.phoneNumber,
+        paymentMethod: `Repaid-${details.paymentMethod}`,
+        totalServiceCost: details.repaymentAmount,
+        workDescriptions: weWantHistory.workDetails
+      })
+      await updateIncomeData.save()
+    }
 
 
     res.status(200).json({
@@ -491,6 +554,7 @@ async function getIncomeAndExpense(req, res) {
 async function addCredit(req, res) {
   try {
     const { date, vehicleNumber, workRows, creditAmount, _id, phoneNumber } = req.body
+    console.log(req.body)
 
     const customer = await creditCustomerDb.findOne({ phoneNumber: phoneNumber, _id: _id });
 
@@ -506,13 +570,13 @@ async function addCredit(req, res) {
         $set: { creditAmount: updatedCreditAmount },
         $push: {
           vehicleNumber: vehicleNumber.toUpperCase(),
-          workDetails: { $each: workRows },
           transactionHistory: {
             date: new Date(date),
             vehicleNumber: vehicleNumber,
             phoneNumber: phoneNumber, // Replace with the actual phone number or keep as sample
             paymentType: "Credit",
             Amount: creditAmount,
+            workDetails: workRows 
           },
         },
       }
@@ -528,6 +592,79 @@ async function addCredit(req, res) {
 
 
 
+async function deleteCustomerData(req,res) {
+  try {
+    const {id} = req.query
+    if(!id){
+      return res.status(400).json({
+        error:true,
+        message:"id is required"
+      })
+    }
+    await creditCustomerDb.deleteOne({_id:id})
+    res.status(200).json({
+      error : false ,
+      message: "customer deleted successfully"
+    })
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred", error });
+  }
+}
+
+
+
+async function deleteIncome(req,res) {
+  try {
+    const {id} = req.query
+
+    console.log(id, " thi sis id ")
+
+    if(!id){
+      return res.status(400).json({
+        error:true,
+        message:"id is required"
+      })
+    }
+
+    await IncomeDb.deleteOne({_id:id})
+    res.status(200).json({
+      error : false ,
+      message: "income deleted successfully"
+    })
+  
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred", error });
+  }
+}
+
+
+async function deleteExpense(req,res) {
+  try {
+    const {id} = req.query
+
+    console.log(id, " thi sis id ")
+
+    if(!id){
+      return res.status(400).json({
+        error:true,
+        message:"id is required"
+      })
+    }
+
+    await ExpenseDb.deleteOne({_id:id})
+    res.status(200).json({
+      error : false ,
+      message: "Expense deleted successfully"
+    })
+  
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred", error });
+  }
+}
+
 export default {
   login,
   addIncome,
@@ -538,5 +675,8 @@ export default {
   getCustomers,
   repayment,
   getIncomeAndExpense,
-  addCredit
+  addCredit,
+  deleteCustomerData,
+  deleteIncome,
+  deleteExpense
 }

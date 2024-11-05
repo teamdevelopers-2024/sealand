@@ -1,25 +1,25 @@
 import axios from "axios";
 
 
-const api = axios.create({
-  baseURL: "https://sealand-api.vercel.app/api", 
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true,
-})
-
 // const api = axios.create({
-//   baseURL: "http://localhost:3001/api", 
+//   baseURL: "https://sealand-api.vercel.app/api", 
 //   headers: {
 //     "Content-Type": "application/json",
 //   },
 //   withCredentials: true,
 // })
 
+const api = axios.create({
+  baseURL: "http://localhost:3001/api", 
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+})
+
 
 // Log the constructed URL for debugging
-const logRequestURL = (endpoint) => {
+const logRequestURL = (endpoint) => {   
   const url = `${api.defaults.baseURL}${endpoint}`;
   console.log("Request URL is:", url); // Log the full request URL
   return url;
@@ -138,12 +138,46 @@ async function getTodayIncomeAndExpense() {
 // Add Credit function
 async function addCredit(body) {
   try {
+    console.log("this is body ; form addcredit : ",body)
     const response = await api.post("/addCredit", body);
     console.log("Credit response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error adding credit:", error);
     return error.response ? error.response.data : "Network error";
+  }
+}
+
+
+async function deleteCustomerData(id) {
+  try {
+    const response = await api.delete(`/deleteCustomerData?id=${id}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
+
+async function deleteIncome(id) {
+  try {
+    const response = await api.delete(`/deleteIncome?id=${id}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
+  }
+}
+
+
+async function deleteExpense(id) {
+  try {
+    const response = await api.delete(`/deleteExpense?id=${id}`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+    return error.response.data
   }
 }
 
@@ -159,4 +193,7 @@ export default {
   repayment,
   getTodayIncomeAndExpense,
   addCredit,
+  deleteCustomerData,
+  deleteIncome,
+  deleteExpense
 };

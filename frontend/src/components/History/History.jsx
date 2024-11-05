@@ -62,7 +62,7 @@ const History = ({ onClose, customer }) => {
               <tr className="bg-gray-700">
                 <th className="px-4 py-2">Date</th>
                 <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Phone number</th>
+                <th className="px-4 py-2">Vehicle Number</th>
                 <th className="px-4 py-2">Paid/Credit</th>
                 <th className="px-4 py-2">Amount</th>
               </tr>
@@ -74,7 +74,7 @@ const History = ({ onClose, customer }) => {
                     {new Date(transaction.date).toLocaleDateString("en-GB")}
                   </td>
                   <td className="px-4 py-2">{customer.customerName}</td>
-                  <td className="px-4 py-2">{transaction.phoneNumber}</td>
+                  <td className="px-4 py-2">{transaction.vehicleNumber}</td>
                   
                   <td className="px-4 py-2">{["UPI", "Cash", "Card"].includes(transaction.paymentType)
           ? `Paid - ${transaction.paymentType}`

@@ -16,7 +16,6 @@ async function connectDB() {
 
     try {
         mongoose.set("strictQuery", false); 
-        mongoose.set('debug', true); 
         const db = await mongoose.connect(process.env.MONGO_URL, {
             serverSelectionTimeoutMS: 15000, 
         });
