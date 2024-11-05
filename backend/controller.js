@@ -5,6 +5,7 @@ import creditCustomerDb from './model/creditCustomers.js'
 import { validateCustomerData } from './services/CustomerValidator.js'
 import { validateExpenseData } from './services/expenseValidator.js'
 import ExpenseDb from './model/expense.js'
+// import monitorDatabaseSize from './database/checkStorage.js'
 
 
 async function login(req, res) {
@@ -103,6 +104,7 @@ async function addcustomer(req, res) {
 
 async function addIncome(req, res) {
   try {
+    // await monitorDatabaseSize()
     const incomeData = req.body;
 
     const errors = validateIncomeData(incomeData);
@@ -153,6 +155,7 @@ export async function incomeHistory(req, res) {
 
 async function addExpense(req, res) {
   try {
+    // await monitorDatabaseSize()
     const expenseData = req.body
     const errors = await validateExpenseData(expenseData)
 
@@ -553,6 +556,7 @@ async function getIncomeAndExpense(req, res) {
 
 async function addCredit(req, res) {
   try {
+    // await monitorDatabaseSize()
     const { date, vehicleNumber, workRows, creditAmount, _id, phoneNumber } = req.body
     console.log(req.body)
 
