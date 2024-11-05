@@ -8,6 +8,9 @@ import searchIcon from "../../assets/searchIcon.svg";
 import addCustomerIcon from "../../assets/addCustomerIcon.svg";
 import MoreModal from "../moreModal/moreModal";
 import SpinnerOnly from "../spinnerOnly/SpinnerOnly";
+import { FaSleigh, FaTrash } from 'react-icons/fa';
+import Swal from 'sweetalert2'
+import swal from "sweetalert";
 
 const CustomerData = () => {
   const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
@@ -21,6 +24,7 @@ const CustomerData = () => {
   const [moreModal, setMoreModal] = useState(false);
   const [selectedVehicleNumbers, setSelectedVehicleNumbers] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Loading state for table data
+  const [isUpdating , setIsUpdating ] = useState(FaSleigh)
 
   const customersPerPage = 10; // Number of customers per page
 
@@ -42,12 +46,12 @@ const CustomerData = () => {
         } catch (error) {
           console.error("Error fetching income history data", error);
         } finally {
-          setIsLoading(false); // Set loading to false after fetching data
+          setIsLoading(false); 
         }
       };
       fetchCustomers();
     }
-  }, [showAddCustomerModal, showPaymentModal, showCreditForm]); // Dependencies
+  }, [showAddCustomerModal, showPaymentModal, showCreditForm,isUpdating]); // Dependencies
 
   const calculateDueAmount = (creditAmount, paidAmount) => {
     return creditAmount - paidAmount;
@@ -86,6 +90,36 @@ const CustomerData = () => {
   const handleCloseModal = () => {
     setMoreModal(false);
   };
+
+
+  const hanldeDelete = async(id)=>{
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+      });
+      if(!result.isConfirmed){
+        return  
+      }
+
+      const response = await api.deleteCustomerData(id)
+      if(!response.error){
+        swal("Success", `Custemer deleted successfully`, "success");
+      }else{
+        swal("Error","error deleting customer",'error')
+      }
+      setIsUpdating(!isUpdating)
+    } catch (error) {
+      console.log(error)
+      swal("error","error deleting customer","error")
+    }
+  }
 
   const totalPages = Math.ceil(customers.length / customersPerPage);
 
@@ -148,6 +182,7 @@ const CustomerData = () => {
                   <th className="px-4 py-2">Paid amount</th>
                   <th className="px-4 py-2">Due amount</th>
                   <th className="px-4 py-2">Credit / Repayment</th>
+                  <th className="px-4 py-2">Dlt</th>
                   <th className="px-4 py-2">History</th>
                 </tr>
               </thead>
@@ -209,6 +244,11 @@ const CustomerData = () => {
                         </button>
                       </td>
                       <td className="px-4 py-2">
+                        <button onClick={() => hanldeDelete(customer._id)} className="text-red-500 hover:text-red-700">
+                          <FaTrash size={18} />
+                        </button>
+                      </td>
+                      <td className="px-4 py-2">
                         <button
                           className="bg-gray-600 text-gray-300 px-4 py-1 rounded-md"
                           onClick={() => handleViewClick(customer)}
@@ -221,7 +261,7 @@ const CustomerData = () => {
                 )}
                 {filteredCustomers.length === 0 && !isLoading && (
                   <tr>
-                    <td colSpan="9" className="text-center pt-6 font-medium">
+                    <td colSpan="10" className="text-center pt-6 font-medium">
                       No Credit Customers...
                     </td>
                   </tr>
@@ -264,6 +304,7 @@ const CustomerData = () => {
         )}
         {showPaymentModal && (
           <PaymentModal
+            setShowAddCustomerModal={setShowPaymentModal}
             customer={selectedCustomer}
             onClose={closePaymentModal}
           />

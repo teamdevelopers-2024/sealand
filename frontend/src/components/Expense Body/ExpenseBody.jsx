@@ -5,6 +5,8 @@ import ExpenseChart from "../Expense Chart/ExpenseChart";
 import PDFDownloadModal from "../PDFDownloadModal/PDFDownloadModal";
 import jsPDF from "jspdf";
 import SpinnerOnly from "../spinnerOnly/SpinnerOnly";
+import { FaTrash } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const Expense = ({ addExpenseModal }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +18,7 @@ const Expense = ({ addExpenseModal }) => {
   const [customEndDate, setCustomEndDate] = useState(null);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
   const [loading, setLoading] = useState(false); // Add loading state
+  const [isUpdating , setIsUpdating] = useState(false)
   const entriesPerPage = 5;
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const Expense = ({ addExpenseModal }) => {
     if (addExpenseModal == false) {
       fetchExpenseHistory();
     }
-  }, [addExpenseModal]);
+  }, [addExpenseModal,isUpdating]);
 
   const generatePDF = (startDate, endDate) => {
     const doc = new jsPDF();
@@ -110,6 +113,40 @@ const Expense = ({ addExpenseModal }) => {
   );
   const pageCount = Math.ceil(filteredEntries.length / entriesPerPage);
 
+
+
+  const handleDelete= async(id)=>{
+    try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+      });
+      if(!result.isConfirmed){
+        return
+      }
+      setLoading(true)
+
+      const response = await api.deleteExpense(id)
+      if(!response.error){
+        swal("Success", `expense deleted successfully`, "success");
+      }else{
+        swal("Error","error deleting expense",'error')
+      }
+      setIsUpdating(!isUpdating)
+    } catch (error) {
+      console.log(error)
+      swal("Error","error deleting expense",'error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 p-10 text-gray-100 relative">
       <main className="mt-8 p-2">
@@ -143,6 +180,7 @@ const Expense = ({ addExpenseModal }) => {
                 <th className="pb-2">Payment Type</th>
                 <th className="pb-2">Phone Number</th>
                 <th className="pb-2">Amount</th>
+                <th className="pb-2">Delete</th>
                 <th className="pb-2">Receipt</th>
               </tr>
             </thead>
@@ -174,6 +212,9 @@ const Expense = ({ addExpenseModal }) => {
                         style: "currency",
                         currency: "INR",
                       }).format(entry.totalExpense)}
+                    </td>
+                    <td className="py-4">
+                      <FaTrash onClick={()=> handleDelete(entry._id)} className="text-red-600 cursor-pointer"/>
                     </td>
                     <td className="py-4">
                       <button

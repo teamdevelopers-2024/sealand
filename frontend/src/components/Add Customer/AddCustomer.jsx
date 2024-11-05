@@ -82,12 +82,11 @@ const AddCustomer = ({ show, onClose }) => {
       customerName,
       vehicleNumber,
       phoneNumber,
-      creditAmount,
-      workDetails,
+      creditAmount
     };
 
     try {
-      const response = await api.addCustomer(formData);
+      const response = await api.addCustomer({formData,  workDetails});
       if (response.error) {
         console.log('getting here')
         // Handle error case

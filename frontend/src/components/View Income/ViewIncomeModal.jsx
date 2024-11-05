@@ -3,7 +3,6 @@ import jsPDF from "jspdf";
 import imgData from "../../assets/logocropped.jpg";
 
 const ViewIncomeModal = ({ entry, onClose }) => {
-
   const formatDate = (date) => {
     const d = new Date(date);
     const day = String(d.getDate()).padStart(2, "0");
@@ -52,12 +51,14 @@ const ViewIncomeModal = ({ entry, onClose }) => {
     doc.line(10, 85, 200, 85);
     // Add table rows for items with index numbers
     doc.setFont("normal");
+    let totalAmount = 0;
     entry.workDescriptions.forEach((item, index) => {
       const yOffset = 90 + index * 10; // Adjust row height for each item
       doc.text(`${index + 1}`, 10, yOffset); // Index number
       doc.text(`${item.description}`, 40, yOffset); // Description
       doc.text(`${item.reference}`, 100, yOffset); // reference
       doc.text(`${parseFloat(item.amount).toLocaleString()}`, 160, yOffset);
+      totalAmount += item.amount
     });
     // Add a separator line after the items
     const itemsEndY = 90 + entry.workDescriptions.length * 10;
@@ -66,7 +67,7 @@ const ViewIncomeModal = ({ entry, onClose }) => {
     doc.setFont("bold");
     doc.text("Total:", 140, itemsEndY + 15);
     doc.text(
-      `${parseFloat(entry.totalServiceCost).toLocaleString()}`,
+      `${parseFloat(totalAmount).toLocaleString()}`,
       160,
       itemsEndY + 15
     );
@@ -79,14 +80,19 @@ const ViewIncomeModal = ({ entry, onClose }) => {
     // Save the PDF with the customer's name
     doc.save(`${entry.customerName.replace(/[^a-zA-Z0-9]/g, "_")}_receipt.pdf`);
   };
+
+  let totalAmount = 0
+
+  entry.workDescriptions.map((item)=>{
+    totalAmount += item.amount
+  })
   if (!entry) return null;
   
   return (
     <>
       {/* Backdrop */}
       <div className="fixed inset-0 bg-black bg-opacity-50 z-20"></div>
-
-      {/* Popup Modal */}
+        {/* Popup Modal */}
       <div className="fixed inset-0 flex items-center justify-center z-30">
         <div className="bg-gray-800 text-white rounded-lg shadow-lg p-6 w-full max-w-4xl mx-auto">
           <h2 className="text-xl mb-4">Income Details</h2>
@@ -123,9 +129,28 @@ const ViewIncomeModal = ({ entry, onClose }) => {
             <div>
               <span className="text-white block">Total Service Cost:</span>
               <p className="text-gray-300">
-                ₹ {parseFloat(entry.totalServiceCost).toLocaleString()}
+                {entry.paymentMethod.slice(0,6) === 'Repaid' ? `₹${parseFloat(totalAmount).toLocaleString()}` :`₹${parseFloat(entry.totalServiceCost).toLocaleString()}`}
+                
               </p>
             </div>
+            {entry.paymentMethod.slice(0,6) === 'Repaid' && 
+            <>
+             <div>
+                  <span className="text-white block">Credit Paid Amount:</span>
+                  <p className="text-gray-300">
+                    ₹ {parseFloat(entry.totalServiceCost).toLocaleString()}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-white block">Credit Due Amount:</span>
+                  <p className="text-gray-300">
+                    ₹ {parseFloat(totalAmount - entry.totalServiceCost).toLocaleString()}
+                  </p>
+                </div>
+            </>
+                 
+            }
+      
           </div>
 
           {/* Work Descriptions */}

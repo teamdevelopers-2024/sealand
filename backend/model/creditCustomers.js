@@ -23,31 +23,43 @@ const creditCustomerSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    workDetails: [
-        {
-            description: {
-                type: String,
-            },
-            amount: {
-                type: Number,
-            },
-            reference: {
-                type: String,
-            },
-        },
-    ],
     paidAmount: {
         type: Number,
         default: 0,
     },
     transactionHistory: [
         {
+            _id: {
+                type: mongoose.Schema.Types.ObjectId,
+                default: () => new mongoose.Types.ObjectId(),
+            },
             date: Date,
-            vehicleNumber:String,
-            phoneNumber:String,
-            paymentType:String ,
-            Amount:Number
-        },
+            vehicleNumber: String,
+            phoneNumber: String,
+            paymentType: String,
+            Amount: Number,
+            paidAmount : {
+                type : Number , 
+                default : 0 
+            },
+            isCredit: {
+                type: Boolean,
+                default: true,
+            },
+            workDetails: [
+                {
+                    description: {
+                        type: String,
+                    },
+                    amount: {
+                        type: Number,
+                    },
+                    reference: {
+                        type: String,
+                    },
+                },
+            ],
+        }
     ],
 });
 
