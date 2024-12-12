@@ -305,11 +305,10 @@ async function getCustomers(req, res) {
 
 
 async function repayment(req, res) {
-  
+
   try {
     const { customer, details } = req.body;
     console.log(details)
-
 
     console.log(customer)
     const history = customer.transactionHistory
@@ -319,17 +318,22 @@ async function repayment(req, res) {
         if(item.paymentType=='Credit'){
           console.log("this is item : ", item)
           if (item.paymentType === 'Credit') {
-            const updateIncomeData = new IncomeDb({
-              workDate: details.repaymentDate,
-              customerName: customer.customerName,
-              vehicleNumber: item.vehicleNumber,
-              contactNumber: customer.phoneNumber,
-              paymentMethod: `Repaid-${details.paymentMethod}`,
-              totalServiceCost: item.Amount,
-              workDescriptions: item.workDetails
-            });            
-      
-            await updateIncomeData.save()      
+            if(details.discount <= item.Amount){
+              item.Amount = item.Amount - details.discount
+              const updateIncomeData = new IncomeDb({
+                workDate: details.repaymentDate,
+                customerName: customer.customerName,
+                vehicleNumber: item.vehicleNumber,
+                contactNumber: customer.phoneNumber,
+                paymentMethod: `Repaid-${details.paymentMethod}`,
+                totalServiceCost: item.Amount,
+                workDescriptions: item.workDetails
+              });       
+              await updateIncomeData.save()      
+          }else{
+              details.discount = details.discount - item.Amount
+              item.Amount = 0;
+           }
             }
         }
       })
@@ -356,6 +360,8 @@ async function repayment(req, res) {
       })
       if(weWantHistory.Amount == details.repaymentAmount){
 
+        weWantHistory.Amount = weWantHistory.Amount - details.discount
+
           const updateTransaction = await creditCustomerDb.findOneAndUpdate(
         {
           _id: customer._id,
@@ -367,6 +373,7 @@ async function repayment(req, res) {
           }
         }
       );
+
     
       } else {
         const updateTransaction = await creditCustomerDb.findOneAndUpdate(
@@ -376,7 +383,7 @@ async function repayment(req, res) {
           },
           {
             $inc: {
-              'transactionHistory.$.paidAmount':details.repaymentAmount,
+              'transactionHistory.$.paidAmount':details.repaymentAmount ,
             }
           }
         );
@@ -412,7 +419,7 @@ async function repayment(req, res) {
         vehicleNumber: weWantHistory.vehicleNumber,
         contactNumber: customer.phoneNumber,
         paymentMethod: `Repaid-${details.paymentMethod}`,
-        totalServiceCost: details.repaymentAmount,
+        totalServiceCost: details.repaymentAmount - details.discount,
         workDescriptions: weWantHistory.workDetails
       })
       await updateIncomeData.save()
