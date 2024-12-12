@@ -342,7 +342,7 @@ async function repayment(req, res) {
           "transactionHistory._id": details.vehicleNumber,
         },
         {
-          "transactionHistory.$": 1, // Projection to get only the matching sub-document
+          "transactionHistory.$": 1, 
         }
       );
 
