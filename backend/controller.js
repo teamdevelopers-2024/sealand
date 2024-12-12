@@ -347,7 +347,6 @@ async function repayment(req, res) {
       );
 
       console.log(result.transactionHistory, " and ", details.repaymentAmount)
-
         let weWantHistory
         result.transactionHistory.map((history)=>{
         if(history._id==details.vehicleNumber){
