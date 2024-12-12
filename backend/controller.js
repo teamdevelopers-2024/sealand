@@ -305,6 +305,7 @@ async function getCustomers(req, res) {
 
 
 async function repayment(req, res) {
+  
   try {
     const { customer, details } = req.body;
     console.log(details)
@@ -366,6 +367,7 @@ async function repayment(req, res) {
           }
         }
       );
+    
       } else {
         const updateTransaction = await creditCustomerDb.findOneAndUpdate(
           {
@@ -399,6 +401,10 @@ async function repayment(req, res) {
   
       if (!updatedCustomer) {
         return res.status(404).json({ message: 'Customer not found' });
+      }
+
+      if(updatedCustomer.paidAmount == updatedCustomer.creditAmount){
+        await creditCustomerDb.deleteOne({_id:customer._id})
       }
       const updateIncomeData = new IncomeDb({
         workDate: details.repaymentDate,

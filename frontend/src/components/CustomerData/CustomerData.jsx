@@ -229,7 +229,7 @@ const CustomerData = () => {
                           customer.paidAmount
                         )}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="flex py-2">
                         <button
                           className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-md"
                           onClick={() => handleCreditClick(customer)}
@@ -241,6 +241,12 @@ const CustomerData = () => {
                           onClick={() => handlePayClick(customer)}
                         >
                           Pay
+                        </button>
+                        <button
+                          className="bg-green-400 text-gray-900 px-4 py-1 rounded-md ml-2"
+                          onClick={() => handlePayClick(customer)}
+                        >
+                          Discount
                         </button>
                       </td>
                       <td className="px-4 py-2">
