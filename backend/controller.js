@@ -332,7 +332,7 @@ async function repayment(req, res) {
               vehicleNumber: item.vehicleNumber,
               contactNumber: customer.phoneNumber,
               paymentMethod: `Repaid-${details.paymentMethod}`,
-              totalServiceCost: item.Amount,
+              totalServiceCost: item.Amount-item.paidAmount,
               workDescriptions: item.workDetails
             });
 
