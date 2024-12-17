@@ -242,12 +242,6 @@ const CustomerData = () => {
                         >
                           Pay
                         </button>
-                        <button
-                          className="bg-green-400 text-gray-900 px-4 py-1 rounded-md ml-2"
-                          onClick={() => handlePayClick(customer)}
-                        >
-                          Discount
-                        </button>
                       </td>
                       <td className="px-4 py-2">
                         <button onClick={() => hanldeDelete(customer._id)} className="text-red-500 hover:text-red-700">

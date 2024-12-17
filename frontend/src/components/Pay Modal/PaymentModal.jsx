@@ -108,9 +108,10 @@ const PaymentModal = ({ onClose, customer }) => {
     try {
       const details = {
         repaymentDate,
-        repaymentAmount  ,
+        repaymentAmount,
         paymentMethod,
         vehicleNumber,
+        discount,
       };
 
       const result = await api.repayment(customer, details);
@@ -222,6 +223,18 @@ const PaymentModal = ({ onClose, customer }) => {
                 {amountError && (
                   <p className="text-red-500 mt-1">{amountError}</p>
                 )}
+              </div>
+
+              <div className="col-span-2 md:col-span-1">
+                <label className="block mb-2">Discount</label>
+                <input
+                  type="number"
+                  onChange={(e) => setDiscount(parseFloat(e.target.value))}
+                  value={discount}
+                  placeholder={`Max discount less than ₹${repaymentAmount}`}
+                  className="w-full px-3 py-2 bg-gray-700 rounded-md focus:outline-none"
+                />
+                {disError && <p className="text-red-500 mt-1">{disError}</p>}
               </div>
             </div>
 
