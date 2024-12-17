@@ -13,7 +13,6 @@ router.get('/incomehistory',controller.incomeHistory)
 router.get("/getExpenses",controller.getExpenses)
 router.get("/getCustomers",controller.getCustomers)
 router.get("/getTodayIncomeAndExpense",controller.getIncomeAndExpense)
-
 router.put('/repayment',controller.repayment)
 
 

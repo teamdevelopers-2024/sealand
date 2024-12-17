@@ -48,9 +48,9 @@ async function login(req, res) {
 
 async function addcustomer(req, res) {
   try {
-    const {formData,  workDetails}= req.body;
-    console.log("customer data",formData);
-    
+    const { formData, workDetails } = req.body;
+    console.log("customer data", formData);
+
     if (typeof formData.vehicleNumber === 'string') {
       formData.vehicleNumber = formData.vehicleNumber
         .split(',')
@@ -59,7 +59,7 @@ async function addcustomer(req, res) {
     }
 
     // Validate customer data
-    const errors = await validateCustomerData(formData,workDetails);
+    const errors = await validateCustomerData(formData, workDetails);
     console.log(errors)
     if (errors.length > 0) {
       console.log('getting here')
@@ -305,6 +305,7 @@ async function getCustomers(req, res) {
 
 
 async function repayment(req, res) {
+
   try {
     const { customer, details } = req.body;
     console.log(details)
@@ -312,25 +313,32 @@ async function repayment(req, res) {
 
     console.log(customer)
     const history = customer.transactionHistory
-    if(details.vehicleNumber == 'Full Repayment'){
+    if (details.vehicleNumber == 'Full Repayment') {
       await creditCustomerDb.deleteOne({ _id: customer._id })
-      history.map(async(item)=>{
-        if(item.paymentType=='Credit'){
-          console.log("this is item : ", item)
+      history.map(async (item) => {
+        
           if (item.paymentType === 'Credit') {
+            if (details.discount <= item.Amount) {
+              item.Amount = item.Amount - details.discount
+            } else {
+              details.discount = details.discount - item.Amount
+              item.Amount = 0;
+            }
+
             const updateIncomeData = new IncomeDb({
+
               workDate: details.repaymentDate,
               customerName: customer.customerName,
               vehicleNumber: item.vehicleNumber,
               contactNumber: customer.phoneNumber,
               paymentMethod: `Repaid-${details.paymentMethod}`,
-              totalServiceCost: item.Amount,
+              totalServiceCost: item.Amount-item.paidAmount,
               workDescriptions: item.workDetails
-            });            
-      
-            await updateIncomeData.save()      
-            }
-        }
+            });
+
+            await updateIncomeData.save()
+          }
+        
       })
 
     } else {
@@ -341,40 +349,40 @@ async function repayment(req, res) {
           "transactionHistory._id": details.vehicleNumber,
         },
         {
-          "transactionHistory.$": 1, // Projection to get only the matching sub-document
+          "transactionHistory.$": 1,
         }
       );
 
       console.log(result.transactionHistory, " and ", details.repaymentAmount)
-
-        let weWantHistory
-        result.transactionHistory.map((history)=>{
-        if(history._id==details.vehicleNumber){
+      let weWantHistory
+      result.transactionHistory.map((history) => {
+        if (history._id == details.vehicleNumber) {
           weWantHistory = history
         }
       })
-      if(weWantHistory.Amount == details.repaymentAmount){
+      if (weWantHistory.Amount == details.repaymentAmount) {
 
-          const updateTransaction = await creditCustomerDb.findOneAndUpdate(
-        {
-          _id: customer._id,
-          "transactionHistory._id": details.vehicleNumber, 
-        },
-        {
-          $set: {
-            'transactionHistory.$.isCredit':false
+        const updateTransaction = await creditCustomerDb.findOneAndUpdate(
+          {
+            _id: customer._id,
+            "transactionHistory._id": details.vehicleNumber,
+          },
+          {
+            $set: {
+              'transactionHistory.$.isCredit': false
+            }
           }
-        }
-      );
+        );
+
       } else {
         const updateTransaction = await creditCustomerDb.findOneAndUpdate(
           {
             _id: customer._id,
-            "transactionHistory._id": details.vehicleNumber, 
+            "transactionHistory._id": details.vehicleNumber,
           },
           {
             $inc: {
-              'transactionHistory.$.paidAmount':details.repaymentAmount,
+              'transactionHistory.$.paidAmount': details.repaymentAmount,
             }
           }
         );
@@ -386,19 +394,23 @@ async function repayment(req, res) {
           $push: {
             transactionHistory: {
               date: new Date(), // Current date
-              vehicleNumber: weWantHistory.vehicleNumber ,// Assuming you want to use the customer's vehicle number
+              vehicleNumber: weWantHistory.vehicleNumber,// Assuming you want to use the customer's vehicle number
               phoneNumber: customer.phoneNumber, // Assuming you want to use the customer's phone number
               paymentType: details.paymentMethod, // Assuming this is part of your details
               Amount: details.repaymentAmount, // The amount being repaid
             },
           },
         },
-    
+
         { new: true }
       );
-  
+
       if (!updatedCustomer) {
         return res.status(404).json({ message: 'Customer not found' });
+      }
+
+      if (updatedCustomer.paidAmount == updatedCustomer.creditAmount) {
+        await creditCustomerDb.deleteOne({ _id: customer._id })
       }
       const updateIncomeData = new IncomeDb({
         workDate: details.repaymentDate,
@@ -406,7 +418,7 @@ async function repayment(req, res) {
         vehicleNumber: weWantHistory.vehicleNumber,
         contactNumber: customer.phoneNumber,
         paymentMethod: `Repaid-${details.paymentMethod}`,
-        totalServiceCost: details.repaymentAmount,
+        totalServiceCost: details.repaymentAmount-details.discount,
         workDescriptions: weWantHistory.workDetails
       })
       await updateIncomeData.save()
@@ -580,7 +592,7 @@ async function addCredit(req, res) {
             phoneNumber: phoneNumber, // Replace with the actual phone number or keep as sample
             paymentType: "Credit",
             Amount: creditAmount,
-            workDetails: workRows 
+            workDetails: workRows
           },
         },
       }
@@ -596,18 +608,18 @@ async function addCredit(req, res) {
 
 
 
-async function deleteCustomerData(req,res) {
+async function deleteCustomerData(req, res) {
   try {
-    const {id} = req.query
-    if(!id){
+    const { id } = req.query
+    if (!id) {
       return res.status(400).json({
-        error:true,
-        message:"id is required"
+        error: true,
+        message: "id is required"
       })
     }
-    await creditCustomerDb.deleteOne({_id:id})
+    await creditCustomerDb.deleteOne({ _id: id })
     res.status(200).json({
-      error : false ,
+      error: false,
       message: "customer deleted successfully"
     })
   } catch (error) {
@@ -618,25 +630,25 @@ async function deleteCustomerData(req,res) {
 
 
 
-async function deleteIncome(req,res) {
+async function deleteIncome(req, res) {
   try {
-    const {id} = req.query
+    const { id } = req.query
 
     console.log(id, " thi sis id ")
 
-    if(!id){
+    if (!id) {
       return res.status(400).json({
-        error:true,
-        message:"id is required"
+        error: true,
+        message: "id is required"
       })
     }
 
-    await IncomeDb.deleteOne({_id:id})
+    await IncomeDb.deleteOne({ _id: id })
     res.status(200).json({
-      error : false ,
+      error: false,
       message: "income deleted successfully"
     })
-  
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred", error });
@@ -644,25 +656,25 @@ async function deleteIncome(req,res) {
 }
 
 
-async function deleteExpense(req,res) {
+async function deleteExpense(req, res) {
   try {
-    const {id} = req.query
+    const { id } = req.query
 
     console.log(id, " thi sis id ")
 
-    if(!id){
+    if (!id) {
       return res.status(400).json({
-        error:true,
-        message:"id is required"
+        error: true,
+        message: "id is required"
       })
     }
 
-    await ExpenseDb.deleteOne({_id:id})
+    await ExpenseDb.deleteOne({ _id: id })
     res.status(200).json({
-      error : false ,
+      error: false,
       message: "Expense deleted successfully"
     })
-  
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred", error });

@@ -24,7 +24,7 @@ const History = ({ onClose, customer }) => {
     doc.setFontSize(16);
     doc.setTextColor(0, 0, 0);
     doc.text(`Transaction History - ${customer.customerName}`, 75, 45);
-    
+
     // Prepare the data for the table
     const tableData = customer.transactionHistory.map(transaction => [
       new Date(transaction.date).toLocaleDateString("en-GB"),
@@ -50,13 +50,13 @@ const History = ({ onClose, customer }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">
-      <div className="bg-gray-800 text-gray-300 rounded-lg w-full max-w-3xl p-6">
+      <div className="bg-gray-800 text-gray-300 rounded-lg w-full max-w-3xl max-h-[600px] p-6">
         <h2 className="text-xl font-bold mb-4">
           Transaction History - {customer.customerName}
         </h2>
 
         {/* Table structure for history */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto max-h-[400px] overflow-y-auto">
           <table className="table-auto w-full text-left text-gray-300">
             <thead>
               <tr className="bg-gray-700">
@@ -69,16 +69,17 @@ const History = ({ onClose, customer }) => {
             </thead>
             <tbody className="bg-gray-700">
               {customer.transactionHistory.map((transaction, index) => (
-                <tr className="border-t border-gray-600">
+                <tr key={index} className="border-t border-gray-600">
                   <td className="px-4 py-2">
                     {new Date(transaction.date).toLocaleDateString("en-GB")}
                   </td>
                   <td className="px-4 py-2">{customer.customerName}</td>
                   <td className="px-4 py-2">{transaction.vehicleNumber}</td>
-                  
-                  <td className="px-4 py-2">{["UPI", "Cash", "Card"].includes(transaction.paymentType)
-          ? `Paid - ${transaction.paymentType}`
-          : "New Credit"}</td>
+                  <td className="px-4 py-2">
+                    {["UPI", "Cash", "Card"].includes(transaction.paymentType)
+                      ? `Paid - ${transaction.paymentType}`
+                      : "New Credit"}
+                  </td>
                   <td className="px-4 py-2">{transaction.Amount}</td>
                 </tr>
               ))}
@@ -86,9 +87,10 @@ const History = ({ onClose, customer }) => {
           </table>
         </div>
 
+
         <div className="mt-6 text-right">
           <button
-          onClick={generatePDF}
+            onClick={generatePDF}
             className="bg-teal-400 text-gray-900 px-4 mr-3 py-2 rounded-md"
           >
             Download
