@@ -317,9 +317,11 @@ async function repayment(req, res) {
       await creditCustomerDb.deleteOne({ _id: customer._id })
       history.map(async(item)=>{
         if(item.paymentType=='Credit'){
-          console.log("this is item : ", item)
+
           if (item.paymentType === 'Credit') {
+
             const updateIncomeData = new IncomeDb({
+              
               workDate: details.repaymentDate,
               customerName: customer.customerName,
               vehicleNumber: item.vehicleNumber,
